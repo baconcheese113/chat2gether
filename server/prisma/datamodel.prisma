@@ -1,0 +1,16 @@
+type User {
+  id: ID! @unique @id
+  gender: GenderType!
+  lookingFor: GenderType!
+  lastActive: DateTime!
+  isHost: Boolean!
+  isConnected: Boolean!
+  visited: [User!]! @relation(name: "VisitedUsers", onDelete: SET_NULL)
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+enum GenderType {
+  MALE,
+  FEMALE
+}

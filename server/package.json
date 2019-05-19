@@ -1,0 +1,46 @@
+{
+  "name": "graphql-basics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "npm install && npm install --only=dev --no-shrinkwrap",
+    "postbuild": "babel src --out-dir dist --copy-files",
+    "test": "env-cmd ./config/test.env jest --watch --runInBand",
+    "dev": "env-cmd ./config/dev.env nodemon --inspect src/index.js --exec babel-node --ext .js,.json,.graphql",
+    "get-schema": "graphql get-schema -p prisma --dotenv config/dev.env"
+  },
+  "jest": {
+    "globalSetup": "./tests/jest/globalSetup.js",
+    "globalTeardown": "./tests/jest/globalTeardown.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "apollo-boost": "^0.3.1",
+    "apollo-server-express": "^2.5.0",
+    "babel-register": "^6.26.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "cross-fetch": "^3.0.2",
+    "env-cmd": "^8.0.2",
+    "graphql": "^14.3.0",
+    "graphql-import": "^0.7.1",
+    "graphql-yoga": "^1.17.4",
+    "jsonwebtoken": "^8.5.1",
+    "prisma-binding": "^2.3.10",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.4.4",
+    "graphql-cli": "^3.0.11",
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.0"
+  }
+}

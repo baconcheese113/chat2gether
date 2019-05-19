@@ -1,0 +1,47 @@
+# import * from './generated/prisma.graphql'
+
+# typedefs 
+type Query {
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]!
+  user(where: UserWhereUniqueInput!): User
+  me: User!
+}
+
+type Mutation {
+  createUser(data: CreateUserInput!): AuthPayload!
+  deleteUser: User!
+  updateUser(data: UserUpdateInput!): User!
+}
+
+# type Subscription {
+  
+# }
+
+type AuthPayload {
+  user: User!
+}
+
+input CreateUserInput {
+  gender: GenderType!
+  lookingFor: GenderType!
+}
+type User {
+  id: ID!
+  gender: GenderType!
+  lookingFor: GenderType!
+  lastActive: String!
+  isHost: Boolean!
+  isConnected: Boolean!
+  visited: [User!]!
+  updatedAt: String!
+  createdAt: String!
+}
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+enum GenderType {
+  MALE
+  FEMALE
+}
