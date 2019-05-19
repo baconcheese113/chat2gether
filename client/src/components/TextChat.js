@@ -42,6 +42,7 @@ const StyledTextChat = styled.section`
 `
 
 const TextHistory = styled.div`
+  font-size: 1.8rem;
   background-image: linear-gradient(#00000000, #000000ff);
   filter: opacity(0.4);
   margin: 0 auto 4rem;
@@ -76,7 +77,7 @@ const TextComment = styled.p`
   }
 `
 
-const TextConsole = styled.div`
+const TextConsole = styled.form`
   width: 100%;
   background-color: #9932cc;
   padding: 3px 5px;
@@ -104,8 +105,9 @@ const ConsoleInput = styled.input`
 `
 const ConsoleButton = styled.button`
   border-radius: 0 10px 10px 0;
-  font-size: 1.4rem;
+  font-size: 1.7rem;
   text-align: left;
+  margin-left: -2px;
   padding: 0.5rem 2rem 0.5rem 0.5rem;
 `
 
@@ -115,11 +117,19 @@ class TextChat extends React.Component {
 
   state = {
     comment: '',
-    consoleVis: false,
+  }
+
+  componentDidMount() {
+    const {lastReadMsg, setLastReadMsg, textChat } = this.props
+    if(lastReadMsg < textChat.length - 1)
+      setLastReadMsg(textChat.length - 1)
   }
 
   componentDidUpdate() {
     this.scrollToBottom()
+    const {lastReadMsg, setLastReadMsg, textChat } = this.props
+    if(lastReadMsg < textChat.length - 1)
+      setLastReadMsg(textChat.length - 1)
   }
 
   scrollToBottom = () => {
@@ -153,30 +163,13 @@ class TextChat extends React.Component {
     })
   }
 
-  chatToggle = e => {
-    const { consoleVis } = this.state
-    this.setState({ consoleVis: !consoleVis })
-    // Toggle - 180, change color, size swell
-    // Text-history - slide vertical
-    // Text-console - border-radius, slide vertical
-
-    // if(e.target.classList.contains('rotate-180')) {
-    //   e.target.classList.remove('rotate-180');
-    //   e.target.classList.add('rotate-360');
-    // } else {
-    //   e.target.classList.remove('rotate-360');
-    //   e.target.classList.add('rotate-180');
-    // }
-    console.log(e.target.parentElement.parentElement)
-  }
-
   handleSubmit = e => {
     const { socketHelper, user, room } = this.props
     const { comment } = this.state
     e.preventDefault()
     // this.props.onSubmit(e, this.state.comment);
     if (!socketHelper || !comment) {
-      console.log(socketHelper)
+      console.log(`No sockethelper! ${socketHelper} ${comment}`)
       return
     }
     socketHelper.emit('send', {

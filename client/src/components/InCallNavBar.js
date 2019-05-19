@@ -16,7 +16,7 @@ const StyledNavBar = styled.div`
 `
 
 const InCallNavBar = props => {
-  const { widgetsActive, setWidgetsActive, resetState, nextMatch } = props
+  const { widgetsActive, setWidgetsActive, resetState, nextMatch, textNotify } = props
   if (!widgetsActive) return ''
 
   const featureToggle = elem => {
@@ -31,6 +31,7 @@ const InCallNavBar = props => {
         iconClass="fas fa-comment"
         onClick={() => featureToggle('text')}
         active={widgetsActive.text ? 1 : 0}
+        notification={textNotify}
       />
       <ToggleButton
         iconClass="fab fa-youtube"

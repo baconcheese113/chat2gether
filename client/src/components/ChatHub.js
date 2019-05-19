@@ -27,6 +27,7 @@ function ChatHub(props) {
   const [countdown, setCountdown] = useState(-1)
   const [countdownTimer, setCountdownTimer] = useState(null)
   const [widgetsActive, setWidgetsActive] = useState({ text: false, menu: false, video: false })
+  const [lastReadMsg, setLastReadMsg] = useState(-1)
 
   const room = useRef(null)
 
@@ -234,11 +235,25 @@ function ChatHub(props) {
           <VideoWindow videoType="remoteVideo" stream={remoteStream} />
           <VideoWindow videoType="localVideo" stream={localStream} />
           {getChatNav()}
+          {widgetsActive.text ? (
+            <TextChat
+              user={user}
+              socketHelper={socketHelper}
+              room={room.current}
+              textChat={textChat}
+              lastReadMsg={lastReadMsg}
+              setLastReadMsg={setLastReadMsg}
+            />
+          ) : (
+            ''
+          )}
+          {widgetsActive.video ? <VideoPlayer /> : ''}
           <InCallNavBar
             nextMatch={nextMatch}
             resetState={resetState}
             setWidgetsActive={setWidgetsActive}
             widgetsActive={widgetsActive}
+            textNotify={textChat.length - (lastReadMsg + 1)}
           />
         </React.Fragment>
       )
@@ -250,7 +265,14 @@ function ChatHub(props) {
             Share Video to Begin
           </button>
           {widgetsActive.text ? (
-            <TextChat user={user} socketHelper={socketHelper} room={room.current} textChat={textChat} />
+            <TextChat
+              user={user}
+              socketHelper={socketHelper}
+              room={room.current}
+              textChat={textChat}
+              lastReadMsg={lastReadMsg}
+              setLastReadMsg={setLastReadMsg}
+            />
           ) : (
             ''
           )}
