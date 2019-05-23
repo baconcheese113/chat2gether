@@ -178,6 +178,13 @@ class SocketHelper {
   emit(title, msg) {
     this.socket.emit(title, msg)
   }
+
+  async replaceTrack(newStream) {
+    const videoTrack = newStream.getVideoTracks()[0]
+    const sender = this.pc.getSenders().find(s => s.track.kind === videoTrack.kind)
+    console.log(`found sender: ${sender}`)
+    sender.replaceTrack(videoTrack)
+  }
 }
 
 export default SocketHelper

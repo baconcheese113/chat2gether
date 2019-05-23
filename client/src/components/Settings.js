@@ -6,10 +6,11 @@ function Settings(props) {
 
   const getDevices = async () => {
     try {
+      console.log(selectedVideo)
       const allDevices = await navigator.mediaDevices.enumerateDevices()
       const vids = allDevices.map((cur, idx) => {
         if (cur.kind === 'videoinput') {
-          console.log(cur.getCapabilities())
+          // console.log(cur.getCapabilities())
           return (
             <option key={idx} value={cur.deviceId}>
               {cur.label}
@@ -26,6 +27,8 @@ function Settings(props) {
   }
 
   useEffect(() => {
+    const videoId = props.stream.getVideoTracks()[0].getSettings().deviceId
+    setSelectedVideo(videoId)
     getDevices()
   }, [])
 
@@ -42,7 +45,7 @@ function Settings(props) {
         <div className="settings-list">
           <label htmlFor="video-source">
             Video Source
-            <select id="video-source" onChange={e => setSelectedVideo(e.target.value)}>
+            <select id="video-source" value={selectedVideo || ''} onChange={e => setSelectedVideo(e.target.value)}>
               {devices}
             </select>
           </label>
