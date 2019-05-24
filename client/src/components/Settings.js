@@ -157,7 +157,7 @@ function Settings(props) {
     e.preventDefault()
     if (feedbackText.length < 1) return 0
     setIsLoading(true)
-    const { data, loading, error } = await props.CREATE_FEEDBACK({ variables: { data: { text: feedbackText } } })
+    const { loading, error } = await props.CREATE_FEEDBACK({ variables: { data: { text: feedbackText } } })
     setIsLoading(false)
     if (loading || error) console.log(loading, error)
     else {
