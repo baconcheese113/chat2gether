@@ -34,5 +34,14 @@ export default {
       },
       info
     );
+  },
+
+  async createFeedback(parent, args, { prisma, request }, info) {
+    return prisma.mutation.createFeedback(
+      {
+        data: { ...args.data }
+      },
+      info
+    );
   }
 };

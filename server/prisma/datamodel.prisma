@@ -10,6 +10,13 @@ type User {
   createdAt: DateTime! @createdAt
 }
 
+type Feedback {
+  id: ID! @unique @id
+  text: String!
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
 enum GenderType {
   MALE,
   FEMALE

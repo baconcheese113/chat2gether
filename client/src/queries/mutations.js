@@ -23,3 +23,12 @@ export const UPDATE_USER = gql`
     }
   }
 `
+
+export const CREATE_FEEDBACK = gql`
+  mutation CreateFeedbackMutation($data: FeedbackCreateInput!) {
+    createFeedback(data: $data) {
+      id
+      text
+    }
+  }
+`

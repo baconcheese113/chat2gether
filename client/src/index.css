@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 html {
   font-size: 62.5%;
   font-family: 'K2D', sans-serif;
@@ -12,41 +13,49 @@ h1 {
   color: #9932cc;
   font-family: 'Megrim', cursive;
 }
+
 header {
   text-align: center;
   background-color: transparent;
   padding: 10px;
 }
+
 body {
-  background-image: linear-gradient(#181818 , #3f3f3f 30%);
+  background-image: linear-gradient(#181818, #3f3f3f 30%);
   height: 100vh;
   color: white;
   text-align: center;
 }
+
 main {
   /* height: 100vh; */
   max-width: 1200px;
   margin: 0 auto;
 }
+
 section {
   background-color: #3f3f3f;
   border-radius: 20px;
   margin: 10px;
   padding: 5px;
 }
+
 section h2 {
   margin: 20px 0;
   padding-top: 20px;
 }
+
 section h1 {
   text-align: left;
   margin: 30px 0;
 }
+
 .user-create-stats {
   /* background-color: red; */
   display: inline-block;
   width: 40%;
 }
+
 .user-create-numbers {
   padding: 10px;
   display: flex;
@@ -56,29 +65,35 @@ section h1 {
   border: 3px dashed #9932cc;
   border-radius: 20px 0;
 }
+
 .user-create-stats h5 {
   text-align: right;
 }
+
 .user-create-stats p {
   color: #777;
 }
-form{
+
+form {
   background-color: #313131;
   border: #555 solid 2px;
   padding: 10px;
   border-radius: 5px;
 }
+
 .form-user-create button {
   background-color: #9932cc;
   /* border: 1px solid #555; */
   box-shadow: 0 0 10px #c38fdd
 }
+
 .form-row {
   display: flex;
   justify-content: space-around;
   flex-direction: column;
   margin: 20px 0;
 }
+
 input, option, select {
   border-radius: 10px 10px 2px 2px;
   outline: none;
@@ -86,6 +101,7 @@ input, option, select {
   margin: 2px;
   cursor: pointer;
 }
+
 button {
   border-radius: 10px;
   outline: none;
@@ -97,9 +113,11 @@ button {
   font-size: 2rem;
   z-index: 20;
 }
+
 button:hover {
   text-shadow: 0 0 2px #fff;
 }
+
 .error {
   color: red;
   font-style: italic;
@@ -107,13 +125,16 @@ button:hover {
 }
 
 /* Chat Room */
+
 .video-container {
   position: absolute;
   overflow: hidden;
 }
+
 video {
   height: 100%;
 }
+
 .video-remote {
   top: 0;
   left: 0;
@@ -121,6 +142,7 @@ video {
   width: 100%;
   overflow: hidden;
 }
+
 .video-local {
   top: 50px;
   /* left: calc(100% - 150px); */
@@ -132,9 +154,11 @@ video {
   border: 2px solid #555;
   transition: border-style 1s, box-shadow 1.2s, filter .6s, animation 3s;
 }
+
 .video-local:hover {
   box-shadow: 0 0 3px #fff;
 }
+
 .video-local:active {
   border: 4px dotted;
   box-shadow: 0 0 0 5px #fff;
@@ -144,10 +168,16 @@ video {
   animation-delay: .8s;
   animation-iteration-count: infinite;
 }
+
 @keyframes circling-dashes {
-  from {box-shadow: 0 0 0 10px #5e5e5e;}
-  to {box-shadow: 0 0 0 5px #fff;}
+  from {
+    box-shadow: 0 0 0 10px #5e5e5e;
+  }
+  to {
+    box-shadow: 0 0 0 5px #fff;
+  }
 }
+
 .video-connecting {
   position: absolute;
   height: 100%;
@@ -157,160 +187,38 @@ video {
   justify-content: space-evenly;
   align-items: center;
 }
-.video-connecting > * {
+
+.video-connecting>* {
   text-align: center;
   margin: 0 auto;
 }
+
 .chat-nav {
   position: absolute;
   overflow: hidden;
   right: 20px;
   top: 20px;
 }
+
 .next-match {
   border-radius: 10px 0 0 10px;
 }
+
 .settings-button {
   border-radius: 0 10px 10px 0;
   border-left: 1px solid #444;
   padding-left: 15px;
 }
+
 .countdown {
   /* position: absolute;
   bottom: 35%; */
   width: 100%;
 }
-/* 
-.text-chat {
-  position: absolute;
-  overflow: hidden;
-  background-color: transparent;
-  bottom: 6rem;
-  left: 0;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  z-index: 5;
-}
-.text-history {
-  background-image: linear-gradient(#00000000, #000000ff);
-  filter: opacity(.4);
-  margin: 0 auto 4.5rem;
-  max-height: 15rem;
-  overflow-y: scroll;
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  position: relative;
-  z-index: -1;
-  animation-fill-mode: forwards;
-}
-.text-comment {
-  padding: 2px;
-}
-.text-local {
-  text-align: right;
-  align-self: flex-end;
-  max-width: 85%;
-}
-.text-remote {
-  text-align: left;
-  align-self: flex-start;
-  max-width: 85%;
-  color: #e7b6ff;
-  text-shadow: 0 0 1px #000;
-}
-.text-console {
-  width: 100%;
-  background-color: #9932cc;
-  padding: 3px 5px;
-  border-radius: 20px 20px 0 0;
-  display: flex;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  justify-content: center;
-  align-items: center;
-  z-index: 5;
-  animation-fill-mode: forwards;
-}
-.text-console input {
-  
-  width: calc(100% - 35px);
-  background-color: #c38fdd;
-  border: 3px solid #c38fdd;
-  border-radius: 10px 0 0 10px;
-  padding: 2px;
-  font-size: 1.4rem;
-  font-family: inherit;
-}
-.text-console button {
-  border-radius: 0 10px 10px 0;
-  font-size: 1.4rem;
-  text-align: left;
-  padding: .5rem 2rem .5rem .5rem;
-}
 
-.chat-hide *,
-.chat-show * {
-  animation-fill-mode: forwards;
-}
-.chat-hide i {
-  animation-name: face-up;
-  animation-duration: .4s;
-}
-.chat-show i {
-  animation-name: face-down;
-  animation-duration: .4s;
-}
-
-.chat-hide .text-history {
-  animation-name: history-collapse;
-  animation-duration: .6s;
-}
-.chat-show .text-history {
-  animation-name: history-show;
-  animation-duration: .6s;
-}
-@keyframes history-collapse {
-  0%{transform: translateY(0)}
-  10% {transform: translateY(-10px);}
-  40%{transform: translateY(0)}
-  100% {transform: translateY(250px);}
-}
-@keyframes history-show {
-  0% {transform: translateY(250px) scaleY(0);}
-  50% {transform: translateY(250px) scaleY(0);}
-  60%{transform: translateY(0) scaleY(1);}
-  90% {transform: translateY(-10px);}
-  100%{transform: translateY(0);}
-}
-.chat-hide form {
-  animation-name: console-collapse;
-  animation-duration: 1s;
-}
-.chat-show form {
-  animation-name: console-show;
-  animation-duration: .6s;
-}
-@keyframes console-collapse {
-  0%{transform: translateY(0)}
-  50%{transform: translateY(0)}
-  60% {transform: translateY(-5px);}
-  70%{transform: translateY(0)}
-  100% {transform: translateY(80px);}
-}
-@keyframes console-show {
-  0% {transform: translateY(120px);}
-  30%{transform: translateY(0)}
-  40% {transform: translateY(-5px);}
-  50%{transform: translateY(0)}
-  100%{transform: translateY(0)}
-} */
 .skip {
   position: absolute;
-  right:10px;
+  right: 10px;
   top: 10px;
   padding: 5px;
   background-color: rgba(50, 50, 50, .7);
@@ -320,109 +228,58 @@ video {
 svg {
   max-width: 500px;
 }
+
 .female {
   stroke: #ff32be;
 }
+
 .male {
   stroke: #1754ed;
 }
+
 .graph-circle {
   stroke: #666;
   stroke-width: 5;
   r: 15;
 }
+
 circle.female {
   fill: #ff87d888;
 }
+
 circle.male {
-  fill: #7fa3ff88; 
+  fill: #7fa3ff88;
 }
+
 .graph-line {
   stroke-width: 10;
   fill: none;
 }
+
 .graph-tick {
   stroke-width: 8;
   stroke: #555;
   fill: none;
 }
+
 .graph-axis {
   stroke: black;
   fill: none;
 }
+
 .axis-unit {
   fill: #ccc;
   text-anchor: middle;
   font-size: 5rem;
   alignment-baseline: central;
 }
+
 .left-align {
   text-anchor: start;
 }
+
 .axis-label {
   fill: #ccc;
   text-anchor: middle;
   font-size: 4rem;
-}
-
-.settings-wrapper {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
-.blur {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  filter: blur(5px) saturate(20%);
-  background-color: #000000aa;
-}
-.settings {
-  margin: auto;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  height: 400px;
-  width: 300px;
-  max-width: 90%;
-  max-height: 90%;
-  background-color: #313131;
-  z-index: 50;
-  border-radius: 5px;
-  box-shadow: 0 0 10px #000;
-  display: flex;
-  flex-direction: column;
-}
-.settings h3 {
-  margin: 10px 20px;
-  padding: 10px;
-  border-bottom: 2px solid #222;
-}
-.settings-list {
-  padding: 15px;
-  flex-grow: 1;
-}
-.settings-list label {
-  font-size: 1.2rem;
-  padding: 0;
-}
-.settings option, .settings select {
-  font-size: .8rem;
-  padding: 0;
-}
-.settings-actions {
-  display: flex;
-  justify-content: space-evenly;
-  justify-self: flex-end;
-  font-size: 1.2rem;
-}
-.settings-actions button {
-  background-color: #aa32cc;
-  height: 100%;
-  width: 100%;
-  border-radius: 0;
-  padding: 15px;
-  box-shadow: 0 0 4px #555;
 }
