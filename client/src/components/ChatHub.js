@@ -9,7 +9,6 @@ import SocketHelper from '../helpers/socketHelper'
 import Settings from './Settings'
 import InCallNavBar from './InCallNavBar'
 import VideoPlayer from './VideoPlayer'
-import SVGTester from './SVGTester'
 
 // When user presses Share Video, request camera
 // When user presses Next Match, Initialize socket and Find Room
@@ -269,7 +268,6 @@ function ChatHub(props) {
           <button type="button" onClick={() => requestCamera()}>
             Share Video to Begin
           </button>
-          <SVGTester />
 
           {widgetsActive.text ? (
             <TextChat

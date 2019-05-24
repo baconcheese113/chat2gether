@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import ChoiceSlider from './ChoiceSlider'
 import NumberSlider from './NumberSlider'
+import SVGTester from './SVGTester'
 
 const StyledForm = styled.form`
   background-color: ${props => props.theme.colorGreyDark1};
@@ -34,6 +35,24 @@ const SubmitButton = styled.button`
   letter-spacing: 1.5px;
   margin-top: 1rem;
 `
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+  background-color: #111;
+  opacity: 0.9;
+  z-index: 500;
+
+  & > * {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0%;
+    transform: translateY(-50%);
+  }
+`
 
 const UserCreateForm = props => {
   const { error } = props
@@ -43,6 +62,7 @@ const UserCreateForm = props => {
   const [age, setAge] = useState(30)
   const [minAge, setMinAge] = useState(18)
   const [maxAge, setMaxAge] = useState(99)
+  const [isLoading, setIsLoading] = useState(false)
 
   const changeNumbers = newArr => {
     if (newArr.length < 1) {
@@ -59,10 +79,17 @@ const UserCreateForm = props => {
   return (
     <StyledForm
       onSubmit={e => {
-        console.log(e)
+        setIsLoading(true)
         props.handleSubmit(e, { gender: GENDERS[gender], lookingFor: GENDERS[lookingFor], age, minAge, maxAge })
       }}
     >
+      {isLoading ? (
+        <Modal>
+          <SVGTester height="50vh" width="50vh" />
+        </Modal>
+      ) : (
+        ''
+      )}
       <Row>
         <InputLabel>I&apos;m</InputLabel>
         <ChoiceSlider cur={gender} change={setGender} choices={GENDERS} height="1.5rem" width="100%" />

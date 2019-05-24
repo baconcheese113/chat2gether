@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { compose, graphql, withApollo } from 'react-apollo'
 import { CREATE_FEEDBACK } from '../queries/mutations'
+import SVGTester from './SVGTester'
 
 const StyledSettings = styled.div`
   position: absolute;
@@ -93,11 +94,31 @@ const FeedbackForm = styled.form`
   }
 `
 
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+  background-color: #111;
+  opacity: 0.9;
+  z-index: 500;
+
+  & > * {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0%;
+    transform: translateY(-50%);
+  }
+`
+
 function Settings(props) {
   const [devices, setDevices] = useState([])
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [feedbackText, setFeedbackText] = useState('')
   const [feedbackMsg, setFeedbackMsg] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const getDevices = async () => {
     try {
@@ -122,6 +143,7 @@ function Settings(props) {
   }
 
   useEffect(() => {
+    if (!props.stream) return
     const videoId = props.stream.getVideoTracks()[0].getSettings().deviceId
     setSelectedVideo(videoId)
     getDevices()
@@ -134,7 +156,9 @@ function Settings(props) {
   const handleFeedback = async e => {
     e.preventDefault()
     if (feedbackText.length < 1) return 0
+    setIsLoading(true)
     const { data, loading, error } = await props.CREATE_FEEDBACK({ variables: { data: { text: feedbackText } } })
+    setIsLoading(false)
     if (loading || error) console.log(loading, error)
     else {
       setFeedbackText('')
@@ -146,6 +170,13 @@ function Settings(props) {
 
   return (
     <StyledSettings>
+      {isLoading ? (
+        <Modal>
+          <SVGTester height="50vh" width="50vh" />
+        </Modal>
+      ) : (
+        ''
+      )}
       <Blur role="button" tabIndex={0} onClick={() => handleClose()} onKeyUp={() => handleClose()} />
       <Container>
         <Title>Settings</Title>

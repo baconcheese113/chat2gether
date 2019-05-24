@@ -19,8 +19,8 @@ const StyledSVGTester = styled.div`
   border-radius: 50%;
   overflow: hidden;
   display: inline-block;
-  height: 300px;
-  width: 300px;
+  height: ${props => props.height || '100%'};
+  width: ${props => props.width || '100%'};
   margin: 0 auto;
   text-align: center;
   display: flex;
@@ -84,15 +84,13 @@ const SVGTester = props => {
     setIsRotateChat(!isRotateChat)
   }
   useEffect(() => {
-    // const isRC = isRotateChat
-    setTimeout(() => {
-      // console.log(isRC)
-      // setIsRotateChat(!isRC)
+    const timer = setTimeout(() => {
       flipRotateChat()
     }, 2000)
+    return () => clearTimeout(timer)
   })
   return (
-    <StyledSVGTester>
+    <StyledSVGTester {...props}>
       <ClippingCircle>
         <svg viewBox="0 0 100 100" height="120%" width="120%">
           <defs>
