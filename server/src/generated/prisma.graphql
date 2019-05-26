@@ -1,5 +1,5 @@
 # source: http://192.168.99.100:4466/livechat/dev
-# timestamp: Thu May 23 2019 01:08:37 GMT-0600 (Mountain Daylight Time)
+# timestamp: Sun May 26 2019 13:50:36 GMT-0600 (Mountain Daylight Time)
 
 type AggregateFeedback {
   count: Int!
@@ -331,6 +331,8 @@ type Subscription {
 
 type User implements Node {
   id: ID!
+  ip: String
+  fingerprint: String
   gender: GenderType!
   lookingFor: GenderType!
   lastActive: DateTime!
@@ -352,6 +354,8 @@ type UserConnection {
 }
 
 input UserCreateInput {
+  ip: String
+  fingerprint: String
   gender: GenderType!
   lookingFor: GenderType!
   lastActive: DateTime!
@@ -377,6 +381,10 @@ type UserEdge {
 enum UserOrderByInput {
   id_ASC
   id_DESC
+  ip_ASC
+  ip_DESC
+  fingerprint_ASC
+  fingerprint_DESC
   gender_ASC
   gender_DESC
   lookingFor_ASC
@@ -395,6 +403,8 @@ enum UserOrderByInput {
 
 type UserPreviousValues {
   id: ID!
+  ip: String
+  fingerprint: String
   gender: GenderType!
   lookingFor: GenderType!
   lastActive: DateTime!
@@ -453,6 +463,86 @@ input UserScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  ip: String
+
+  """All values that are not equal to given value."""
+  ip_not: String
+
+  """All values that are contained in given list."""
+  ip_in: [String!]
+
+  """All values that are not contained in given list."""
+  ip_not_in: [String!]
+
+  """All values less than the given value."""
+  ip_lt: String
+
+  """All values less than or equal the given value."""
+  ip_lte: String
+
+  """All values greater than the given value."""
+  ip_gt: String
+
+  """All values greater than or equal the given value."""
+  ip_gte: String
+
+  """All values containing the given string."""
+  ip_contains: String
+
+  """All values not containing the given string."""
+  ip_not_contains: String
+
+  """All values starting with the given string."""
+  ip_starts_with: String
+
+  """All values not starting with the given string."""
+  ip_not_starts_with: String
+
+  """All values ending with the given string."""
+  ip_ends_with: String
+
+  """All values not ending with the given string."""
+  ip_not_ends_with: String
+  fingerprint: String
+
+  """All values that are not equal to given value."""
+  fingerprint_not: String
+
+  """All values that are contained in given list."""
+  fingerprint_in: [String!]
+
+  """All values that are not contained in given list."""
+  fingerprint_not_in: [String!]
+
+  """All values less than the given value."""
+  fingerprint_lt: String
+
+  """All values less than or equal the given value."""
+  fingerprint_lte: String
+
+  """All values greater than the given value."""
+  fingerprint_gt: String
+
+  """All values greater than or equal the given value."""
+  fingerprint_gte: String
+
+  """All values containing the given string."""
+  fingerprint_contains: String
+
+  """All values not containing the given string."""
+  fingerprint_not_contains: String
+
+  """All values starting with the given string."""
+  fingerprint_starts_with: String
+
+  """All values not starting with the given string."""
+  fingerprint_not_starts_with: String
+
+  """All values ending with the given string."""
+  fingerprint_ends_with: String
+
+  """All values not ending with the given string."""
+  fingerprint_not_ends_with: String
   gender: GenderType
 
   """All values that are not equal to given value."""
@@ -587,6 +677,8 @@ input UserSubscriptionWhereInput {
 }
 
 input UserUpdateDataInput {
+  ip: String
+  fingerprint: String
   gender: GenderType
   lookingFor: GenderType
   lastActive: DateTime
@@ -596,6 +688,8 @@ input UserUpdateDataInput {
 }
 
 input UserUpdateInput {
+  ip: String
+  fingerprint: String
   gender: GenderType
   lookingFor: GenderType
   lastActive: DateTime
@@ -605,6 +699,8 @@ input UserUpdateInput {
 }
 
 input UserUpdateManyDataInput {
+  ip: String
+  fingerprint: String
   gender: GenderType
   lookingFor: GenderType
   lastActive: DateTime
@@ -625,6 +721,8 @@ input UserUpdateManyInput {
 }
 
 input UserUpdateManyMutationInput {
+  ip: String
+  fingerprint: String
   gender: GenderType
   lookingFor: GenderType
   lastActive: DateTime
@@ -697,6 +795,86 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  ip: String
+
+  """All values that are not equal to given value."""
+  ip_not: String
+
+  """All values that are contained in given list."""
+  ip_in: [String!]
+
+  """All values that are not contained in given list."""
+  ip_not_in: [String!]
+
+  """All values less than the given value."""
+  ip_lt: String
+
+  """All values less than or equal the given value."""
+  ip_lte: String
+
+  """All values greater than the given value."""
+  ip_gt: String
+
+  """All values greater than or equal the given value."""
+  ip_gte: String
+
+  """All values containing the given string."""
+  ip_contains: String
+
+  """All values not containing the given string."""
+  ip_not_contains: String
+
+  """All values starting with the given string."""
+  ip_starts_with: String
+
+  """All values not starting with the given string."""
+  ip_not_starts_with: String
+
+  """All values ending with the given string."""
+  ip_ends_with: String
+
+  """All values not ending with the given string."""
+  ip_not_ends_with: String
+  fingerprint: String
+
+  """All values that are not equal to given value."""
+  fingerprint_not: String
+
+  """All values that are contained in given list."""
+  fingerprint_in: [String!]
+
+  """All values that are not contained in given list."""
+  fingerprint_not_in: [String!]
+
+  """All values less than the given value."""
+  fingerprint_lt: String
+
+  """All values less than or equal the given value."""
+  fingerprint_lte: String
+
+  """All values greater than the given value."""
+  fingerprint_gt: String
+
+  """All values greater than or equal the given value."""
+  fingerprint_gte: String
+
+  """All values containing the given string."""
+  fingerprint_contains: String
+
+  """All values not containing the given string."""
+  fingerprint_not_contains: String
+
+  """All values starting with the given string."""
+  fingerprint_starts_with: String
+
+  """All values not starting with the given string."""
+  fingerprint_not_starts_with: String
+
+  """All values ending with the given string."""
+  fingerprint_ends_with: String
+
+  """All values not ending with the given string."""
+  fingerprint_not_ends_with: String
   gender: GenderType
 
   """All values that are not equal to given value."""

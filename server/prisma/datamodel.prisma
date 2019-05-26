@@ -1,5 +1,7 @@
 type User {
   id: ID! @unique @id
+  ip: String
+  fingerprint: String
   gender: GenderType!
   lookingFor: GenderType!
   lastActive: DateTime!

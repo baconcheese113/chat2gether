@@ -4,6 +4,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import Fingerprint from 'express-fingerprint';
 
 const app = express();
 const httpServer = require('http').createServer(app);
@@ -38,6 +39,17 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(
+  Fingerprint({
+    parameters: [
+      // Defaults
+      Fingerprint.useragent,
+      Fingerprint.acceptHeaders,
+      Fingerprint.geoip
+    ]
+  })
+);
+
 server.applyMiddleware({
   app,
   path: '/graphql',
@@ -49,7 +61,8 @@ server.applyMiddleware({
 
 httpServer.listen(
   {
-    port: process.env.PORT || 4000
+    port: process.env.PORT || 4000,
+    host: '0.0.0.0'
   },
   () => console.log(`Server is running on ${server.graphqlPath}`)
 );

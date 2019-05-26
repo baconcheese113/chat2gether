@@ -1,12 +1,18 @@
 import getUserId from '../utils/getUserId';
 import generateToken from '../utils/generateToken';
-import cookieParser from 'cookie-parser';
 
 export default {
   async createUser(parent, args, { prisma, request }, info) {
     const lastActive = new Date().toISOString();
     const user = await prisma.mutation.createUser({
-      data: { ...args.data, lastActive, isHost: false, isConnected: false }
+      data: {
+        ...args.data,
+        lastActive,
+        isHost: false,
+        isConnected: false,
+        ip: request.req.ip,
+        fingerprint: request.req.fingerprint.hash
+      }
     });
     const token = generateToken(user.id);
     const options = {
