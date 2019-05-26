@@ -27,6 +27,7 @@ function ChatHub(props) {
   const [countdown, setCountdown] = useState(-1)
   const [countdownTimer, setCountdownTimer] = useState(null)
   const [widgetsActive, setWidgetsActive] = useState({ text: false, menu: false, video: false })
+  const [chatSettings, setChatSettings] = useState({ micMute: false, speakerMute: false })
   const [lastReadMsg, setLastReadMsg] = useState(-1)
 
   const room = useRef(null)
@@ -178,12 +179,16 @@ function ChatHub(props) {
   }
 
   // InitializeSocket needs to be called first
-  const requestCamera = async (videoSource = null) => {
+  const requestCamera = async (videoSource = null, audioSource = null) => {
     console.log('request camera')
     const constraints = {
       video: {
         deviceId: videoSource ? { exact: videoSource } : undefined,
         aspectRatio: { min: 0.5, max: 2 },
+        facingMode: 'environment',
+      },
+      audio: {
+        deviceId: audioSource ? { exact: audioSource } : undefined,
       },
     }
     console.log(constraints)
@@ -236,8 +241,13 @@ function ChatHub(props) {
     if (remoteStream) {
       return (
         <React.Fragment>
-          <VideoWindow videoType="remoteVideo" stream={remoteStream} />
-          <VideoWindow videoType="localVideo" stream={localStream} />
+          <VideoWindow videoType="remoteVideo" stream={remoteStream} chatSettings={chatSettings} />
+          <VideoWindow
+            videoType="localVideo"
+            stream={localStream}
+            chatSettings={chatSettings}
+            setChatSettings={setChatSettings}
+          />
           {getChatNav()}
           {widgetsActive.text ? (
             <TextChat
@@ -258,6 +268,9 @@ function ChatHub(props) {
             setWidgetsActive={setWidgetsActive}
             widgetsActive={widgetsActive}
             textNotify={textChat.length - (lastReadMsg + 1)}
+            chatSettings={chatSettings}
+            setChatSettings={setChatSettings}
+            localStream={localStream}
           />
         </React.Fragment>
       )
@@ -287,6 +300,8 @@ function ChatHub(props) {
             resetState={resetState}
             setWidgetsActive={setWidgetsActive}
             widgetsActive={widgetsActive}
+            chatSettings={chatSettings}
+            setChatSettings={setChatSettings}
           />
         </div>
       )
@@ -296,7 +311,12 @@ function ChatHub(props) {
         <div className="video-connecting">
           {getChatNav()}
           <p className="connecting-text">{connectionMsg}</p>
-          <VideoWindow videoType="localVideo" stream={localStream} />
+          <VideoWindow
+            videoType="localVideo"
+            stream={localStream}
+            chatSettings={chatSettings}
+            setChatSettings={setChatSettings}
+          />
           {countdown > 0 ? <div className="countdown">{countdown}</div> : ''}
           <Stats />
           <InCallNavBar nextMatch={nextMatch} resetState={resetState} />
@@ -317,18 +337,4 @@ function ChatHub(props) {
   )
 }
 
-export default compose(
-  graphql(GET_ME, { name: 'GET_ME' }),
-  // graphql(UPDATE_USER, {name: 'UPDATE_USER'}),
-  // graphql(FIND_ROOM, {name: 'FIND_ROOM'}, {
-  //   options: (props) => (
-  //     {variables: {
-  //       where: {
-  //         AND: [
-  //           {isConnected: false},
-  //           {isHost: true},
-  //           {lastActive_gt: "2019-04-01T05:10:24.850Z"},
-  //         ]
-  //       }
-  //   }})}
-)(withApollo(ChatHub))
+export default compose(graphql(GET_ME, { name: 'GET_ME' }))(withApollo(ChatHub))

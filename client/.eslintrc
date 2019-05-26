@@ -27,6 +27,7 @@
     "no-console": "off",
     "no-restricted-syntax": "off",
     "no-undef": "off",
+    "jsx-a11y/media-has-caption": "off",
     "jsx-a11y/label-has-for": [ 2, {
       "components": [ "Label" ],
       "required": {

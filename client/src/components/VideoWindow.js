@@ -1,4 +1,13 @@
 import React from 'react'
+import styled from 'styled-components'
+import ToggleButton from './ToggleButton'
+
+const SettingsBar = styled.div`
+  position: absolute;
+  bottom: 0;
+  transform: scale(0.8);
+  opacity: 0.7;
+`
 
 class VideoWindow extends React.Component {
   constructor(props) {
@@ -43,9 +52,16 @@ class VideoWindow extends React.Component {
   }
 
   getVideo = () => {
-    const { stream, videoType } = this.props
+    const { stream, videoType, chatSettings } = this.props
     if (stream) {
-      return <video ref={this.videoRef} id={videoType} muted autoPlay />
+      return (
+        <video
+          ref={this.videoRef}
+          id={videoType}
+          muted={videoType === 'localVideo' || chatSettings.speakerMute}
+          autoPlay
+        />
+      )
     }
     return ''
   }
@@ -69,7 +85,7 @@ class VideoWindow extends React.Component {
   }
 
   render() {
-    const { videoType } = this.props
+    const { videoType, chatSettings, setChatSettings } = this.props
     const { top, left } = this.state
 
     if (videoType === 'localVideo') {
@@ -81,6 +97,13 @@ class VideoWindow extends React.Component {
           className="video-container video-local"
         >
           {this.getVideo()}
+          <SettingsBar>
+            <ToggleButton
+              iconClass={`fas fa-microphone${chatSettings.micMute ? '-slash' : ''}`}
+              onClick={() => setChatSettings({ ...chatSettings, micMute: !chatSettings.micMute })}
+              active={chatSettings.micMute ? 0 : 1}
+            />
+          </SettingsBar>
         </div>
       )
     }

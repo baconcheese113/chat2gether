@@ -16,7 +16,16 @@ const StyledNavBar = styled.div`
 `
 
 const InCallNavBar = props => {
-  const { widgetsActive, setWidgetsActive, resetState, nextMatch, textNotify } = props
+  const {
+    widgetsActive,
+    setWidgetsActive,
+    resetState,
+    nextMatch,
+    textNotify,
+    chatSettings,
+    setChatSettings,
+    localStream,
+  } = props
   if (!widgetsActive) return ''
 
   const featureToggle = elem => {
@@ -27,6 +36,21 @@ const InCallNavBar = props => {
     <StyledNavBar>
       <ToggleButton iconClass="fas fa-stop" onClick={resetState} />
       <ToggleButton iconClass="fas fa-fast-forward" onClick={nextMatch} />
+
+      <ToggleButton
+        iconClass={`fas fa-microphone${chatSettings.micMute ? '-slash' : ''}`}
+        onClick={() => {
+          const audio = localStream.getAudioTracks()
+          if (audio.length > 0) audio[0].enabled = chatSettings.micMute // enabled is the inverse of mute, but we're inverting that onClick
+          setChatSettings({ ...chatSettings, micMute: !chatSettings.micMute })
+        }}
+        active={chatSettings.micMute ? 0 : 1}
+      />
+      <ToggleButton
+        iconClass={`fas fa-volume${chatSettings.speakerMute ? '-mute' : '-up'}`}
+        onClick={() => setChatSettings({ ...chatSettings, speakerMute: !chatSettings.speakerMute })}
+        active={chatSettings.speakerMute ? 0 : 1}
+      />
       <ToggleButton
         iconClass="fas fa-comment"
         onClick={() => featureToggle('text')}

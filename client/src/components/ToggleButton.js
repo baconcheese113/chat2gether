@@ -3,9 +3,8 @@ import styled from 'styled-components'
 
 const StyledToggleButton = styled.div`
   position: relative;
-  height: 4.5rem;
-  margin: 2px 0.5rem;
-  min-width: 4.5rem;
+  height: 3.5rem;
+  width: 3.5rem;
   color: ${props => props.theme.colorPrimaryLight};
 
   margin-left: ${props => (props.right ? 'auto' : '.5rem')};
@@ -13,6 +12,7 @@ const StyledToggleButton = styled.div`
 const ButtonElem = styled.button`
   height: 100%;
   width: 100%;
+  padding: 0;
   border-radius: 50%;
   /* background-color: ${({ active, theme }) => (active ? theme.colorPrimary : theme.colorGreyDark2)}; */
   background-image: linear-gradient(
