@@ -194,6 +194,7 @@ function ChatHub(props) {
     console.log(constraints)
     // Get stream
     try {
+      console.log(navigator.mediaDevices)
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       // If we have an existing connection
       if (remoteStream && videoSource) {

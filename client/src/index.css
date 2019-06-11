@@ -186,6 +186,7 @@ video {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  font-size: 2rem;
 }
 
 .video-connecting>* {
