@@ -53,7 +53,7 @@ const ChoiceSlider = props => {
   const renderOptions = () => {
     const options = []
     // for (const [index, choice] of choices.entries()) {
-    choices.forEach((choice, index) => {
+    ;['MALE', 'FEMALE', 'OTHER'].forEach((choice, index) => {
       options.push(
         <Option {...props} active={cur === index} onClick={() => change(index)} key={index}>
           {choice}

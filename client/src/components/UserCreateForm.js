@@ -92,7 +92,7 @@ const UserCreateForm = props => {
       )}
       <Row>
         <InputLabel>I&apos;m</InputLabel>
-        <ChoiceSlider cur={gender} change={setGender} choices={GENDERS} height="1.5rem" width="100%" />
+        <ChoiceSlider cur={gender} change={setGender} choices={GENDERS} height="4.5rem" width="100%" />
       </Row>
       <Row>
         <InputLabel>I want to chat with</InputLabel>
