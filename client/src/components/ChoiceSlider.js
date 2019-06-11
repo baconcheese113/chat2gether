@@ -13,7 +13,7 @@ const StyledChoiceSlider = styled.div`
 `
 
 const Option = styled.option`
-  border: none;
+  /* border: none;
   border-radius: 3rem;
   width: 100%;
   padding: ${({ height }) => height || '1rem'} 0;
@@ -25,7 +25,7 @@ const Option = styled.option`
   &:active,
   &:focus {
     background-color: transparent;
-  }
+  } */
 `
 
 const Slider = styled.div`
