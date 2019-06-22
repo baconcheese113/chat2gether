@@ -9,6 +9,7 @@ import SocketHelper from '../helpers/socketHelper'
 import Settings from './Settings'
 import InCallNavBar from './InCallNavBar'
 import VideoPlayer from './VideoPlayer'
+import UserUpdateForm from './UserUpdateForm'
 
 // When user presses Share Video, request camera
 // When user presses Next Match, Initialize socket and Find Room
@@ -319,7 +320,7 @@ function ChatHub(props) {
             setChatSettings={setChatSettings}
           />
           {countdown > 0 ? <div className="countdown">{countdown}</div> : ''}
-          <Stats />
+          <UserUpdateForm user={user} setUser={setUser} />
           <InCallNavBar nextMatch={nextMatch} resetState={resetState} />
         </div>
       </React.Fragment>

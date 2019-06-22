@@ -1,5 +1,5 @@
 # source: http://192.168.99.100:4466/livechat/dev
-# timestamp: Sun May 26 2019 13:50:36 GMT-0600 (Mountain Daylight Time)
+# timestamp: Sat Jun 22 2019 15:23:50 GMT-0600 (Mountain Daylight Time)
 
 type AggregateFeedback {
   count: Int!
@@ -251,6 +251,8 @@ input FeedbackWhereUniqueInput {
 enum GenderType {
   MALE
   FEMALE
+  M2F
+  F2M
 }
 
 """Raw JSON value"""
@@ -334,7 +336,10 @@ type User implements Node {
   ip: String
   fingerprint: String
   gender: GenderType!
-  lookingFor: GenderType!
+  lookingFor: [GenderType!]!
+  age: Int
+  minAge: Int
+  maxAge: Int
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
@@ -357,11 +362,18 @@ input UserCreateInput {
   ip: String
   fingerprint: String
   gender: GenderType!
-  lookingFor: GenderType!
+  age: Int
+  minAge: Int
+  maxAge: Int
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
+  lookingFor: UserCreatelookingForInput
   visited: UserCreateManyInput
+}
+
+input UserCreatelookingForInput {
+  set: [GenderType!]
 }
 
 input UserCreateManyInput {
@@ -387,8 +399,12 @@ enum UserOrderByInput {
   fingerprint_DESC
   gender_ASC
   gender_DESC
-  lookingFor_ASC
-  lookingFor_DESC
+  age_ASC
+  age_DESC
+  minAge_ASC
+  minAge_DESC
+  maxAge_ASC
+  maxAge_DESC
   lastActive_ASC
   lastActive_DESC
   isHost_ASC
@@ -406,7 +422,10 @@ type UserPreviousValues {
   ip: String
   fingerprint: String
   gender: GenderType!
-  lookingFor: GenderType!
+  lookingFor: [GenderType!]!
+  age: Int
+  minAge: Int
+  maxAge: Int
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
@@ -553,16 +572,72 @@ input UserScalarWhereInput {
 
   """All values that are not contained in given list."""
   gender_not_in: [GenderType!]
-  lookingFor: GenderType
+  age: Int
 
   """All values that are not equal to given value."""
-  lookingFor_not: GenderType
+  age_not: Int
 
   """All values that are contained in given list."""
-  lookingFor_in: [GenderType!]
+  age_in: [Int!]
 
   """All values that are not contained in given list."""
-  lookingFor_not_in: [GenderType!]
+  age_not_in: [Int!]
+
+  """All values less than the given value."""
+  age_lt: Int
+
+  """All values less than or equal the given value."""
+  age_lte: Int
+
+  """All values greater than the given value."""
+  age_gt: Int
+
+  """All values greater than or equal the given value."""
+  age_gte: Int
+  minAge: Int
+
+  """All values that are not equal to given value."""
+  minAge_not: Int
+
+  """All values that are contained in given list."""
+  minAge_in: [Int!]
+
+  """All values that are not contained in given list."""
+  minAge_not_in: [Int!]
+
+  """All values less than the given value."""
+  minAge_lt: Int
+
+  """All values less than or equal the given value."""
+  minAge_lte: Int
+
+  """All values greater than the given value."""
+  minAge_gt: Int
+
+  """All values greater than or equal the given value."""
+  minAge_gte: Int
+  maxAge: Int
+
+  """All values that are not equal to given value."""
+  maxAge_not: Int
+
+  """All values that are contained in given list."""
+  maxAge_in: [Int!]
+
+  """All values that are not contained in given list."""
+  maxAge_not_in: [Int!]
+
+  """All values less than the given value."""
+  maxAge_lt: Int
+
+  """All values less than or equal the given value."""
+  maxAge_lte: Int
+
+  """All values greater than the given value."""
+  maxAge_gt: Int
+
+  """All values greater than or equal the given value."""
+  maxAge_gte: Int
   lastActive: DateTime
 
   """All values that are not equal to given value."""
@@ -680,10 +755,13 @@ input UserUpdateDataInput {
   ip: String
   fingerprint: String
   gender: GenderType
-  lookingFor: GenderType
+  age: Int
+  minAge: Int
+  maxAge: Int
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
+  lookingFor: UserUpdatelookingForInput
   visited: UserUpdateManyInput
 }
 
@@ -691,21 +769,31 @@ input UserUpdateInput {
   ip: String
   fingerprint: String
   gender: GenderType
-  lookingFor: GenderType
+  age: Int
+  minAge: Int
+  maxAge: Int
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
+  lookingFor: UserUpdatelookingForInput
   visited: UserUpdateManyInput
+}
+
+input UserUpdatelookingForInput {
+  set: [GenderType!]
 }
 
 input UserUpdateManyDataInput {
   ip: String
   fingerprint: String
   gender: GenderType
-  lookingFor: GenderType
+  age: Int
+  minAge: Int
+  maxAge: Int
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
+  lookingFor: UserUpdatelookingForInput
 }
 
 input UserUpdateManyInput {
@@ -724,10 +812,13 @@ input UserUpdateManyMutationInput {
   ip: String
   fingerprint: String
   gender: GenderType
-  lookingFor: GenderType
+  age: Int
+  minAge: Int
+  maxAge: Int
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
+  lookingFor: UserUpdatelookingForInput
 }
 
 input UserUpdateManyWithWhereNestedInput {
@@ -885,16 +976,72 @@ input UserWhereInput {
 
   """All values that are not contained in given list."""
   gender_not_in: [GenderType!]
-  lookingFor: GenderType
+  age: Int
 
   """All values that are not equal to given value."""
-  lookingFor_not: GenderType
+  age_not: Int
 
   """All values that are contained in given list."""
-  lookingFor_in: [GenderType!]
+  age_in: [Int!]
 
   """All values that are not contained in given list."""
-  lookingFor_not_in: [GenderType!]
+  age_not_in: [Int!]
+
+  """All values less than the given value."""
+  age_lt: Int
+
+  """All values less than or equal the given value."""
+  age_lte: Int
+
+  """All values greater than the given value."""
+  age_gt: Int
+
+  """All values greater than or equal the given value."""
+  age_gte: Int
+  minAge: Int
+
+  """All values that are not equal to given value."""
+  minAge_not: Int
+
+  """All values that are contained in given list."""
+  minAge_in: [Int!]
+
+  """All values that are not contained in given list."""
+  minAge_not_in: [Int!]
+
+  """All values less than the given value."""
+  minAge_lt: Int
+
+  """All values less than or equal the given value."""
+  minAge_lte: Int
+
+  """All values greater than the given value."""
+  minAge_gt: Int
+
+  """All values greater than or equal the given value."""
+  minAge_gte: Int
+  maxAge: Int
+
+  """All values that are not equal to given value."""
+  maxAge_not: Int
+
+  """All values that are contained in given list."""
+  maxAge_in: [Int!]
+
+  """All values that are not contained in given list."""
+  maxAge_not_in: [Int!]
+
+  """All values less than the given value."""
+  maxAge_lt: Int
+
+  """All values less than or equal the given value."""
+  maxAge_lte: Int
+
+  """All values greater than the given value."""
+  maxAge_gt: Int
+
+  """All values greater than or equal the given value."""
+  maxAge_gte: Int
   lastActive: DateTime
 
   """All values that are not equal to given value."""

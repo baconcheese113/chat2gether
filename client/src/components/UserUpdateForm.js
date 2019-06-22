@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import ChoiceSlider from './ChoiceSlider'
+import { graphql, compose, withApollo } from 'react-apollo'
 import NumberSlider from './NumberSlider'
-import SVGTester from './SVGTester'
+import ChoiceSlider from './ChoiceSlider'
+import { UPDATE_USER } from '../queries/mutations'
 
 const StyledForm = styled.form`
+  width: 80%;
+  max-width: 600px;
   background-color: ${props => props.theme.colorGreyDark1};
   padding: 1rem;
   margin: 2rem 1rem;
@@ -34,35 +37,18 @@ const SubmitButton = styled.button`
   font-size: 2rem;
   letter-spacing: 1.5px;
   margin-top: 1rem;
-`
-const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0%;
-  left: 0%;
-  right: 0%;
-  background-color: #111;
-  opacity: 0.9;
-  z-index: 500;
-
-  & > * {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0%;
-    transform: translateY(-50%);
-  }
+  filter: grayscale(${props => (props.hasChanges ? 0 : 1)});
 `
 
-const UserCreateForm = props => {
-  const { error } = props
+const UserUpdateForm = props => {
+  const { user, setUser } = props
   const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
-  const [gender, setGender] = useState(0)
-  const [lookingFor, setLookingFor] = useState(1)
-  const [age, setAge] = useState(30)
-  const [minAge, setMinAge] = useState(18)
-  const [maxAge, setMaxAge] = useState(90)
-  const [isLoading, setIsLoading] = useState(false)
+  const [lookingFor, setLookingFor] = useState(GENDERS.indexOf(user.lookingFor) || 1)
+  const [age, setAge] = useState(user.age || 30)
+  const [minAge, setMinAge] = useState(user.minAge || 18)
+  const [maxAge, setMaxAge] = useState(user.maxAge || 90)
+  const [error, setError] = useState(null)
+  const [hasChanges, setHasChanges] = useState(false)
 
   const changeNumbers = newArr => {
     if (newArr.length < 1) {
@@ -76,40 +62,44 @@ const UserCreateForm = props => {
     }
   }
 
+  const handleSubmit = async e => {
+    e.preventDefault()
+    const changes = {}
+    if (lookingFor !== GENDERS.indexOf(user.lookingFor)) changes.lookingFor = GENDERS[lookingFor]
+
+    setUser({ ...user, ...changes })
+    const { data, newError } = await props.UPDATE_USER({ variables: { data: changes } })
+    if (newError) {
+      setError(newError)
+      return
+    }
+    console.log(data)
+  }
+
+  useEffect(() => {
+    if (lookingFor !== GENDERS.indexOf(user.lookingFor)) {
+      if (!hasChanges) setHasChanges(true)
+    } else if (hasChanges) setHasChanges(false)
+  }, [lookingFor, user])
+
   return (
     <StyledForm
       onSubmit={e => {
-        setIsLoading(true)
-        props.handleSubmit(e, { gender: GENDERS[gender], lookingFor: GENDERS[lookingFor], age, minAge, maxAge })
+        handleSubmit(e)
       }}
     >
-      {isLoading ? (
-        <Modal>
-          <SVGTester height="50vh" width="50vh" />
-        </Modal>
-      ) : (
-        ''
-      )}
-      <Row>
-        <InputLabel>I&apos;m</InputLabel>
-        <ChoiceSlider cur={gender} change={setGender} choices={GENDERS} height="1.5rem" width="100%" />
-      </Row>
       <Row>
         <InputLabel>I want to chat with</InputLabel>
         <ChoiceSlider cur={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
       </Row>
       <Row>
-        <InputLabel>My Age</InputLabel>
-        <NumberSlider numbers={[age]} change={changeNumbers} />
-      </Row>
-      <Row>
-        <InputLabel>Their age</InputLabel>
+        <InputLabel>Their Age</InputLabel>
         <NumberSlider numbers={[minAge, maxAge]} change={changeNumbers} showFill />
       </Row>
       {error}
-      <SubmitButton>Start</SubmitButton>
+      <SubmitButton hasChanges={hasChanges}>Update</SubmitButton>
     </StyledForm>
   )
 }
 
-export default UserCreateForm
+export default compose(graphql(UPDATE_USER, { name: 'UPDATE_USER' }))(withApollo(UserUpdateForm))

@@ -36,8 +36,13 @@ input CreateUserInput {
 }
 type User {
   id: ID!
+  ip: String
+  fingerprint: String
   gender: GenderType!
-  lookingFor: GenderType!
+  lookingFor: [GenderType!]!
+  age: Int!
+  minAge: Int!
+  maxAge: Int!
   lastActive: String!
   isHost: Boolean!
   isConnected: Boolean!
@@ -53,6 +58,8 @@ enum MutationType {
 enum GenderType {
   MALE
   FEMALE
+  M2F
+  F2M
 }
 
 type Feedback {

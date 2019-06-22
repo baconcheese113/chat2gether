@@ -9,7 +9,11 @@ class SocketHelper {
     this.remoteStream = null
     this.isCaller = false
     this.iceServers = {
-      iceServers: [{ url: 'stun:stun.services.mozilla.com' }, { url: 'stun:stun.l.google.com:19302' }],
+      iceServers: [
+        { urls: 'stun:stun.services.mozilla.com' },
+        { urls: 'stun:stun.l.google.com:19302' },
+        /* turn here */
+      ],
     }
     // this.initializeEvents();
   }

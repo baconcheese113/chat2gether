@@ -1,43 +1,125 @@
-import React, { useState, useEffect, useRef } from 'react'
-import styled from 'styled-components'
+import React from 'react'
+import styled, { css } from 'styled-components'
 
 const StyledNumberSlider = styled.div`
-  background-color: ${props => (props.active ? '#fff' : props.theme.colorGreyLight2)};
   width: ${({ width }) => width || '90'}%;
   margin: 3rem auto 1rem;
-  height: 0.5rem;
   position: relative;
   display: flex;
   align-items: center;
-  border-radius: 500rem; /* Arbitrarily high number */
-  box-shadow: ${({ active }) => (active ? '0 0 1rem #fff' : '')};
-  transition: all 0.8s;
+`
+const thumbMixin = css`
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-image: linear-gradient(
+    to bottom right,
+    ${props => props.theme.colorPrimary},
+    ${props => props.theme.colorGreyDark1}
+  );
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
 `
 
-const Slider = styled.div`
+const trackMixin = css`
   background-color: ${props => props.theme.colorPrimary};
+  border-radius: 500rem; /* Arbitrarily high number */
+  height: 3px;
+  display: flex;
+  align-items: center;
+`
+
+const Slider = styled.input`
+  appearance: none;
   background-image: linear-gradient(
     to bottom right,
     ${props => props.theme.colorPrimary},
     ${props => props.theme.colorGreyDark1}
   );
   position: absolute;
-  width: 2rem;
-  height: 2rem;
-  cursor: pointer;
-  border-radius: 50%;
-  z-index: 10;
-  /* top: -50%; */
-  left: calc(${props => props.left}% - 1rem);
-`
+  width: 100%;
+  height: 1rem;
+  box-shadow: ${({ active }) => (active ? '0 0 1rem #fff' : '')};
+  transition: all 0.8s;
 
-const NumberDisplay = styled.p`
-  font-size: 1rem;
-  position: relative;
-  bottom: 2rem;
-  color: ${props => props.theme.colorPrimaryLight};
-  transform: scale(${props => (props.active ? 2.5 : 1)});
-  transition: all 0.4s;
+  &,
+  &::-webkit-slider-runnable-track,
+  &::-webkit-slider-thumb {
+    appearance: none;
+    background: none;
+  }
+
+  &,
+  &::-moz-range-track
+  &::-moz-range-progress,
+  &::-moz-range-thumb {
+    -moz-appearance: none;
+    background: none;
+  }
+
+  &::-moz-range-progress {
+    display: none;
+  }
+
+  /* Number above slider */
+  &::before {
+    content: "${props => props.value}";
+    font-size: 2rem;
+    display: inline-block;
+    text-align: center;
+    position: absolute;
+    bottom: 130%;
+    left: ${props => props.left * 98}%;
+    color: ${props => props.theme.colorPrimaryLight};
+    z-index: 10;
+  }
+    
+  /* Number effect on click */
+  &:active::before {
+    font-size: 4rem;
+  }
+
+  /* First slider is visible */
+  &:nth-child(1)::-webkit-slider-runnable-track {
+    ${trackMixin};
+  }
+  &:nth-child(1)::-moz-range-track {
+    ${trackMixin};
+  }
+  &:nth-child(1)::-ms-track {
+    ${trackMixin};
+  }
+
+  &::-ms-fill-lower,
+  &::-ms-fill-upper {
+    ${trackMixin};
+  }
+
+  /* Thumb for sliders */
+  &::-webkit-slider-thumb {
+    appearance: none;
+    ${thumbMixin};
+  }
+
+  &::-moz-range-thumb {
+    ${thumbMixin};
+  }
+
+  &::-ms-thumb {
+    ${thumbMixin};
+  }
+
+  /* Thumb on first slider should be higher in z order */
+  &:nth-child(1)::-webkit-slider-thumb {
+    z-index: 2;
+  }
+  &:nth-child(1)::-moz-range-thumb {
+    z-index: 2;
+  }
+  &:nth-child(1)::-ms-thumb {
+    z-index: 2;
+  }
 `
 
 const SliderFill = styled.div`
@@ -46,61 +128,16 @@ const SliderFill = styled.div`
   left: ${props => props.left}%;
   right: ${props => props.right}%;
   top: 0;
-  bottom: 0;
+  height: 3px;
+  z-index: 0;
 `
 
 const NumberSlider = props => {
   const { numbers, change, showFill } = props
   const MIN_AGE = 18
-  const MAX_AGE = 99
-  const mainSlider = useRef()
-  const [box, setBox] = useState(null) // set to mainSlider's bounding box
-  const [sliderIndex, setSliderIndex] = useState(-1) // Set above -1 when in use
+  const MAX_AGE = 90
 
-  const numberToPercent = number => {
-    return ((number - MIN_AGE) / (MAX_AGE - MIN_AGE)) * 100
-  }
-  const pixelToNumber = x => {
-    const percent = Math.min(Math.max((x - box.left) / (box.right - box.left), 0), 1)
-    return Math.round((MAX_AGE - MIN_AGE) * percent + MIN_AGE)
-  }
-  useEffect(() => {
-    setBox(mainSlider.current.getBoundingClientRect())
-  }, [])
-
-  const startUpdating = (e, index) => {
-    console.log('starting', e)
-    setSliderIndex(index)
-  }
-  const stopUpdating = () => {
-    console.log('stopped')
-    setSliderIndex(-1)
-  }
-  const followUpdate = e => {
-    if (sliderIndex < 0) {
-      return
-    }
-    let intendedNum = null
-    if (e.targetTouches) {
-      intendedNum = pixelToNumber(e.targetTouches[0].clientX)
-    } else if (e.clientX) {
-      intendedNum = pixelToNumber(e.clientX)
-    } else return
-    // console.log(`${e.targetTouches[0].clientX} out of ${box.left} to ${box.right} making it ${intendedNum} length ${numbers.length} and index ${changingSliderIndex} for ${numbers}`) // looking for 70 and 630
-    if (numbers.length === 1) {
-      change([intendedNum])
-      return
-    }
-    const newArr = [...numbers]
-    if (sliderIndex === 0 && intendedNum >= numbers[1]) {
-      newArr[0] = numbers[1] - 1
-    } else if (sliderIndex === 1 && intendedNum <= numbers[0]) {
-      newArr[1] = numbers[0] + 1
-    } else {
-      newArr[sliderIndex] = intendedNum
-    }
-    change([...newArr])
-  }
+  const getPercentFromValue = val => (val - MIN_AGE) / (MAX_AGE - MIN_AGE)
 
   const renderSliders = () => {
     const sliders = []
@@ -108,35 +145,39 @@ const NumberSlider = props => {
       sliders.push(
         <Slider
           key={index}
-          left={numberToPercent(number)}
-          onTouchStart={e => startUpdating(e, index)}
-          onMouseDown={e => startUpdating(e, index)}
-          onTouchEnd={e => stopUpdating(e, index)}
-          onMouseUp={e => stopUpdating(e, index)}
-          onTouchMove={followUpdate}
-          onMouseMove={followUpdate}
-        >
-          <NumberDisplay active={sliderIndex === index}>{number}</NumberDisplay>
-        </Slider>,
+          type="range"
+          min={MIN_AGE}
+          max={MAX_AGE}
+          value={number}
+          title={number}
+          left={getPercentFromValue(number)}
+          onChange={e => {
+            const newNumbers = [...numbers]
+            if (numbers.length === 1) {
+              newNumbers[index] = e.target.value
+            } else if (index === 0 && e.target.value < newNumbers[1]) {
+              newNumbers[0] = e.target.value
+            } else if (index === 1 && e.target.value > newNumbers[0]) {
+              newNumbers[1] = e.target.value
+            }
+            change(newNumbers)
+          }}
+        />,
       )
     }
     if (showFill && numbers.length > 1) {
       sliders.push(
         <SliderFill
           key={1000}
-          left={numberToPercent(numbers[0])}
-          right={100 - numberToPercent(numbers[numbers.length - 1])}
+          left={getPercentFromValue(numbers[0]) * 100}
+          right={(1 - getPercentFromValue(numbers[1])) * 100}
         />,
       )
     }
     return sliders
   }
 
-  return (
-    <StyledNumberSlider ref={mainSlider} active={sliderIndex > -1}>
-      {renderSliders()}
-    </StyledNumberSlider>
-  )
+  return <StyledNumberSlider>{renderSliders()}</StyledNumberSlider>
 }
 
 export default NumberSlider

@@ -10,15 +10,11 @@ const StyledChoiceSlider = styled.div`
   justify-content: space-around;
   position: relative;
   border: 2px solid ${props => props.theme.colorPrimary};
+  cursor: pointer;
 `
 
-const Option = styled.option`
-  position:absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  /* border: none;
+const Option = styled.span`
+  border: none;
   border-radius: 3rem;
   width: 100%;
   padding: ${({ height }) => height || '1rem'} 0;
@@ -30,7 +26,7 @@ const Option = styled.option`
   &:active,
   &:focus {
     background-color: transparent;
-  } */
+  }
 `
 
 const Slider = styled.div`
@@ -57,14 +53,13 @@ const ChoiceSlider = props => {
 
   const renderOptions = () => {
     const options = []
-    // for (const [index, choice] of choices.entries()) {
-    ;['MALE', 'FEMALE', 'OTHER'].forEach((choice, index) => {
+    for (const [index, choice] of choices.entries()) {
       options.push(
         <Option {...props} active={cur === index} onClick={() => change(index)} key={index}>
           {choice}
         </Option>,
       )
-    })
+    }
     return options
   }
 

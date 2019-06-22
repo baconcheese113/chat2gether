@@ -6,11 +6,55 @@ import { CREATE_USER } from '../queries/mutations'
 import UserCreateForm from './UserCreateForm'
 
 const Main = styled.main`
-  /* height: 90vh;
-  overflow: hidden; */
+  max-width: 60rem;
 `
 
-function UserCreate(props) {
+const BackdropImage = styled.img`
+  position: fixed;
+  background: url('https://images.unsplash.com/photo-1541980162-4d2fd81f420d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80');
+  filter: blur(3px) grayscale(0.9) brightness(50%);
+  transform: translate(-50%, -50%) scale(3);
+  object-position: center;
+  transform-origin: center center;
+  z-index: -1;
+`
+
+const IntroSection = styled.section`
+  display: flex;
+  flex-direction: column;
+`
+const TitleFeature = styled.h3`
+  font-size: 2rem;
+  margin: 2rem auto;
+  text-align: left;
+  width: 70%;
+  color: ${props => props.theme.colorPrimary};
+`
+
+const UserCreateStats = styled.div`
+  display: inline-block;
+  width: 40%;
+  margin: 2rem auto;
+`
+
+const UserCreateNumbers = styled.div`
+  padding: 10px;
+  display: flex;
+  min-width: 150px;
+  justify-content: space-between;
+  background-color: #555;
+  border: 3px dashed #9932cc;
+  border-radius: 20px 0;
+`
+
+const MoreFeatures = styled.button`
+  display: inline-block;
+  font: inherit;
+  font-size: 2rem;
+  color: inherit;
+`
+
+const UserCreate = props => {
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -49,26 +93,30 @@ function UserCreate(props) {
 
   return (
     <Main>
-      <section>
+      <BackdropImage
+        src="https://images.unsplash.com/photo-1541980162-4d2fd81f420d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
+        alt="background stock photo"
+      />
+      <IntroSection>
         <h2>
           Share video, audio or text*
           <br />
           Chat together
         </h2>
-        <h1>
+        <TitleFeature {...props}>
           <i className="far fa-check-square" /> 100% free
-        </h1>
-        <h1>
+        </TitleFeature>
+        <TitleFeature {...props}>
           <i className="far fa-check-square" /> No account required
-        </h1>
-        <div className="user-create-stats">
-          <div className="user-create-numbers">
+        </TitleFeature>
+        <UserCreateStats>
+          <UserCreateNumbers>
             <i className="fas fa-users" />
             <h5>2</h5>
-          </div>
+          </UserCreateNumbers>
           <p>Active users today</p>
-        </div>
-      </section>
+        </UserCreateStats>
+      </IntroSection>
 
       <UserCreateForm isSubmitting={isSubmitting} error={errorMsg} handleSubmit={handleSubmit} />
 
