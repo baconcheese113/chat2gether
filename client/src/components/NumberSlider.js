@@ -154,11 +154,11 @@ const NumberSlider = props => {
           onChange={e => {
             const newNumbers = [...numbers]
             if (numbers.length === 1) {
-              newNumbers[index] = e.target.value
+              newNumbers[index] = parseInt(e.target.value, 10)
             } else if (index === 0 && e.target.value < newNumbers[1]) {
-              newNumbers[0] = e.target.value
+              newNumbers[0] = parseInt(e.target.value, 10)
             } else if (index === 1 && e.target.value > newNumbers[0]) {
-              newNumbers[1] = e.target.value
+              newNumbers[1] = parseInt(e.target.value, 10)
             }
             change(newNumbers)
           }}

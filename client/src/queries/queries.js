@@ -5,7 +5,9 @@ export const GET_USERS = gql`
     users {
       id
       gender
-      lookingFor
+      lookingFor {
+        name
+      }
       updatedAt
       createdAt
     }
@@ -17,7 +19,12 @@ export const FIND_ROOM = gql`
     users(where: $where) {
       id
       gender
-      lookingFor
+      lookingFor {
+        name
+      }
+      age
+      minAge
+      maxAge
       lastActive
       isConnected
       isHost
@@ -30,7 +37,12 @@ export const GET_ME = gql`
     me {
       id
       gender
-      lookingFor
+      lookingFor {
+        name
+      }
+      age
+      minAge
+      maxAge
       lastActive
       isHost
       isConnected

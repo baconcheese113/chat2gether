@@ -78,12 +78,21 @@ const UserCreate = props => {
     e.preventDefault()
     console.log(gender, lookingFor, age, minAge, maxAge)
     if (age && minAge && maxAge) {
+      const lookingForConnect = {
+        connect: lookingFor.map(x => {
+          return { name: x }
+        }),
+      }
       setIsSubmitting(true)
-      const { data, loading, error } = await props.CREATE_USER({ variables: { data: { gender, lookingFor } } })
-      if (error) setErrorMsg(error)
-      else if (loading) setErrorMsg(loading)
+      const { data, loading, error } = await props.CREATE_USER({
+        variables: { data: { gender, lookingFor: lookingForConnect, age, minAge, maxAge } },
+      })
+      if (error) {
+        setErrorMsg(error)
+      } else if (loading) setErrorMsg(loading)
       else {
         const { user } = data.createUser
+        console.log(user)
         props.storeUser(user)
       }
     } else {

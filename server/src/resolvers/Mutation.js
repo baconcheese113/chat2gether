@@ -4,16 +4,27 @@ import generateToken from '../utils/generateToken';
 export default {
   async createUser(parent, args, { prisma, request }, info) {
     const lastActive = new Date().toISOString();
-    const user = await prisma.mutation.createUser({
-      data: {
-        ...args.data,
-        lastActive,
-        isHost: false,
-        isConnected: false,
-        ip: request.req.ip,
-        fingerprint: request.req.fingerprint.hash
+    // const { lookingFor } = args.data;
+    // if (lookingFor) {
+    //   args.data.lookingFor = {
+    //     connect: lookingFor.map(x => {
+    //       return { name: x };
+    //     })
+    //   };
+    // }
+    console.log(args.data, info);
+    const user = await prisma.mutation.createUser(
+      {
+        data: {
+          ...args.data,
+          lastActive,
+          isHost: false,
+          isConnected: false,
+          ip: request.req.ip,
+          fingerprint: request.req.fingerprint.hash
+        }
       }
-    });
+    );
     const token = generateToken(user.id);
     const options = {
       maxAge: 1000 * 60 * 60 * 72 //expires in 3 days
@@ -21,6 +32,7 @@ export default {
       // secure: process.env.NODE_ENV === 'prod', // only transferred over https
       // sameSite: true, // only sent for requests to the same FQDN as the domain in the cookie
     };
+    console.log(user);
     request.res.cookie('token', token, options);
     return { user };
   },

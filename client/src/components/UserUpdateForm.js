@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { graphql, compose, withApollo } from 'react-apollo'
 import NumberSlider from './NumberSlider'
-import ChoiceSlider from './ChoiceSlider'
 import { UPDATE_USER } from '../queries/mutations'
+import ChoicePicker from './ChoicePicker'
 
 const StyledForm = styled.form`
   width: 80%;
@@ -43,7 +43,7 @@ const SubmitButton = styled.button`
 const UserUpdateForm = props => {
   const { user, setUser } = props
   const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
-  const [lookingFor, setLookingFor] = useState(GENDERS.indexOf(user.lookingFor) || 1)
+  const [lookingFor, setLookingFor] = useState(user.lookingFor || [...GENDERS])
   const [age, setAge] = useState(user.age || 30)
   const [minAge, setMinAge] = useState(user.minAge || 18)
   const [maxAge, setMaxAge] = useState(user.maxAge || 90)
@@ -90,7 +90,7 @@ const UserUpdateForm = props => {
     >
       <Row>
         <InputLabel>I want to chat with</InputLabel>
-        <ChoiceSlider cur={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
+        <ChoicePicker selected={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
       </Row>
       <Row>
         <InputLabel>Their Age</InputLabel>

@@ -31,7 +31,6 @@ app.use((req, res, next) => {
   }
   const { token } = req.cookies;
   if (token) {
-    console.log(process.env.PORT);
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     // Put the userId onto the req for future requests to access
     req.userId = userId;

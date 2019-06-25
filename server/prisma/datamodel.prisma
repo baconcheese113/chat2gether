@@ -1,12 +1,12 @@
 type User {
   id: ID! @unique @id
-  ip: String
-  fingerprint: String
+  ip: String!
+  fingerprint: String!
   gender: GenderType!
-  lookingFor: [GenderType!]!
-  age: Int
-  minAge: Int
-  maxAge: Int
+  lookingFor: [GenderObject!]!
+  age: Int!
+  minAge: Int!
+  maxAge: Int!
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
@@ -22,9 +22,15 @@ type Feedback {
   createdAt: DateTime! @createdAt
 }
 
+type GenderObject {
+  id: ID! @unique @id
+  name: String! @unique
+}
+
 enum GenderType {
-  MALE,
-  FEMALE,
-  M2F,
+  MALE
+  FEMALE
+  M2F
   F2M
+  OTHER
 }

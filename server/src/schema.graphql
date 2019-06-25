@@ -30,16 +30,24 @@ type AuthPayload {
   user: User!
 }
 
+type GenderObject {
+  id: ID!
+  name: String!
+}
+
 input CreateUserInput {
   gender: GenderType!
-  lookingFor: GenderType!
+  lookingFor: GenderObjectCreateManyInput
+  age: Int!
+  minAge: Int!
+  maxAge: Int!
 }
 type User {
   id: ID!
   ip: String
   fingerprint: String
   gender: GenderType!
-  lookingFor: [GenderType!]!
+  lookingFor: [GenderObject!]!
   age: Int!
   minAge: Int!
   maxAge: Int!

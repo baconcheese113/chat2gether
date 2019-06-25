@@ -6,8 +6,10 @@ export const CREATE_USER = gql`
       user {
         id
         gender
-        lookingFor
         lastActive
+        age
+        minAge
+        maxAge
       }
     }
   }
@@ -17,7 +19,9 @@ export const UPDATE_USER = gql`
     updateUser(data: $data) {
       id
       gender
-      lookingFor
+      age
+      minAge
+      maxAge
       isHost
       isConnected
     }

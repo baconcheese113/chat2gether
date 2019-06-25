@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import ChoiceSlider from './ChoiceSlider'
 import NumberSlider from './NumberSlider'
 import SVGTester from './SVGTester'
+import ChoicePicker from './ChoicePicker'
 
 const StyledForm = styled.form`
   background-color: ${props => props.theme.colorGreyDark1};
@@ -58,7 +59,7 @@ const UserCreateForm = props => {
   const { error } = props
   const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
   const [gender, setGender] = useState(0)
-  const [lookingFor, setLookingFor] = useState(1)
+  const [lookingFor, setLookingFor] = useState(['MALE', 'FEMALE', 'F2M', 'M2F'])
   const [age, setAge] = useState(30)
   const [minAge, setMinAge] = useState(18)
   const [maxAge, setMaxAge] = useState(90)
@@ -80,7 +81,7 @@ const UserCreateForm = props => {
     <StyledForm
       onSubmit={e => {
         setIsLoading(true)
-        props.handleSubmit(e, { gender: GENDERS[gender], lookingFor: GENDERS[lookingFor], age, minAge, maxAge })
+        props.handleSubmit(e, { gender: GENDERS[gender], lookingFor, age, minAge, maxAge })
       }}
     >
       {isLoading ? (
@@ -96,7 +97,7 @@ const UserCreateForm = props => {
       </Row>
       <Row>
         <InputLabel>I want to chat with</InputLabel>
-        <ChoiceSlider cur={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
+        <ChoicePicker selected={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
       </Row>
       <Row>
         <InputLabel>My Age</InputLabel>

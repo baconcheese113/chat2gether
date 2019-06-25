@@ -80,7 +80,6 @@ const SVGTester = props => {
   const [isRotateChat, setIsRotateChat] = useState(false)
 
   const flipRotateChat = () => {
-    console.log(isRotateChat)
     setIsRotateChat(!isRotateChat)
   }
   useEffect(() => {
