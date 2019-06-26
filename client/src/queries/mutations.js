@@ -3,14 +3,12 @@ import { gql } from 'apollo-boost'
 export const CREATE_USER = gql`
   mutation CreateUserMutation($data: CreateUserInput!) {
     createUser(data: $data) {
-      user {
-        id
-        gender
-        lastActive
-        age
-        minAge
-        maxAge
-      }
+      id
+      gender
+      lastActive
+      age
+      minAge
+      maxAge
     }
   }
 `
@@ -20,6 +18,9 @@ export const UPDATE_USER = gql`
       id
       gender
       age
+      lookingFor {
+        name
+      }
       minAge
       maxAge
       isHost

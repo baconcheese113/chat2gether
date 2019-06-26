@@ -59,7 +59,11 @@ const UserCreateForm = props => {
   const { error } = props
   const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
   const [gender, setGender] = useState(0)
-  const [lookingFor, setLookingFor] = useState(['MALE', 'FEMALE', 'F2M', 'M2F'])
+  const [lookingFor, setLookingFor] = useState(
+    GENDERS.map(x => {
+      return { name: x }
+    }),
+  )
   const [age, setAge] = useState(30)
   const [minAge, setMinAge] = useState(18)
   const [maxAge, setMaxAge] = useState(90)

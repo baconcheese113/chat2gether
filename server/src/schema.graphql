@@ -16,7 +16,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(data: CreateUserInput!): AuthPayload!
+  createUser(data: CreateUserInput!): User!
   deleteUser: User!
   updateUser(data: UserUpdateInput!): User!
   createFeedback(data: FeedbackCreateInput!): Feedback!
@@ -25,10 +25,6 @@ type Mutation {
 # type Subscription {
 
 # }
-
-type AuthPayload {
-  user: User!
-}
 
 type GenderObject {
   id: ID!

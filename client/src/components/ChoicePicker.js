@@ -49,10 +49,10 @@ const ChoicePicker = props => {
 
   const handleClick = (e, choice) => {
     e.preventDefault()
-    if (selected.includes(choice)) {
-      change(selected.filter(val => val !== choice))
+    if (selected.find(obj => obj.name === choice)) {
+      change(selected.filter(obj => obj.name !== choice))
     } else {
-      change([...selected, choice])
+      change([...selected, { name: choice }])
     }
   }
 
@@ -64,7 +64,7 @@ const ChoicePicker = props => {
           {...props}
           optionStart={index === 0}
           optionEnd={index === choices.length - 1}
-          active={selected.includes(choice)}
+          active={selected.find(obj => obj.name === choice)}
           onClick={e => handleClick(e, choice)}
           key={index}
         >

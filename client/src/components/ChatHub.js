@@ -146,7 +146,17 @@ function ChatHub(props) {
       query: FIND_ROOM,
       variables: {
         where: {
-          AND: [{ isConnected: false }, { isHost: true }, { updatedAt_gt: d.toISOString() }],
+          AND: [
+            { isConnected: false },
+            { isHost: true },
+            { updatedAt_gt: d.toISOString() },
+            { gender_in: user.lookingFor.map(x => x.name) },
+            { lookingFor_some: { name: user.gender } },
+            { minAge_lte: user.age },
+            { maxAge_gte: user.age },
+            { age_lte: user.maxAge },
+            { age_gte: user.minAge },
+          ],
         },
       },
     })
@@ -320,7 +330,13 @@ function ChatHub(props) {
             setChatSettings={setChatSettings}
           />
           {countdown > 0 ? <div className="countdown">{countdown}</div> : ''}
-          <UserUpdateForm user={user} setUser={setUser} />
+          <UserUpdateForm
+            user={user}
+            setUser={newUser => {
+              setUser(newUser)
+              if (room.current) nextMatch()
+            }}
+          />
           <InCallNavBar nextMatch={nextMatch} resetState={resetState} />
         </div>
       </React.Fragment>

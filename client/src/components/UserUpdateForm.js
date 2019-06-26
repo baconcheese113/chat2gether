@@ -40,10 +40,21 @@ const SubmitButton = styled.button`
   filter: grayscale(${props => (props.hasChanges ? 0 : 1)});
 `
 
+const stripLF = arr => {
+  return arr.map(x => {
+    return { name: x.name }
+  })
+}
+
 const UserUpdateForm = props => {
   const { user, setUser } = props
   const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
-  const [lookingFor, setLookingFor] = useState(user.lookingFor || [...GENDERS])
+  const [lookingFor, setLookingFor] = useState(
+    stripLF(user.lookingFor) ||
+      GENDERS.map(x => {
+        return { name: x }
+      }),
+  )
   const [age, setAge] = useState(user.age || 30)
   const [minAge, setMinAge] = useState(user.minAge || 18)
   const [maxAge, setMaxAge] = useState(user.maxAge || 90)
@@ -62,25 +73,61 @@ const UserUpdateForm = props => {
     }
   }
 
+  const areEqualArr = (arr1, arr2) => {
+    const temp1 = arr1.map(x => x.name)
+    const temp2 = arr2.map(x => x.name)
+
+    const inTemp2 = temp1.every(x => temp2.includes(x))
+    const inTemp1 = temp2.every(x => temp1.includes(x))
+
+    return inTemp1 && inTemp2
+  }
+
   const handleSubmit = async e => {
     e.preventDefault()
+    console.log(user.lookingFor, lookingFor)
     const changes = {}
-    if (lookingFor !== GENDERS.indexOf(user.lookingFor)) changes.lookingFor = GENDERS[lookingFor]
 
+    // If lookingFor is different, changes should include it
+    if (!areEqualArr(user.lookingFor, lookingFor)) {
+      changes.lookingFor = lookingFor
+    }
+    // If minAge is different, changes should include it
+    if (user.minAge !== minAge) {
+      changes.minAge = minAge
+    }
+    // If maxAge is different, changes should include it
+    if (user.maxAge !== maxAge) {
+      changes.maxAge = maxAge
+    }
+
+    console.log(changes)
+    // If changes is empty return
+    if (Object.entries(changes).length === 0) return
+
+    // setUser based off changes
     setUser({ ...user, ...changes })
+
+    // Now change shape to fit update (if lookingFor was changed)
+    if (user.lookingFor != lookingFor) {
+      changes.lookingFor = {
+        set: stripLF(lookingFor),
+      }
+    }
+
+    // Send request
     const { data, newError } = await props.UPDATE_USER({ variables: { data: changes } })
     if (newError) {
       setError(newError)
-      return
     }
     console.log(data)
   }
 
   useEffect(() => {
-    if (lookingFor !== GENDERS.indexOf(user.lookingFor)) {
+    if (!areEqualArr(user.lookingFor, lookingFor) || minAge != user.minAge || maxAge != user.maxAge) {
       if (!hasChanges) setHasChanges(true)
     } else if (hasChanges) setHasChanges(false)
-  }, [lookingFor, user])
+  }, [lookingFor, user, maxAge, minAge])
 
   return (
     <StyledForm
