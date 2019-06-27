@@ -25,6 +25,9 @@ export const UPDATE_USER = gql`
       maxAge
       isHost
       isConnected
+      visited {
+        id
+      }
     }
   }
 `

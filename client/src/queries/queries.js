@@ -46,6 +46,9 @@ export const GET_ME = gql`
       lastActive
       isHost
       isConnected
+      visited {
+        id
+      }
     }
   }
 `

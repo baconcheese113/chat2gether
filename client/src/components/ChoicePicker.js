@@ -11,7 +11,7 @@ const gradient = css`
 
 const StyledChoicePicker = styled.div`
   border-radius: 500rem; /* Large number to ensure rounded ends */
-  width: ${({ width }) => width || '70%'};
+  width: ${({ width }) => width || '90%'};
   margin: 1rem auto;
   outline: none;
   background-color: ${props => props.theme.colorGreyDark1};
@@ -19,6 +19,7 @@ const StyledChoicePicker = styled.div`
   justify-content: space-around;
   position: relative;
   border: 2px solid ${props => props.theme.colorPrimary};
+  font-size: 1.6rem;
   cursor: pointer;
 `
 

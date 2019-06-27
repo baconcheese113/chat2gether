@@ -64,6 +64,7 @@ function ChatHub(props) {
     const newSocketHelper = new SocketHelper()
     newSocketHelper.localStream = localStream
     newSocketHelper.onNextRoom = async roomId => {
+      console.log('onNextRoom')
       if (roomId) {
         const { error } = await props.client.mutate({
           mutation: UPDATE_USER,
@@ -102,7 +103,7 @@ function ChatHub(props) {
     newSocketHelper.onIdentity = u => {
       console.log(`Chatting with ${u.id}`)
       setOtherUser(u)
-      setConnectionMsg(`Matched with a ${u.gender.toLowerCase()}...`)
+      setConnectionMsg(`Matched with a ${u.gender.toLowerCase()}, ${u.age} years old...`)
       startCountdown()
     }
     newSocketHelper.onIceConnectionStateChange = e => {
@@ -129,12 +130,17 @@ function ChatHub(props) {
   }
 
   const nextMatch = async () => {
+    const data = { isHost: false, isConnected: false }
+    if (otherUser) {
+      data.visited = { connect: [{ id: otherUser.id }] }
+    }
+
     // Clean up any existing room
     resetState()
     setConnectionMsg('Finding a match...')
     const resetUserRes = await props.client.mutate({
       mutation: UPDATE_USER,
-      variables: { data: { isHost: false, isConnected: false } },
+      variables: { data },
     })
     if (resetUserRes.error) console.error(resetUserRes)
 
@@ -147,15 +153,18 @@ function ChatHub(props) {
       variables: {
         where: {
           AND: [
-            { isConnected: false },
-            { isHost: true },
-            { updatedAt_gt: d.toISOString() },
+            { id_not: user.id },
+            { id_not_in: user.visited.map(x => x.id) },
             { gender_in: user.lookingFor.map(x => x.name) },
             { lookingFor_some: { name: user.gender } },
             { minAge_lte: user.age },
             { maxAge_gte: user.age },
             { age_lte: user.maxAge },
             { age_gte: user.minAge },
+            { isHost: true },
+            { isConnected: false },
+            { visited_none: { id: user.id } },
+            { updatedAt_gt: d.toISOString() },
           ],
         },
       },
