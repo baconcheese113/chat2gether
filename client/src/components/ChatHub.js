@@ -103,7 +103,7 @@ function ChatHub(props) {
     newSocketHelper.onIdentity = u => {
       console.log(`Chatting with ${u.id}`)
       setOtherUser(u)
-      setConnectionMsg(`Matched with a ${u.gender.toLowerCase()}, ${u.age} years old...`)
+      setConnectionMsg(`Matched with a ${u.age} year old ${u.gender.toLowerCase()}...`)
       startCountdown()
     }
     newSocketHelper.onIceConnectionStateChange = e => {
@@ -215,19 +215,7 @@ function ChatHub(props) {
     // Get stream
     try {
       console.log(navigator.mediaDevices)
-      // get "getUserMedia" function for other browsers
-      navigator.getUserMedia =
-        navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
-      if (!navigator.getUserMedia) {
-        alert("Your browser isn't currently supported, please try the latest version of Chrome")
-        return
-      }
-      let stream
-      if (navigator.mediaDevices) {
-        stream = await navigator.mediaDevices.getUserMedia(constraints)
-      } else {
-        stream = await navigator.getUserMedia(constraints)
-      }
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
       // If we have an existing connection
       if (remoteStream && videoSource) {
         socketHelper.replaceTrack(stream)
@@ -235,7 +223,7 @@ function ChatHub(props) {
       setLocalStream(stream)
     } catch (e) {
       alert(
-        'Video is required to use this app, please click "allow" when your browser prompts you. If you\'re still receiving this error, please contact me.',
+        'Video is required to use this app, please click "allow" when your browser prompts you. Also make sure you\'re at "https://". If you\'re still receiving this error, please contact me.',
       )
       console.error(e)
     }
