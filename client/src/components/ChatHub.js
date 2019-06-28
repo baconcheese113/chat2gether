@@ -215,14 +215,28 @@ function ChatHub(props) {
     // Get stream
     try {
       console.log(navigator.mediaDevices)
-      const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      // get "getUserMedia" function for other browsers
+      navigator.getUserMedia =
+        navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
+      if (!navigator.getUserMedia) {
+        alert("Your browser isn't currently supported, please try the latest version of Chrome")
+        return
+      }
+      let stream
+      if (navigator.mediaDevices) {
+        stream = await navigator.mediaDevices.getUserMedia(constraints)
+      } else {
+        stream = await navigator.getUserMedia(constraints)
+      }
       // If we have an existing connection
       if (remoteStream && videoSource) {
         socketHelper.replaceTrack(stream)
       }
       setLocalStream(stream)
     } catch (e) {
-      alert('Video is required to use this app')
+      alert(
+        'Video is required to use this app, please click "allow" when your browser prompts you. If you\'re still receiving this error, please contact me.',
+      )
       console.error(e)
     }
   }
