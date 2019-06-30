@@ -126,8 +126,8 @@ video {
   /* left: calc(100% - 150px); */
   /* right: 50px; */
   box-shadow: 0 0 2px #949494;
-  height: 150px;
-  width: 120px;
+  height: 120px;
+  /* width: 120px; */
   border-radius: 20px;
   border: 2px solid #555;
   transition: border-style 1s, box-shadow 1.2s, filter .6s, animation 3s;
