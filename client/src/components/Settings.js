@@ -119,11 +119,27 @@ function Settings(props) {
   const [feedbackText, setFeedbackText] = useState('')
   const [feedbackMsg, setFeedbackMsg] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   const getDevices = async () => {
     try {
       console.log(selectedVideo)
       const allDevices = await navigator.mediaDevices.enumerateDevices()
+      let numCameras = 0
+      allDevices.forEach(val => {
+        if (val.kind === 'videoinput') {
+          const label = val.label.toLowerCase()
+          if (label.includes('back') || label.includes('front')) {
+            numCameras += 1
+          }
+        }
+      })
+      // If numCameras === 2 then this is a mobile phone or tablet
+      // Assumes that mobile devices have camera labels that include 'back' and 'front'
+      console.log(numCameras)
+      if (numCameras === 2) {
+        setIsMobile(true)
+      }
       const vids = allDevices.map((cur, idx) => {
         if (cur.kind === 'videoinput') {
           // console.log(cur.getCapabilities())
@@ -133,7 +149,6 @@ function Settings(props) {
             </option>
           )
         }
-        return null
       })
       setDevices(vids)
     } catch (e) {
@@ -150,9 +165,22 @@ function Settings(props) {
   }, [])
 
   const handleClose = (shouldApply = true) => {
-    if (shouldApply) props.requestCamera(selectedVideo)
+    if (shouldApply) {
+      if (isMobile) {
+        const device = devices.filter(val => val && val.props.value === selectedVideo)[0]
+        console.log(device)
+        if (device.props.children.includes('back')) {
+          props.requestCamera(undefined, undefined, 'environment')
+        } else {
+          props.requestCamera(undefined, undefined, 'portrait')
+        }
+      } else {
+        props.requestCamera(selectedVideo)
+      }
+    }
     props.setWidgetsActive({ ...props.widgetsActive, menu: false })
   }
+
   const handleFeedback = async e => {
     e.preventDefault()
     if (feedbackText.length < 1) return 0
