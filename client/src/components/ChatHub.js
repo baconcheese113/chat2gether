@@ -204,7 +204,7 @@ function ChatHub(props) {
       video: {
         deviceId: videoSource ? { exact: videoSource } : undefined,
         aspectRatio: { min: 0.5, max: 2 },
-        facingMode,
+        facingMode: facingMode ? { exact: facingMode } : undefined,
       },
       audio: {
         deviceId: audioSource ? { exact: audioSource } : undefined,

@@ -172,7 +172,7 @@ function Settings(props) {
         if (device.props.children.includes('back')) {
           props.requestCamera(undefined, undefined, 'environment')
         } else {
-          props.requestCamera(undefined, undefined, 'portrait')
+          props.requestCamera(undefined, undefined, 'user')
         }
       } else {
         props.requestCamera(selectedVideo)
