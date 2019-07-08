@@ -200,7 +200,7 @@ function ChatHub(props) {
   // InitializeSocket needs to be called first
   const requestCamera = async (videoSource = undefined, audioSource = undefined, facingMode = undefined) => {
     console.log('request camera')
-    const constraints = {
+    let constraints = {
       video: {
         deviceId: videoSource ? { exact: videoSource } : undefined,
         aspectRatio: { min: 0.5, max: 2 },
@@ -209,6 +209,9 @@ function ChatHub(props) {
       audio: {
         deviceId: audioSource ? { exact: audioSource } : undefined,
       },
+    }
+    if (facingMode) {
+      constraints = { video: { facingMode }, audio: true }
     }
     console.log(constraints)
     // Get stream

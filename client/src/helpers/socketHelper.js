@@ -184,6 +184,7 @@ class SocketHelper {
   }
 
   async replaceTrack(newStream) {
+    console.log('switching tracks')
     const videoTrack = newStream.getVideoTracks()[0]
     const sender = this.pc.getSenders().find(s => s.track.kind === videoTrack.kind)
     console.log(`found sender: ${sender}`)
