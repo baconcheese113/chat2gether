@@ -198,25 +198,22 @@ function ChatHub(props) {
   }
 
   // InitializeSocket needs to be called first
-  const requestCamera = async (videoSource = undefined, audioSource = undefined, facingMode = undefined) => {
+  const requestCamera = async (videoSource = undefined, audioSource = undefined) => {
     console.log('request camera')
     const constraints = {
       video: {
         deviceId: videoSource ? { exact: videoSource } : undefined,
         aspectRatio: { min: 0.5, max: 2 },
-        facingMode: facingMode ? { exact: facingMode } : undefined,
       },
       audio: {
         deviceId: audioSource ? { exact: audioSource } : undefined,
       },
     }
-    // if (facingMode) {
-    //   constraints = { video: { facingMode: { exact: facingMode } } }
-    // }
     console.log(constraints)
     // Get stream
     try {
       console.log(navigator.mediaDevices)
+      // Have to stop tracks before switching on mobile
       if (localStream) localStream.getVideoTracks().forEach(track => track.stop())
       console.log('tracks stopped')
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
