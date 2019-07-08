@@ -5,13 +5,19 @@ export default {
   async createUser(parent, args, { prisma, request }, info) {
     const lastActive = new Date().toISOString();
     console.log(args.data, info);
+    let ip = request.req.connection.remoteAddress;
+
+    if (request.req.headers && request.req.headers['x-forwarded-for']) {
+      [ip] = request.req.headers['x-forwarded-for'].split(',');
+    }
+    console.log(ip);
     const user = await prisma.mutation.createUser({
       data: {
         ...args.data,
         lastActive,
         isHost: false,
         isConnected: false,
-        ip: request.req.ip,
+        ip,
         fingerprint: request.req.fingerprint.hash
       },
       info
