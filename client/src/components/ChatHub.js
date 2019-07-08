@@ -217,6 +217,8 @@ function ChatHub(props) {
     // Get stream
     try {
       console.log(navigator.mediaDevices)
+      if (localStream) localStream.getVideoTracks().forEach(track => track.stop())
+      console.log('tracks stopped')
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       // If we have an existing connection
       console.log(stream)

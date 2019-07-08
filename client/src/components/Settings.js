@@ -167,7 +167,7 @@ function Settings(props) {
   const handleClose = (shouldApply = true) => {
     if (shouldApply) {
       if (isMobile) {
-        const device = devices.filter(val => val && val.props.value === selectedVideo)[0]
+        const device = devices.find(val => val && val.props.value === selectedVideo)
         console.log(device)
         if (device.props.children.includes('back')) {
           props.requestCamera(undefined, undefined, 'environment')
