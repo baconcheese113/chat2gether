@@ -166,17 +166,17 @@ function Settings(props) {
 
   const handleClose = (shouldApply = true) => {
     if (shouldApply) {
-      if (isMobile) {
-        const device = devices.find(val => val && val.props.value === selectedVideo)
-        console.log(device)
-        if (device.props.children.includes('back')) {
-          props.requestCamera(undefined, undefined, 'environment')
-        } else {
-          props.requestCamera(undefined, undefined, 'user')
-        }
-      } else {
-        props.requestCamera(selectedVideo)
-      }
+      // if (isMobile) {
+      //   const device = devices.find(val => val && val.props.value === selectedVideo)
+      //   console.log(device)
+      //   if (device.props.children.includes('back')) {
+      //     props.requestCamera(undefined, undefined, 'environment')
+      //   } else {
+      //     props.requestCamera(undefined, undefined, 'user')
+      //   }
+      // } else {
+      props.requestCamera(selectedVideo)
+      // }
     }
     props.setWidgetsActive({ ...props.widgetsActive, menu: false })
   }
