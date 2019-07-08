@@ -211,7 +211,7 @@ function ChatHub(props) {
       },
     }
     if (facingMode) {
-      constraints = { video: { facingMode }, audio: true }
+      constraints = { video: { facingMode: { exact: facingMode } } }
     }
     console.log(constraints)
     // Get stream
@@ -219,6 +219,7 @@ function ChatHub(props) {
       console.log(navigator.mediaDevices)
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       // If we have an existing connection
+      console.log(stream)
       if (remoteStream && videoSource) {
         socketHelper.replaceTrack(stream)
       }
