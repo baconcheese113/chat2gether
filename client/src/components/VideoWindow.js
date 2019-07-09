@@ -60,6 +60,8 @@ class VideoWindow extends React.Component {
           id={videoType}
           muted={videoType === 'localVideo' || chatSettings.speakerMute}
           autoPlay
+          playsInline
+          controls={false}
         />
       )
     }

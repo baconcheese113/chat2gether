@@ -104,7 +104,12 @@ class SocketHelper {
       this.pc.oniceconnectionstatechange = e => {
         this.onIceConnectionStateChange(e)
       }
-      this.pc.addStream(this.localStream)
+      if (this.pc.addStream) {
+        this.pc.addStream(this.localStream)
+      } else {
+        // Recommended implementation since addStream is obsolete
+        this.localStream.getTracks().forEach(track => this.pc.addTrack(track, this.localStream))
+      }
     }
 
     // Set Local description and emit offer
