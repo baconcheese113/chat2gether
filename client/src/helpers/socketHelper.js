@@ -92,29 +92,39 @@ class SocketHelper {
         })
       }
     }
+
     // This code is called from ready and offer, once per user
     const createPC = () => {
       this.pc = new RTCPeerConnection(this.iceServers)
       this.pc.onicecandidate = onIceCandidate
       this.pc.ontrack = e => {
-        console.log('ontrack')
+        console.log('ontrack', e)
         this.updateConnectionMsg('Connection complete')
         this.onTrack(e)
       }
       this.pc.oniceconnectionstatechange = e => {
         this.onIceConnectionStateChange(e)
       }
-      if (this.pc.addStream) {
-        this.pc.addStream(this.localStream)
-      } else {
-        // Recommended implementation since addStream is obsolete
-        this.localStream.getTracks().forEach(track => this.pc.addTrack(track, this.localStream))
+      this.pc.onnegotiationneeded = async e => {
+        console.log(`negotiation needed for`, e)
+        // await this.pc.createOffer(setLocalAndOffer, err => console.error(err))
       }
+      // if (this.pc.addStream) {
+      //   console.log('addStream')
+      //   this.pc.addStream(this.localStream)
+      // } else {
+      console.log('addTracks')
+      // Recommended implementation since addStream is obsolete
+      this.localStream.getTracks().forEach(track => {
+        console.log(track)
+        this.pc.addTrack(track, this.localStream)
+      })
+      // }
     }
 
     // Set Local description and emit offer
     const setLocalAndOffer = sessionDesc => {
-      console.log(sessionDesc)
+      console.log('setLocalAndOffer', sessionDesc)
       this.pc.setLocalDescription(sessionDesc)
       this.socket.emit('offer', {
         type: 'offer',
@@ -122,18 +132,25 @@ class SocketHelper {
         roomId: this.roomId,
       })
     }
+
     // Ready called after 2nd user joins, only 1st user executes this
     this.socket.on('ready', async () => {
       if (this.isCaller) {
         console.log('on ready')
         createPC()
-        await this.pc.createOffer(setLocalAndOffer, e => console.error(e))
+        try {
+          // await this.pc.createOffer(setLocalAndOffer, e => console.error(e))
+          const offer = await this.pc.createOffer()
+          setLocalAndOffer(offer)
+        } catch (e) {
+          console.error(e)
+        }
         console.log('local rtc established')
       }
     })
 
     const setLocalAndAnswer = sessionDesc => {
-      console.log(sessionDesc)
+      console.log('setLocalAndAnswer', sessionDesc)
       this.pc.setLocalDescription(sessionDesc)
       this.socket.emit('answer', {
         type: 'answer',
@@ -146,8 +163,18 @@ class SocketHelper {
       if (!this.isCaller) {
         console.log('on offer')
         createPC()
-        await this.pc.setRemoteDescription(new RTCSessionDescription(desc))
-        await this.pc.createAnswer(setLocalAndAnswer, e => console.log(e))
+        console.log(desc)
+        try {
+          await this.pc.setRemoteDescription(new RTCSessionDescription(desc))
+          console.log('set remote description')
+          // await this.pc.createAnswer(setLocalAndAnswer, e => console.log(e))
+          const answer = await this.pc.createAnswer()
+          setLocalAndAnswer(answer)
+        } catch (e) {
+          console.error(e)
+        }
+      } else {
+        console.log('offer received by user 1', desc)
       }
     })
 
@@ -192,7 +219,7 @@ class SocketHelper {
     console.log('switching tracks')
     const videoTrack = newStream.getVideoTracks()[0]
     const sender = this.pc.getSenders().find(s => s.track.kind === videoTrack.kind)
-    console.log(`found sender: ${sender}`)
+    console.log('found sender', sender)
     sender.replaceTrack(videoTrack)
   }
 }

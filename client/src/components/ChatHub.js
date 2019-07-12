@@ -75,7 +75,7 @@ function ChatHub(props) {
       nextMatch()
     }
     newSocketHelper.onTrack = async e => {
-      console.log('ontrack')
+      console.log('ontrack', e)
       const { data, loading, error } = await props.client.mutate({
         mutation: UPDATE_USER,
         variables: { data: { isConnected: true } },
@@ -83,17 +83,18 @@ function ChatHub(props) {
       if (error) console.error(error)
       if (loading) console.log(loading)
       setUser(data.updateUser)
-      console.log(data.updateUser, room.current)
+      console.log('ontrack dump', data.updateUser, room.current, e.streams[0])
       newSocketHelper.emit('identity', { user: data.updateUser, roomId: room.current })
-      // setRemoteStream(e.streams[0]);
+      // setRemoteStream(e.streams[0])
       setTimeout(() => {
-        console.log(otherUser)
+        console.log(`other user is ${otherUser}`)
         let hackyUser = null
+        // Using this hack to get state from inside closure
         setOtherUser(prev => {
           hackyUser = prev
           return prev
         })
-        console.log(hackyUser)
+        console.log(`hackyUser is ${hackyUser}`)
         if (hackyUser) {
           setRemoteStream(e.streams[0])
         }
@@ -214,7 +215,7 @@ function ChatHub(props) {
     try {
       console.log(navigator.mediaDevices)
       // Have to stop tracks before switching on mobile
-      if (localStream) localStream.getVideoTracks().forEach(track => track.stop())
+      if (localStream) localStream.getTracks().forEach(track => track.stop())
       console.log('tracks stopped')
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       // If we have an existing connection
