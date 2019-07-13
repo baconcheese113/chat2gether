@@ -22,14 +22,20 @@ const io = require('socket.io')(httpServer);
 require('./socket')(io);
 io.listen(httpServer);
 
-if (process.env.NODE_ENV === 'production') {
+console.log(`env is ${process.env.IS_UNDER_CONSTRUCTION}`);
+if (process.env.IS_UNDER_CONSTRUCTION === 'true') {
+  app.get('*', (req, res) => {
+    app.use(express.static(path.join(__dirname, '../../client/build')));
+    res.sendFile(path.join(__dirname, '../../client/build', 'construction.html'));
+  });
+} else if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../../client/build')));
   app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
   });
 } else {
   app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/public', 'index.html'));
+    res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
   });
 }
 
