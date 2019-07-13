@@ -321,14 +321,6 @@ function ChatHub(props) {
             ''
           )}
           {widgetsActive.video ? <VideoPlayer /> : ''}
-          <InCallNavBar
-            nextMatch={nextMatch}
-            resetState={resetState}
-            setWidgetsActive={setWidgetsActive}
-            widgetsActive={widgetsActive}
-            chatSettings={chatSettings}
-            setChatSettings={setChatSettings}
-          />
         </div>
       )
     }
@@ -351,7 +343,14 @@ function ChatHub(props) {
               if (room.current) nextMatch()
             }}
           />
-          <InCallNavBar nextMatch={nextMatch} resetState={resetState} />
+          <InCallNavBar
+            nextMatch={nextMatch}
+            resetState={resetState}
+            setWidgetsActive={setWidgetsActive}
+            widgetsActive={widgetsActive}
+            chatSettings={chatSettings}
+            setChatSettings={setChatSettings}
+          />
         </div>
       </React.Fragment>
     )
