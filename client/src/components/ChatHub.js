@@ -226,7 +226,7 @@ function ChatHub(props) {
       setLocalStream(stream)
     } catch (e) {
       alert(
-        'Video is required to use this app, please click "allow" when your browser prompts you. Also make sure you\'re at "https://". If you\'re still receiving this error, please contact me.',
+        "Video is required to use this app. On iOS only Safari can share video. Also make sure you're at 'https://'. If you're still receiving this error, please contact me.",
       )
       console.error(e)
     }
