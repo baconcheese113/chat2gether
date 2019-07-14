@@ -4,9 +4,139 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://fonts.googleapis.com/css?family=Megrim|Simonetta|K2D" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 62.5%;
+      font-family: 'K2D', sans-serif;
+    }
+
+    body {
+      background-image: linear-gradient(#181818, #3f3f3f 30%);
+      height: 100%;
+      width: 100%;
+      color: white;
+      text-align: center;
+    }
+
+    main {
+      max-width: 600rem;
+      overflow: hidden;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 90vh;
+      width: 100%;
+    }
+    section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+    }
+    
+    .title-container {
+      position: relative;
+    }
+    .title-container h1 {
+      color: #9932cc;
+      font-family: 'Megrim', cursive;
+      font-size: 5rem;
+      text-shadow: 0 0 1rem #000;
+      transform-origin: center right;
+    }
+    .swing-start {
+      animation: 1s 2.2s swing-down;
+    }
+    .swing-left {
+      animation: 1s swing-left ease-in-out;
+    }
+    .swing-right {
+      animation: 1s swing-right ease-in-out;
+    }
+    @keyframes swing-down {
+      0% {transform: rotate(0deg);}
+      100% {transform: rotate(-110deg);}
+    }
+    @keyframes swing-left {
+      0% {transform: rotate(-110deg);}
+      100% {transform: rotate(-70deg);}
+    }
+    @keyframes swing-right {
+      0% {transform: rotate(-70deg);}
+      100% {transform: rotate(-110deg);}
+    }
+    .subtitle-container {
+      position: relative;
+    }
+    .subtitle {
+      display: inline-block;
+      animation: .2s 2.2s subtitle-tilt;
+      animation-fill-mode: forwards;
+    }
+    @keyframes subtitle-tilt {
+      0% {transform: rotate(0deg);}
+      100% {transform: rotate(6deg);}
+    }
+    .fa-hard-hat {
+      position: absolute;
+      font-size: 3rem;
+      bottom: 5000%;
+      left: 60%;
+      color: #ffc802;
+      animation: .5s 1.7s hard-hat-fall linear;
+      animation-fill-mode: forwards;
+    }
+    @keyframes hard-hat-fall {
+      0%{bottom: 5000%;}
+      90%{transform: rotate(6deg);}
+      100% {bottom: 20%; transform: rotate(6deg);}
+    }
+    img {
+      position: fixed;
+      filter: blur(3px) grayscale(0.9) brightness(50%);
+      transform: translate(-50%, -50%) scale(3);
+      z-index: -1;
+    }
+
+  </style>
   <title>C2G</title>
 </head>
 <body>
-  <h1>Page Under Construction</h1>
+    <img src="https://images.unsplash.com/photo-1541980162-4d2fd81f420d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80" alt="background stock photo">
+  <main class="main">
+    <section>
+      <div class="title-container">
+        <h1 id="title-swinging" class="swing-start">Chat2Gether</h1>
+        
+      </div>
+      <div class="subtitle-container">
+        <h2 class="subtitle">Under Construction</h2>
+        <i class="fas fa-hard-hat"></i>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const title = document.getElementById('title-swinging')
+    title.addEventListener('animationend', () => {
+      if(title.className === 'swing-start') {
+        title.className = 'swing-left'
+      } else if (title.className === 'swing-left') {
+        title.className = 'swing-right'
+      } else if(title.className === 'swing-right') {
+        title.className = 'swing-left'
+      }
+    })
+  </script>
 </body>
 </html>
