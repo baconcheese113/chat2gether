@@ -19,27 +19,20 @@ class SocketHelper {
   }
 
   // Functions to overwrite
-  // onTrack = (e) => {};
-  // onIceConnectionStateChange = (e) => {};
-  // onComment = e => {};
-  // updateConnectionMsg = connectionMsg => {};
-  // onNextRoom = userId => {};
-  // onDisconnect = () => {};
-  // onIdentity = user => {};
 
-  onTrack = () => {}
+  onTrack = e => e
 
-  onIceConnectionStateChange = () => {}
+  onIceConnectionStateChange = e => e
 
-  onComment = () => {}
+  onComment = e => e
 
-  updateConnectionMsg = () => {}
+  updateConnectionMsg = connectionMsg => connectionMsg
 
-  onNextRoom = () => {}
+  onNextRoom = userId => userId
 
   onDisconnect = () => {}
 
-  onIdentity = () => {}
+  onIdentity = user => user
 
   /**
    * General Flow

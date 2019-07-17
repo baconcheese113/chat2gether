@@ -9,6 +9,7 @@ import Settings from './Settings'
 import InCallNavBar from './InCallNavBar'
 import VideoPlayer from './VideoPlayer'
 import UserUpdateForm from './UserUpdateForm'
+import Countdown from './Countdown'
 
 // When user presses Share Video, request camera
 // When user presses Next Match, Initialize socket and Find Room
@@ -260,7 +261,6 @@ function ChatHub(props) {
       }
       return data.me
     })()
-    // console.log(props)
   }, [])
 
   const renderBackground = () => {
@@ -275,7 +275,7 @@ function ChatHub(props) {
             setChatSettings={setChatSettings}
           />
           {getChatNav()}
-          {widgetsActive.text ? (
+          {widgetsActive.text && (
             <TextChat
               user={user}
               socketHelper={socketHelper}
@@ -284,10 +284,14 @@ function ChatHub(props) {
               lastReadMsg={lastReadMsg}
               setLastReadMsg={setLastReadMsg}
             />
-          ) : (
-            ''
           )}
-          {widgetsActive.video ? <VideoPlayer /> : ''}
+          {widgetsActive.video && <VideoPlayer />}
+          <Countdown
+            socketHelper={socketHelper}
+            setSocketHelper={setSocketHelper}
+            myUserId={user.id}
+            roomId={room.current}
+          />
           <InCallNavBar
             nextMatch={nextMatch}
             resetState={resetState}
@@ -307,20 +311,6 @@ function ChatHub(props) {
           <button type="button" onClick={() => requestCamera()}>
             Share Video to Begin
           </button>
-
-          {widgetsActive.text ? (
-            <TextChat
-              user={user}
-              socketHelper={socketHelper}
-              room={room.current}
-              textChat={textChat}
-              lastReadMsg={lastReadMsg}
-              setLastReadMsg={setLastReadMsg}
-            />
-          ) : (
-            ''
-          )}
-          {widgetsActive.video ? <VideoPlayer /> : ''}
         </div>
       )
     }
@@ -335,7 +325,7 @@ function ChatHub(props) {
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
           />
-          {countdown > 0 ? <div className="countdown">{countdown}</div> : ''}
+          {countdown > 0 && <div className="countdown">{countdown}</div>}
           <UserUpdateForm
             user={user}
             setUser={newUser => {
@@ -359,10 +349,8 @@ function ChatHub(props) {
   return (
     <div>
       {renderBackground()}
-      {widgetsActive.menu ? (
+      {widgetsActive.menu && (
         <Settings setWidgetsActive={setWidgetsActive} requestCamera={requestCamera} stream={localStream} />
-      ) : (
-        ''
       )}
     </div>
   )

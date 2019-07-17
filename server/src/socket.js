@@ -54,11 +54,14 @@ module.exports = io => {
       socket.to(msg.roomId).emit('identity', msg.user);
     });
 
+    socket.on('countdown', msg => {
+      console.log(`${msg.type} from ${msg.userId}`);
+      socket.to(msg.roomId).emit(msg.type, msg.userId);
+    });
+
     // Called when a user closes the connection
     socket.on('disconnecting', reason => {
-      console.log(
-        socket.username + ' disconnected from ' + Object.values(socket.rooms)[1]
-      );
+      console.log(`${socket.username} disconnected from ${Object.values(socket.rooms)[1]}`);
       // socket.to(Object.values(socket.rooms)[1]).emit('disconnect')
       io.in(Object.values(socket.rooms)[1]).emit('disconnect');
       console.log(reason);

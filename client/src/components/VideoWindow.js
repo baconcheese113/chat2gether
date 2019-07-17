@@ -53,11 +53,13 @@ class VideoWindow extends React.Component {
 
   getVideo = () => {
     const { stream, videoType, chatSettings } = this.props
+    const remoteWidth = videoType === 'remoteVideo' ? '100%' : undefined
     if (stream) {
       return (
         <video
           ref={this.videoRef}
           id={videoType}
+          style={{ width: remoteWidth }}
           muted={videoType === 'localVideo' || chatSettings.speakerMute}
           autoPlay
           playsInline
