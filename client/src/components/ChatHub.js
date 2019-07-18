@@ -27,7 +27,8 @@ function ChatHub(props) {
   const [connectionMsg, setConnectionMsg] = useState('Welcome to Chat2Gether')
   const [countdown, setCountdown] = useState(-1)
   const [countdownTimer, setCountdownTimer] = useState(null)
-  const [widgetsActive, setWidgetsActive] = useState({ text: false, menu: false, video: false })
+  const [widgetsActive, setWidgetsActive] = useState({ text: false, menu: false, video: false, countdown: false })
+  const [countdownNotify, setCountdownNotify] = useState(false)
   const [chatSettings, setChatSettings] = useState({ micMute: false, speakerMute: false })
   const [lastReadMsg, setLastReadMsg] = useState(-1)
 
@@ -288,9 +289,11 @@ function ChatHub(props) {
           {widgetsActive.video && <VideoPlayer />}
           <Countdown
             socketHelper={socketHelper}
-            setSocketHelper={setSocketHelper}
             myUserId={user.id}
             roomId={room.current}
+            countdownNotify={countdownNotify}
+            setCountdownNotify={setCountdownNotify}
+            active={widgetsActive.countdown}
           />
           <InCallNavBar
             nextMatch={nextMatch}
@@ -298,6 +301,7 @@ function ChatHub(props) {
             setWidgetsActive={setWidgetsActive}
             widgetsActive={widgetsActive}
             textNotify={textChat.length - (lastReadMsg + 1)}
+            countdownNotify={countdownNotify}
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
             localStream={localStream}
