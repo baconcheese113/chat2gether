@@ -157,6 +157,7 @@ const Countdown = props => {
         setCountdownNotify(true)
       }
       if (myUserId !== userId) {
+        setStatus('started')
         setCountdownText('10')
         startCountdown()
       }
