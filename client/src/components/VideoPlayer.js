@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import HtmlParse from '../helpers/htmlParse'
 
@@ -73,16 +73,29 @@ const SubmitButton = styled.button`
 const VideoPlayer = props => {
   const [currentVideo, setCurrentVideo] = useState(null)
   const [query, setQuery] = useState('')
+  const player = useRef()
 
   const coords = { x: window.innerWidth / 2, y: window.innerHeight / 3 }
 
   useEffect(() => {
     ;(async () => {
-      const parser = new HtmlParse(null)
-      const doc = await parser.parsePage()
-      console.log(doc)
+      // const parser = new HtmlParse(null)
+      // const doc = await parser.parsePage()
+      // console.log(doc)
     })()
   }, [])
+
+  useEffect(() => {
+    if (!player.current) return
+    const iframe = document.querySelector('iframe').documentElement
+    console.log(iframe)
+    // console.log(player.current.shadowRoot)
+    // const playPause = document.querySelector('[class*="playPause"]')
+    // console.log(playPause)
+    // return () => {
+    //   effect
+    // };
+  })
 
   const onSubmit = async e => {
     e.preventDefault()
@@ -103,8 +116,9 @@ const VideoPlayer = props => {
       </SearchBarForm>
       {currentVideo ? (
         <iframe
+          ref={player}
           title="PIP Video Player"
-          src={`https://www.youtube.com/embed/${currentVideo}`}
+          src={HtmlParse.getUrl() + currentVideo}
           frameBorder="0"
           width={window.innerWidth * 0.9 - 10}
           height={window.innerWidth * 0.9 * 0.6}
