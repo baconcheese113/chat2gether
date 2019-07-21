@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import HtmlParse from '../helpers/htmlParse'
+import VideoGrid from './VideoGrid'
 
 const StyledVideoPlayer = styled.div`
   position: absolute;
@@ -41,39 +42,11 @@ const DragHandle = styled.div`
   );
 `
 
-const SearchBarForm = styled.form`
-  display: flex;
-  padding: 0;
-  border: none;
-  border-bottom: 1px solid #555;
-`
-
-const SearchBar = styled.input`
-  display: block;
-  background-color: #aaa;
-  border-radius: 1rem;
-  /* border: none; */
-  width: 82%;
-  margin: 0;
-  margin-right: -5px;
-  font-size: 1.6rem;
-  padding: 0 4px;
-  z-index: 5;
-`
-const SubmitButton = styled.button`
-  display: block;
-  padding: 3px 6px;
-  text-align: center;
-  font-size: 1.8rem;
-  width: 20%;
-  background-color: #222;
-  z-index: 0;
-`
 /** ******************* Component Starts */
 const VideoPlayer = props => {
   const [currentVideo, setCurrentVideo] = useState(null)
-  const [query, setQuery] = useState('')
   const player = useRef()
+  const parser = useRef(new HtmlParse(null))
 
   const coords = { x: window.innerWidth / 2, y: window.innerHeight / 3 }
 
@@ -97,38 +70,37 @@ const VideoPlayer = props => {
     // };
   })
 
-  const onSubmit = async e => {
+  const onSubmit = async (e, newQuery) => {
     e.preventDefault()
-    if (!query) return
-    const newParser = new HtmlParse(query)
-    await newParser.parsePage()
-    setCurrentVideo(newParser.getVideoIdAt(0))
+    if (!newQuery) return
+    parser.current = new HtmlParse(newQuery)
+    await parser.current.parsePage()
+    setCurrentVideo(parser.current.getVideoIdAt(0))
   }
 
   return (
-    <StyledVideoPlayer {...props} coords={coords}>
-      <DragHandle {...props}>
-        <i className="fas fa-grip-horizontal" />
-      </DragHandle>
-      <SearchBarForm onSubmit={onSubmit}>
-        <SearchBar onChange={e => setQuery(e.target.value)} />
-        <SubmitButton>Search</SubmitButton>
-      </SearchBarForm>
-      {currentVideo ? (
-        <iframe
-          ref={player}
-          title="PIP Video Player"
-          src={HtmlParse.getUrl() + currentVideo}
-          frameBorder="0"
-          width={window.innerWidth * 0.9 - 10}
-          height={window.innerWidth * 0.9 * 0.6}
-          scrolling="no"
-          allowFullScreen
-        />
-      ) : (
-        <p>Watch something while you wait!</p>
-      )}
-    </StyledVideoPlayer>
+    <React.Fragment>
+      <VideoGrid videos={parser.current.videos} onSubmit={onSubmit} />
+      <StyledVideoPlayer {...props} coords={coords}>
+        <DragHandle {...props}>
+          <i className="fas fa-grip-horizontal" />
+        </DragHandle>
+        {currentVideo ? (
+          <iframe
+            ref={player}
+            title="PIP Video Player"
+            src={HtmlParse.getUrl() + currentVideo}
+            frameBorder="0"
+            width={window.innerWidth * 0.9 - 10}
+            height={window.innerWidth * 0.9 * 0.6}
+            scrolling="no"
+            allowFullScreen
+          />
+        ) : (
+          <p>Watch something while you wait!</p>
+        )}
+      </StyledVideoPlayer>
+    </React.Fragment>
   )
 }
 
