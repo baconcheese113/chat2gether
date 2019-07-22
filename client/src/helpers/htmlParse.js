@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const YOUTUBE_SEARCH = 'https://www.youtube.com/results?search_query='
+const DOMAIN = 'youtube'
+const SEARCH_URL = `https://www.${DOMAIN}.com/video/search?search=`
 const PROXY_URL = 'https://cors-anywhere.herokuapp.com/'
 
 class HtmlParse {
@@ -8,33 +9,44 @@ class HtmlParse {
   search = null
 
   // List of ids that will be pulled out of the parsed response
-  videoIds = []
+  videos = []
 
   constructor(search) {
     this.search = search
   }
 
+  static getUrl() {
+    return `https://www.${DOMAIN}.com/embed/`
+  }
+
   async parsePage() {
     console.log('parsing page')
-    const response = await axios.get(PROXY_URL + YOUTUBE_SEARCH + this.search) // not needed due to proxy , {headers: {'Access-Control-Allow-Origin': '*'}})
+    const response = await axios.get(PROXY_URL + SEARCH_URL + this.search) // not needed due to proxy , {headers: {'Access-Control-Allow-Origin': '*'}})
     const parser = new DOMParser()
     const doc = parser.parseFromString(response.data, 'text/html')
-    // console.log(response.data)
-    const ulResults = doc.querySelector('#videoListSearchResults')
+    // videoSearchResult on full web, videoListSearchResults on mobile
+    const ulResults = doc.querySelector('#videoSearchResult') || doc.querySelector('#videoListSearchResults')
+    const isMobile = !!doc.querySelector('#videoListSearchResults')
     if (!ulResults) {
       console.log('no results')
       return
     }
     const items = ulResults.getElementsByTagName('li')
     for (const i of items) {
-      this.videoIds.push(i.firstElementChild.firstElementChild.firstElementChild.getAttribute('href').split('=')[1])
+      if (i.hasAttribute('_vkey') || isMobile) {
+        const newItem = {}
+        newItem.id = isMobile
+          ? i
+              .querySelector('.imageLink')
+              .getAttribute('href')
+              .split('=')[1]
+          : i.getAttribute('_vkey')
+        newItem.title = i.querySelector('img').getAttribute('alt')
+        newItem.img = i.querySelector('img').getAttribute('data-thumb_url')
+        newItem.duration = isMobile ? i.querySelector('.time').textContent : i.querySelector('.duration').textContent
+        this.videos.push(newItem)
+      }
     }
-
-    // console.log(doc.querySelector('#videoListSearchResults'))
-  }
-
-  getVideoIdAt(num) {
-    return this.videoIds[num]
   }
 }
 

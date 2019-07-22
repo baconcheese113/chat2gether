@@ -9,19 +9,19 @@ const syncRotate = keyframes`
 `
 
 const StyledVideoPlayer = styled.div`
-  display: flex;
+  display: ${props => (props.active ? 'flex' : 'none')};
   flex-direction: column;
   position: absolute;
   left: 50%;
   top: 10%;
   transform: translateX(-50%);
   min-height: 20rem;
+  min-width: 25rem;
   max-width: 90%;
   border: 2px solid #555;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: #111;
-  transition: all .4s;
-  /* opacity: ${props => (props.active ? 1 : 0)}; */
+  transition: all 0.4s;
 
   & > p {
     display: flex;
@@ -79,8 +79,8 @@ const Notification = styled.span`
   background-color: red;
   font-size: 1.3rem;
   border-radius: 50%;
-  width: 2rem;
-  height: 2rem;
+  width: 1.2rem;
+  height: 1.2rem;
   z-index: 10;
 `
 
@@ -88,12 +88,11 @@ const SYNC = { OFF: 'off', REQUESTED: 'requested', UNACCEPTED: 'unaccepted', ACC
 
 /** ******************* Component Starts */
 const VideoPlayer = props => {
-  const { socketHelper, roomId, userId, active } = props
-  console.log(props)
+  const { socketHelper, roomId, userId, active, videoNotify, setVideoNotify } = props
   const [currentVideo, setCurrentVideo] = useState(null)
   const [isShown, setIsShown] = useState(false)
   const [parser, setParser] = useState(new HtmlParse(null))
-  const [syncState, setSyncState] = useState(SYNC.ACCEPTED)
+  const [syncState, setSyncState] = useState(SYNC.OFF)
   const player = useRef()
 
   const coords = { x: window.innerWidth / 2, y: window.innerHeight / 3 }
@@ -119,35 +118,49 @@ const VideoPlayer = props => {
     }
   }
 
+  const receiveMessage = newMsg => {
+    if (newMsg.userId === userId) return
+    let newState = syncState
+    // Handle other user toggling on sync
+    if (newMsg.type === 'start') {
+      if (syncState === SYNC.OFF) {
+        newState = SYNC.UNACCEPTED
+      } else if (syncState === SYNC.REQUESTED) {
+        newState = SYNC.ACCEPTED
+        socketHelper.emit('videoPlayerSync', { ...msg, videoId: currentVideo, type: 'setVideo' })
+      }
+      // Handle other user toggling off sync
+    } else if (newMsg.type === 'stop') {
+      if (syncState === SYNC.UNACCEPTED) {
+        newState = SYNC.OFF
+      } else if (syncState === SYNC.ACCEPTED) {
+        newState = SYNC.REQUESTED
+      }
+      // Handle other user changing the video
+    } else if (newMsg.type === 'setVideo' && syncState === SYNC.ACCEPTED) {
+      if (!active) setVideoNotify(true)
+      setCurrentVideo(newMsg.videoId)
+    }
+    // Notify if state was changed
+    if (syncState !== newState && !active) {
+      setVideoNotify(true)
+    }
+    setSyncState(newState)
+  }
+
   useEffect(() => {
     if (!socketHelper) return
-    socketHelper.socket.on('videoPlayerSync', newMsg => {
-      if (newMsg.userId === userId) return
-      console.log(newMsg)
-      let newState = syncState
-      if (newMsg.type === 'start') {
-        if (syncState === SYNC.OFF) {
-          newState = SYNC.UNACCEPTED
-        } else if (syncState === SYNC.REQUESTED) {
-          newState = SYNC.ACCEPTED
-        }
-      } else if (newMsg.type === 'stop') {
-        if (syncState === SYNC.UNACCEPTED) {
-          newState = SYNC.OFF
-        } else if (syncState === SYNC.ACCEPTED) {
-          newState = SYNC.REQUESTED
-        }
-      } else if (newMsg.type === 'setVideo' && syncState === SYNC.ACCEPTED) {
-        setCurrentVideo(newMsg.videoId)
-        console.log(`setVideo with ${newMsg.videoId}`)
-      }
-      setSyncState(newState)
-    })
+    socketHelper.socket.on('videoPlayerSync', receiveMessage)
     return () => {
       socketHelper.socket.off('videoPlayerSync')
     }
-  }, [socketHelper])
+  }, [socketHelper, currentVideo, syncState, active])
 
+  useEffect(() => {
+    if (videoNotify && active) {
+      setVideoNotify(false)
+    }
+  }, [active])
   const toggleSync = () => {
     let newState = syncState
     if (syncState === SYNC.OFF) {
@@ -159,21 +172,21 @@ const VideoPlayer = props => {
     } else if (syncState === SYNC.ACCEPTED) {
       newState = SYNC.UNACCEPTED
     }
-    if (syncState === SYNC.OFF || syncState === SYNC.UNACCEPTED) msg.type = 'start'
-    else {
+    setSyncState(newState)
+    if (syncState === SYNC.OFF || syncState === SYNC.UNACCEPTED) {
+      msg.type = 'start'
+    } else {
       msg.type = 'stop'
     }
     socketHelper.emit('videoPlayerSync', msg)
-    setSyncState(newState)
   }
 
   const getColor = React.useMemo(() => {
     if (syncState === SYNC.OFF) return '#fff'
-    // if (syncState === SYNC.ACCEPTED) return props.theme.colorPrimary
+    if (syncState === SYNC.ACCEPTED) return 'green'
     return '#ffe400'
   }, [syncState])
 
-  console.log(HtmlParse.getUrl() + currentVideo)
   return (
     <React.Fragment>
       <VideoGrid
@@ -203,7 +216,7 @@ const VideoPlayer = props => {
             width={window.innerWidth * 0.9 - 10}
             height={window.innerWidth * 0.9 * 0.6}
             scrolling="no"
-            allowFullScreen
+            allowFullScreen={false}
           />
         ) : (
           <p>Watch something while you wait!</p>

@@ -30,6 +30,7 @@ const InCallNavBar = props => {
     nextMatch,
     textNotify,
     countdownNotify,
+    videoNotify,
     chatSettings,
     setChatSettings,
     localStream,
@@ -78,6 +79,7 @@ const InCallNavBar = props => {
           iconClass="fab fa-youtube"
           onClick={() => featureToggle('video')}
           active={widgetsActive.video ? 1 : 0}
+          notification={videoNotify ? 1 : 0}
         />
         {/* <ToggleButton
         iconClass="fas fa-bars"

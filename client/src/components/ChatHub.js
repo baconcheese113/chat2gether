@@ -29,6 +29,7 @@ function ChatHub(props) {
   const [countdownTimer, setCountdownTimer] = useState(null)
   const [widgetsActive, setWidgetsActive] = useState({ text: false, menu: false, video: false, countdown: false })
   const [countdownNotify, setCountdownNotify] = useState(false)
+  const [videoNotify, setVideoNotify] = useState(false)
   const [chatSettings, setChatSettings] = useState({ micMute: false, speakerMute: false })
   const [lastReadMsg, setLastReadMsg] = useState(-1)
 
@@ -291,6 +292,8 @@ function ChatHub(props) {
             userId={user.id}
             roomId={room.current}
             active={widgetsActive.video}
+            videoNotify={videoNotify}
+            setVideoNotify={setVideoNotify}
           />
           <Countdown
             socketHelper={socketHelper}
@@ -307,6 +310,7 @@ function ChatHub(props) {
             widgetsActive={widgetsActive}
             textNotify={textChat.length - (lastReadMsg + 1)}
             countdownNotify={countdownNotify}
+            videoNotify={videoNotify}
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
             localStream={localStream}
