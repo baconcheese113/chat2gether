@@ -286,7 +286,12 @@ function ChatHub(props) {
               setLastReadMsg={setLastReadMsg}
             />
           )}
-          {widgetsActive.video && <VideoPlayer />}
+          <VideoPlayer
+            socketHelper={socketHelper}
+            userId={user.id}
+            roomId={room.current}
+            active={widgetsActive.video}
+          />
           <Countdown
             socketHelper={socketHelper}
             myUserId={user.id}

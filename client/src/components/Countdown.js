@@ -91,11 +91,13 @@ const ScanLine = styled.div`
 `
 
 const Countdown = props => {
-  const { myUserId, socketHelper, roomId, setCountdownNotify, active } = props
+  const { userId, socketHelper, roomId, setCountdownNotify, active } = props
   const [isRequester, setIsRequester] = useState(false)
   const [status, setStatus] = useState('none')
   const [countdownText, setCountdownText] = useState('Countdown')
   const timer = useRef()
+
+  const spacing = 1.6 // parsedText ? (4 / countdownText) * 0.2 + 1 : 1
 
   const resetTimer = () => {
     setStatus('none')
@@ -116,7 +118,7 @@ const Countdown = props => {
       setCountdownText(time)
       timer.current = setTimeout(() => {
         tickTimer(time)
-      }, 1200) // (4 / time) * 200 + 1000)
+      }, spacing * 1000) // (4 / time) * 200 + 1000)
     }
   }
   const startCountdown = () => {
@@ -141,29 +143,29 @@ const Countdown = props => {
   useEffect(() => {
     if (!socketHelper) return
 
-    socketHelper.socket.on('requestedCountdown', userId => {
-      console.log('requested countdown', userId)
+    socketHelper.socket.on('requestedCountdown', senderUserId => {
+      console.log('requested countdown', senderUserId)
       if (!active) {
         setCountdownNotify(true)
       }
-      if (myUserId !== userId) {
+      if (userId !== senderUserId) {
         setStatus('requested')
         setCountdownText('Ready to Countdown?')
       }
     })
-    socketHelper.socket.on('startedCountdown', userId => {
-      console.log('started countdown', userId)
+    socketHelper.socket.on('startedCountdown', senderUserId => {
+      console.log('started countdown', senderUserId)
       if (!active) {
         setCountdownNotify(true)
       }
-      if (myUserId !== userId) {
+      if (userId !== senderUserId) {
         setStatus('started')
         setCountdownText('10')
         startCountdown()
       }
     })
-    socketHelper.socket.on('cancelledCountdown', userId => {
-      console.log('cancelled countdown', userId)
+    socketHelper.socket.on('cancelledCountdown', senderUserId => {
+      console.log('cancelled countdown', senderUserId)
       setCountdownNotify(false)
       if (timer && timer.current) {
         clearTimeout(timer.current)
@@ -182,7 +184,7 @@ const Countdown = props => {
 
   const msg = {
     roomId,
-    userId: myUserId,
+    userId,
   }
 
   const handleRequest = () => {
@@ -210,8 +212,6 @@ const Countdown = props => {
     timer.current = setTimeout(() => resetTimer(), 3000)
   }
 
-  const parsedText = parseInt(countdownText, 10)
-  const spacing = 1.2 // parsedText ? (4 / countdownText) * 0.2 + 1 : 1
   return (
     <StyledCountdown active={active}>
       <TextContainer>

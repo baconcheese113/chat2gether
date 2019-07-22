@@ -3,19 +3,16 @@ import styled from 'styled-components'
 
 const StyledVideoGrid = styled.div`
   position: absolute;
-  /* top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0; */
   width: 100%;
   height: 100%;
   z-index: 100;
+  display: ${props => (props.isShown ? 'block' : 'none')};
 `
 const Backdrop = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
 `
 const Modal = styled.div`
   position: absolute;
@@ -24,14 +21,21 @@ const Modal = styled.div`
   left: 5%;
   right: 5%;
   background-color: rgba(0, 0, 0, 0.8);
+  overflow-y: hidden;
+  max-width: 90rem;
+  margin: 0 auto;
+  border-radius: 0 0 2rem 2rem;
+`
+const CloseButton = styled.button`
+  position: absolute;
+  top: 5%;
+  right: 5%;
 `
 const ScrollList = styled.div`
-  /* position: absolute; */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   gap: 1rem;
-  height: 40vh;
-  /* grid-auto-rows: 10rem; */
+  height: 93%;
   overflow-y: auto;
 `
 const Result = styled.figure`
@@ -39,7 +43,11 @@ const Result = styled.figure`
   overflow: hidden;
   position: relative;
   min-height: 15rem;
-  background-color: red;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `
 const ResultTitle = styled.figcaption`
   position: absolute;
@@ -47,7 +55,7 @@ const ResultTitle = styled.figcaption`
   left: 0;
   right: 0;
   font-size: 1.6rem;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
 `
 const ResultImage = styled.img`
   height: 100%;
@@ -69,7 +77,6 @@ const SearchBar = styled.input`
   display: block;
   background-color: #aaa;
   border-radius: 1rem;
-  /* border: none; */
   width: 82%;
   margin: 0;
   margin-right: -5px;
@@ -88,14 +95,32 @@ const SubmitButton = styled.button`
 `
 
 const VideoGrid = props => {
-  const { videos, onSubmit } = props
+  const { videos, onSubmitSearch, isShown, setIsShown, selectVideo } = props
   const [query, setQuery] = useState('')
+  const [submittedQuery, setSubmittedQuery] = useState('')
+
+  const handleClose = e => {
+    setIsShown(false)
+  }
+
+  const handleSelectVideo = id => {
+    selectVideo(id)
+    setIsShown(false)
+  }
+
+  const handleSearchSubmit = e => {
+    e.preventDefault()
+    if (query.length < 1 || query === submittedQuery) return
+    onSubmitSearch(query)
+    setSubmittedQuery(query)
+  }
 
   return (
-    <StyledVideoGrid>
-      <Backdrop />
+    <StyledVideoGrid isShown={isShown}>
+      <Backdrop onClick={handleClose} />
+      <CloseButton onClick={handleClose}>X</CloseButton>
       <Modal>
-        <SearchBarForm onSubmit={e => onSubmit(e, query)}>
+        <SearchBarForm onSubmit={handleSearchSubmit}>
           <SearchBar value={query} onChange={e => setQuery(e.target.value)} />
           <SubmitButton>Search</SubmitButton>
         </SearchBarForm>
@@ -103,7 +128,7 @@ const VideoGrid = props => {
           {videos &&
             videos.map(video => {
               return (
-                <Result>
+                <Result key={video.id} onClick={() => handleSelectVideo(video.id)}>
                   <ResultTitle>{video.title}</ResultTitle>
                   <ResultImage src={video.img} alt={video.title} />
                   <ResultDuration>{video.duration}</ResultDuration>

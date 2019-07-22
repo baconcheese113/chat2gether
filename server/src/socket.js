@@ -59,6 +59,11 @@ module.exports = io => {
       socket.to(msg.roomId).emit(msg.type, msg.userId);
     });
 
+    socket.on('videoPlayerSync', msg => {
+      console.log(`${msg.type} from ${msg.userId}`);
+      socket.to(msg.roomId).emit('videoPlayerSync', msg);
+    });
+
     // Called when a user closes the connection
     socket.on('disconnecting', reason => {
       console.log(`${socket.username} disconnected from ${Object.values(socket.rooms)[1]}`);
