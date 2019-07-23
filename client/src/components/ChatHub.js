@@ -227,6 +227,12 @@ function ChatHub(props) {
         socketHelper.replaceTrack(stream)
       }
       setLocalStream(stream)
+      const audio = stream.getAudioTracks()
+      console.log(audio)
+      if (audio.length > 0) {
+        audio[0].enabled = !chatSettings.micMute
+        console.log(`audio enabled is now ${audio[0].enabled}`)
+      }
     } catch (e) {
       alert(
         "Video is required to use this app. On iOS only Safari can share video. Also make sure you're at 'https://'. If you're still receiving this error, please contact me.",
@@ -314,6 +320,7 @@ function ChatHub(props) {
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
             localStream={localStream}
+            buttons={{ stop: true, mic: true, speaker: true, countdown: true, chat: true, video: true }}
           />
         </React.Fragment>
       )
@@ -353,6 +360,8 @@ function ChatHub(props) {
             widgetsActive={widgetsActive}
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
+            localStream={localStream}
+            buttons={{ stop: true, mic: true, speaker: true }}
           />
         </div>
       </React.Fragment>

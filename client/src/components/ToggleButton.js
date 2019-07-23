@@ -6,8 +6,7 @@ const StyledToggleButton = styled.div`
   height: 3.5rem;
   width: 3.5rem;
   color: ${props => props.theme.colorPrimaryLight};
-
-  margin-left: ${props => (props.right ? 'auto' : '.5rem')};
+  margin-left: '.5rem';
 `
 const ButtonElem = styled.button`
   height: 100%;
@@ -44,9 +43,9 @@ const ToggleButton = props => {
       <StyledToggleButton {...props}>
         <ButtonElem onClick={onClick} {...props}>
           {title}
-          {iconClass ? <i className={iconClass} /> : ''}
+          {iconClass && <i className={iconClass} />}
         </ButtonElem>
-        {notification > 0 ? <Notification>{notification}</Notification> : ''}
+        {notification > 0 && <Notification>{notification}</Notification>}
       </StyledToggleButton>
     </React.Fragment>
   )
