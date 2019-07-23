@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const DOMAIN = 'youtube'
+const DOMAIN = process.env.REACT_APP_SEARCH_DOMAIN || 'youtube'
 const SEARCH_URL = `https://www.${DOMAIN}.com/video/search?search=`
 const PROXY_URL = 'https://cors-anywhere.herokuapp.com/'
 
