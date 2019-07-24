@@ -154,7 +154,7 @@ function ChatHub(props) {
     const d = new Date()
     d.setMinutes(d.getMinutes() - 1)
     const tempSocketHelper = await initializeSocket()
-    tempSocketHelper.leaveRooms()
+    // tempSocketHelper.leaveRooms()
     const compatibleHosts = await props.client.query({
       query: FIND_ROOM,
       variables: {
@@ -198,9 +198,6 @@ function ChatHub(props) {
       room.current = updatedUser.id
       console.log(`FUCK WE JOINING ${updatedUser.id} BRUH`)
       tempSocketHelper.joinRoom(updatedUser.id)
-      probeTimer.current = setTimeout(() => {
-        nextMatch()
-      }, 61000)
     } else {
       // Join a host
       room.current = hosts[0].id
@@ -208,6 +205,16 @@ function ChatHub(props) {
       tempSocketHelper.joinRoom(hosts[0].id)
     }
   }
+
+  useEffect(() => {
+    if (connectionMsg === 'Waiting for matches...') {
+      console.log('effect cleared')
+      clearTimeout(probeTimer.current)
+      probeTimer.current = setTimeout(() => {
+        nextMatch()
+      }, 60000)
+    }
+  }, [connectionMsg])
 
   // InitializeSocket needs to be called first
   const requestCamera = async (videoSource = undefined, audioSource = undefined) => {

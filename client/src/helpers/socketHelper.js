@@ -194,7 +194,7 @@ class SocketHelper {
   }
 
   leaveRooms() {
-    this.socket.disconnect(true)
+    this.socket.disconnect()
   }
 
   // Helper function for creating and joining a specific room
