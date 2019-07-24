@@ -33,6 +33,7 @@ function ChatHub(props) {
   const [chatSettings, setChatSettings] = useState({ micMute: false, speakerMute: false })
   const [lastReadMsg, setLastReadMsg] = useState(-1)
 
+  const probeTimer = useRef(null)
   const room = useRef(null)
 
   const startCountdown = () => {
@@ -54,6 +55,7 @@ function ChatHub(props) {
     console.log('reset state')
     // Clean up any existing room
     window.clearInterval(countdownTimer)
+    clearTimeout(probeTimer.current)
     setRemoteStream(null)
     setTextChat([])
     room.current = null
@@ -79,6 +81,7 @@ function ChatHub(props) {
     }
     newSocketHelper.onTrack = async e => {
       console.log('ontrack', e)
+      clearTimeout(probeTimer.current)
       const { data, loading, error } = await props.client.mutate({
         mutation: UPDATE_USER,
         variables: { data: { isConnected: true } },
@@ -151,6 +154,7 @@ function ChatHub(props) {
     const d = new Date()
     d.setMinutes(d.getMinutes() - 1)
     const tempSocketHelper = await initializeSocket()
+    tempSocketHelper.leaveRooms()
     const compatibleHosts = await props.client.query({
       query: FIND_ROOM,
       variables: {
@@ -192,7 +196,11 @@ function ChatHub(props) {
       console.log(updatedUser)
       setUser(updatedUser)
       room.current = updatedUser.id
+      console.log(`FUCK WE JOINING ${updatedUser.id} BRUH`)
       tempSocketHelper.joinRoom(updatedUser.id)
+      probeTimer.current = setTimeout(() => {
+        nextMatch()
+      }, 61000)
     } else {
       // Join a host
       room.current = hosts[0].id
