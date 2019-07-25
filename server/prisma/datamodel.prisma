@@ -7,6 +7,8 @@ type User {
   age: Int!
   minAge: Int!
   maxAge: Int!
+  audioPref: AudioPrefType!
+  accAudioPrefs: [AudioPrefObject!]!
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
@@ -24,7 +26,7 @@ type Feedback {
 
 type GenderObject {
   id: ID! @unique @id
-  name: String! @unique
+  name: GenderType! @unique
 }
 
 enum GenderType {
@@ -33,4 +35,16 @@ enum GenderType {
   M2F
   F2M
   OTHER
+}
+
+type AudioPrefObject {
+  id: ID! @unique @id
+  name: AudioPrefType! @unique
+}
+
+enum AudioPrefType {
+  NO_AUDIO
+  MOANS
+  CONVERSATION
+  ROLEPLAY
 }

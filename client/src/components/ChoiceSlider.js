@@ -56,7 +56,7 @@ const ChoiceSlider = props => {
     for (const [index, choice] of choices.entries()) {
       options.push(
         <Option {...props} active={cur === index} onClick={() => change(index)} key={index}>
-          {choice}
+          {choice.replace(/_/g, ' ')}
         </Option>,
       )
     }

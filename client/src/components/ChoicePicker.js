@@ -19,7 +19,7 @@ const StyledChoicePicker = styled.div`
   justify-content: space-around;
   position: relative;
   border: 2px solid ${props => props.theme.colorPrimary};
-  font-size: 1.6rem;
+  font-size: ${props => props.fontSize || '1.6rem'};
   cursor: pointer;
 `
 
@@ -69,14 +69,14 @@ const ChoicePicker = props => {
           onClick={e => handleClick(e, choice)}
           key={index}
         >
-          {choice}
+          {choice.replace(/_/g, " ")}
         </Option>,
       )
     }
     return options
   }
 
-  return <StyledChoicePicker>{renderOptions()}</StyledChoicePicker>
+  return <StyledChoicePicker {...props}>{renderOptions()}</StyledChoicePicker>
 }
 
 export default ChoicePicker

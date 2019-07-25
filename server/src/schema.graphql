@@ -28,7 +28,11 @@ type Mutation {
 
 type GenderObject {
   id: ID!
-  name: String!
+  name: GenderType!
+}
+type AudioPrefObject {
+  id: ID!
+  name: AudioPrefType!
 }
 
 input CreateUserInput {
@@ -37,6 +41,8 @@ input CreateUserInput {
   age: Int!
   minAge: Int!
   maxAge: Int!
+  audioPref: AudioPrefType!
+  accAudioPrefs: AudioPrefObjectCreateManyInput
 }
 type User {
   id: ID!
@@ -47,6 +53,8 @@ type User {
   age: Int!
   minAge: Int!
   maxAge: Int!
+  audioPref: AudioPrefType!
+  accAudioPrefs: [AudioPrefObject!]!
   lastActive: String!
   isHost: Boolean!
   isConnected: Boolean!
@@ -64,6 +72,12 @@ enum GenderType {
   FEMALE
   M2F
   F2M
+}
+enum AudioPrefType {
+  NO_AUDIO
+  MOANS
+  CONVERSATION
+  ROLEPLAY
 }
 
 type Feedback {

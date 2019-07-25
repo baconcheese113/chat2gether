@@ -9,6 +9,7 @@ export const CREATE_USER = gql`
       age
       minAge
       maxAge
+      audioPref
     }
   }
 `
@@ -23,6 +24,10 @@ export const UPDATE_USER = gql`
       }
       minAge
       maxAge
+      audioPref
+      accAudioPrefs {
+        name
+      }
       isHost
       isConnected
       visited {

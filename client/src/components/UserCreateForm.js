@@ -55,9 +55,11 @@ const Modal = styled.div`
   }
 `
 
+const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
+const AUDIO_PREFS = ['NO_AUDIO', 'MOANS', 'CONVERSATION', 'ROLEPLAY']
+
 const UserCreateForm = props => {
-  const { error } = props
-  const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
+  const { error, handleSubmit } = props
   const [gender, setGender] = useState(0)
   const [lookingFor, setLookingFor] = useState(
     GENDERS.map(x => {
@@ -67,6 +69,12 @@ const UserCreateForm = props => {
   const [age, setAge] = useState(30)
   const [minAge, setMinAge] = useState(18)
   const [maxAge, setMaxAge] = useState(90)
+  const [audioPref, setAudioPref] = useState(0)
+  const [accAudioPrefs, setAccAudioPrefs] = useState(
+    AUDIO_PREFS.map(x => {
+      return { name: x }
+    }),
+  )
   const [isLoading, setIsLoading] = useState(false)
 
   const changeNumbers = newArr => {
@@ -81,19 +89,25 @@ const UserCreateForm = props => {
     }
   }
 
+  const onSubmit = e => {
+    setIsLoading(true)
+    handleSubmit(e, {
+      gender: GENDERS[gender],
+      lookingFor,
+      age,
+      minAge,
+      maxAge,
+      audioPref: AUDIO_PREFS[audioPref],
+      accAudioPrefs,
+    })
+  }
+
   return (
-    <StyledForm
-      onSubmit={e => {
-        setIsLoading(true)
-        props.handleSubmit(e, { gender: GENDERS[gender], lookingFor, age, minAge, maxAge })
-      }}
-    >
-      {isLoading ? (
+    <StyledForm onSubmit={onSubmit}>
+      {isLoading && (
         <Modal>
           <SVGTester height="50vh" width="50vh" />
         </Modal>
-      ) : (
-        ''
       )}
       <Row>
         <InputLabel>I&apos;m</InputLabel>
@@ -110,6 +124,21 @@ const UserCreateForm = props => {
       <Row>
         <InputLabel>Their age</InputLabel>
         <NumberSlider numbers={[minAge, maxAge]} change={changeNumbers} showFill />
+      </Row>
+      <Row>
+        <InputLabel>My Audio Preference</InputLabel>
+        <ChoiceSlider cur={audioPref} change={setAudioPref} choices={AUDIO_PREFS} height="1.5rem" width="100%" />
+      </Row>
+      <Row>
+        <InputLabel>Preferences I&apos;ll do</InputLabel>
+        <ChoicePicker
+          selected={accAudioPrefs}
+          change={setAccAudioPrefs}
+          choices={AUDIO_PREFS}
+          height="1.5rem"
+          width="100%"
+          fontSize="1.1rem"
+        />
       </Row>
       {error}
       <SubmitButton>Start</SubmitButton>

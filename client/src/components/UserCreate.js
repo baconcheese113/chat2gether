@@ -74,13 +74,23 @@ const UserCreate = props => {
     fetchData()
   }, [])
 
-  const handleSubmit = async (e, { gender, lookingFor, age, minAge, maxAge }) => {
+  const handleSubmit = async (e, { gender, lookingFor, age, minAge, maxAge, audioPref, accAudioPrefs }) => {
     e.preventDefault()
-    console.log(gender, lookingFor, age, minAge, maxAge)
+    console.log(gender, lookingFor, age, minAge, maxAge, audioPref, accAudioPrefs)
     if (age && minAge && maxAge) {
       setIsSubmitting(true)
       const { data, loading, error } = await props.CREATE_USER({
-        variables: { data: { gender, lookingFor: { connect: lookingFor }, age, minAge, maxAge } },
+        variables: {
+          data: {
+            gender,
+            lookingFor: { connect: lookingFor },
+            age,
+            minAge,
+            maxAge,
+            audioPref,
+            accAudioPrefs: { connect: accAudioPrefs },
+          },
+        },
       })
       if (error) {
         setErrorMsg(error)
@@ -88,6 +98,9 @@ const UserCreate = props => {
       else {
         const user = data.createUser
         user.lookingFor = lookingFor.map(x => {
+          return { name: x }
+        })
+        user.accAudioPrefs = accAudioPrefs.map(x => {
           return { name: x }
         })
         console.log(user)
