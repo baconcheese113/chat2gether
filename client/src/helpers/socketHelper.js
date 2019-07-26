@@ -210,10 +210,18 @@ class SocketHelper {
 
   async replaceTrack(newStream) {
     console.log('switching tracks')
-    const videoTrack = newStream.getVideoTracks()[0]
-    const sender = this.pc.getSenders().find(s => s.track.kind === videoTrack.kind)
-    console.log('found sender', sender)
-    sender.replaceTrack(videoTrack)
+    const videoTracks = newStream.getVideoTracks()
+    const audioTracks = newStream.getAudioTracks()
+    if (videoTracks && videoTracks[0]) {
+      const sender = this.pc.getSenders().find(s => s.track.kind === videoTracks[0].kind)
+      console.log('found video sender', sender)
+      await sender.replaceTrack(videoTracks[0])
+    }
+    if (audioTracks && audioTracks[0]) {
+      const sender = this.pc.getSenders().find(s => s.track.kind === audioTracks[0].kind)
+      console.log('found audio sender', sender)
+      await sender.replaceTrack(audioTracks[0])
+    }
   }
 }
 
