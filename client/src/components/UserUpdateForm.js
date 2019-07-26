@@ -4,6 +4,7 @@ import { graphql, compose, withApollo } from 'react-apollo'
 import NumberSlider from './NumberSlider'
 import { UPDATE_USER } from '../queries/mutations'
 import ChoicePicker from './ChoicePicker'
+import ChoiceSlider from './ChoiceSlider'
 
 const StyledForm = styled.form`
   width: 80%;
@@ -40,34 +41,36 @@ const SubmitButton = styled.button`
   filter: grayscale(${props => (props.hasChanges ? 0 : 1)});
 `
 
-const stripLF = arr => {
+const stripArr = arr => {
   return arr.map(x => {
     return { name: x.name }
   })
 }
+const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
+const AUDIO_PREFS = ['NO_AUDIO', 'MOANS', 'CONVERSATION', 'ROLEPLAY']
 
 const UserUpdateForm = props => {
   const { user, setUser } = props
-  const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
   const [lookingFor, setLookingFor] = useState(
-    stripLF(user.lookingFor) ||
+    stripArr(user.lookingFor) ||
       GENDERS.map(x => {
         return { name: x }
       }),
   )
-  const [age, setAge] = useState(user.age || 30)
   const [minAge, setMinAge] = useState(user.minAge || 18)
   const [maxAge, setMaxAge] = useState(user.maxAge || 90)
+  const [audioPref, setAudioPref] = useState(AUDIO_PREFS.indexOf(user.audioPref) || 0)
+  const [accAudioPrefs, setAccAudioPrefs] = useState(
+    stripArr(user.accAudioPrefs) ||
+      AUDIO_PREFS.map(x => {
+        return { name: x }
+      }),
+  )
   const [error, setError] = useState(null)
   const [hasChanges, setHasChanges] = useState(false)
 
   const changeNumbers = newArr => {
-    if (newArr.length < 1) {
-      return
-    }
-    if (newArr.length === 1) {
-      setAge(newArr[0])
-    } else if (newArr.length === 2) {
+    if (newArr.length === 2) {
       setMinAge(newArr[0])
       setMaxAge(newArr[1])
     }
@@ -100,6 +103,14 @@ const UserUpdateForm = props => {
     if (user.maxAge !== maxAge) {
       changes.maxAge = maxAge
     }
+    // If audioPref is different, changes should include it
+    if (AUDIO_PREFS.indexOf(user.audioPref) !== audioPref) {
+      changes.audioPref = AUDIO_PREFS[audioPref]
+    }
+    // If accAudioPrefs is different, changes should include it
+    if (!areEqualArr(user.accAudioPrefs, accAudioPrefs)) {
+      changes.accAudioPrefs = accAudioPrefs
+    }
 
     console.log(changes)
     // If changes is empty return
@@ -111,7 +122,13 @@ const UserUpdateForm = props => {
     // Now change shape to fit update (if lookingFor was changed)
     if (user.lookingFor != lookingFor) {
       changes.lookingFor = {
-        set: stripLF(lookingFor),
+        set: stripArr(lookingFor),
+      }
+    }
+    // Now change shape to fit update (if accAudioPrefs was changed)
+    if (user.accAudioPrefs != accAudioPrefs) {
+      changes.accAudioPrefs = {
+        set: stripArr(accAudioPrefs),
       }
     }
 
@@ -124,10 +141,16 @@ const UserUpdateForm = props => {
   }
 
   useEffect(() => {
-    if (!areEqualArr(user.lookingFor, lookingFor) || minAge != user.minAge || maxAge != user.maxAge) {
+    if (
+      !areEqualArr(user.lookingFor, lookingFor) ||
+      minAge != user.minAge ||
+      maxAge != user.maxAge ||
+      !areEqualArr(user.accAudioPrefs, accAudioPrefs) ||
+      audioPref != AUDIO_PREFS.indexOf(user.audioPref)
+    ) {
       if (!hasChanges) setHasChanges(true)
     } else if (hasChanges) setHasChanges(false)
-  }, [lookingFor, user, maxAge, minAge])
+  }, [lookingFor, user, maxAge, minAge, audioPref, accAudioPrefs])
 
   return (
     <StyledForm
@@ -142,6 +165,21 @@ const UserUpdateForm = props => {
       <Row>
         <InputLabel>Their Age</InputLabel>
         <NumberSlider numbers={[minAge, maxAge]} change={changeNumbers} showFill />
+      </Row>
+      <Row>
+        <InputLabel>My Audio Preference</InputLabel>
+        <ChoiceSlider cur={audioPref} change={setAudioPref} choices={AUDIO_PREFS} height="1.5rem" width="100%" fontSize="1.2rem"/>
+      </Row>
+      <Row>
+        <InputLabel>Preferences I&apos;ll do</InputLabel>
+        <ChoicePicker
+          selected={accAudioPrefs}
+          change={setAccAudioPrefs}
+          choices={AUDIO_PREFS}
+          height="1.5rem"
+          width="100%"
+          fontSize="1.1rem"
+        />
       </Row>
       {error}
       <SubmitButton hasChanges={hasChanges}>Update</SubmitButton>

@@ -10,6 +10,10 @@ export const GET_USERS = gql`
       }
       updatedAt
       createdAt
+      audioPref
+      accAudioPrefs {
+        name
+      }
     }
   }
 `
@@ -25,6 +29,10 @@ export const FIND_ROOM = gql`
       age
       minAge
       maxAge
+      audioPref
+      accAudioPrefs {
+        name
+      }
       lastActive
       isConnected
       isHost
@@ -43,6 +51,10 @@ export const GET_ME = gql`
       age
       minAge
       maxAge
+      audioPref
+      accAudioPrefs {
+        name
+      }
       lastActive
       isHost
       isConnected

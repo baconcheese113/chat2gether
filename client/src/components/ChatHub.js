@@ -109,7 +109,10 @@ function ChatHub(props) {
     newSocketHelper.onIdentity = u => {
       console.log(`Chatting with ${u.id}`)
       setOtherUser(u)
-      setConnectionMsg(`Matched with a ${u.age} year old ${u.gender.toLowerCase()}...`)
+      setConnectionMsg(
+        `Matched with a ${u.age} year old ${u.gender.toLowerCase()}.
+        Prefers ${u.audioPref.replace(/_/g, ' ').toLowerCase()}...`,
+      )
       startCountdown()
     }
     newSocketHelper.onIceConnectionStateChange = e => {
@@ -168,6 +171,8 @@ function ChatHub(props) {
             { maxAge_gte: user.age },
             { age_lte: user.maxAge },
             { age_gte: user.minAge },
+            { audioPref_in: user.accAudioPrefs.map(x => x.name) },
+            { accAudioPrefs_some: { name: user.audioPref } },
             { isHost: true },
             { isConnected: false },
             { visited_none: { id: user.id } },

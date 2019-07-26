@@ -3,13 +3,14 @@ import styled from 'styled-components'
 
 const StyledChoiceSlider = styled.div`
   border-radius: 500rem; /* Large number to ensure rounded ends */
-  width: ${({ width }) => width || '70%'};
+  width: ${({ width }) => width || '90%'};
   margin: 1rem auto;
   background-color: ${props => props.theme.colorGreyDark1};
   display: flex;
   justify-content: space-around;
   position: relative;
   border: 2px solid ${props => props.theme.colorPrimary};
+  font-size: ${props => props.fontSize || 'inherit'};
   cursor: pointer;
 `
 
