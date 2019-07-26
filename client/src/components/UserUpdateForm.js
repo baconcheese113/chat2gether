@@ -7,16 +7,21 @@ import ChoicePicker from './ChoicePicker'
 import ChoiceSlider from './ChoiceSlider'
 
 const StyledForm = styled.form`
-  width: 80%;
+  width: 90%;
+  max-height: 40%;
   max-width: 600px;
   background-color: ${props => props.theme.colorGreyDark1};
-  padding: 1rem;
-  margin: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
 `
 const Row = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+const ScrollContent = styled.div`
+  overflow-y: auto;
+  flex: 1;
 `
 const InputLabel = styled.label`
   display: inline-block;
@@ -26,6 +31,7 @@ const InputLabel = styled.label`
   color: ${props => props.theme.colorPrimaryLight};
 `
 const SubmitButton = styled.button`
+  display: inline-block;
   background-image: linear-gradient(
     to bottom right,
     ${props => props.theme.colorPrimary},
@@ -37,7 +43,7 @@ const SubmitButton = styled.button`
   padding: 0.5rem 1rem;
   font-size: 2rem;
   letter-spacing: 1.5px;
-  margin-top: 1rem;
+  margin: 2px auto;
   filter: grayscale(${props => (props.hasChanges ? 0 : 1)});
 `
 
@@ -158,29 +164,38 @@ const UserUpdateForm = props => {
         handleSubmit(e)
       }}
     >
-      <Row>
-        <InputLabel>I want to chat with</InputLabel>
-        <ChoicePicker selected={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
-      </Row>
-      <Row>
-        <InputLabel>Their Age</InputLabel>
-        <NumberSlider numbers={[minAge, maxAge]} change={changeNumbers} showFill />
-      </Row>
-      <Row>
-        <InputLabel>My Audio Preference</InputLabel>
-        <ChoiceSlider cur={audioPref} change={setAudioPref} choices={AUDIO_PREFS} height="1.5rem" width="100%" fontSize="1.2rem"/>
-      </Row>
-      <Row>
-        <InputLabel>Preferences I&apos;ll do</InputLabel>
-        <ChoicePicker
-          selected={accAudioPrefs}
-          change={setAccAudioPrefs}
-          choices={AUDIO_PREFS}
-          height="1.5rem"
-          width="100%"
-          fontSize="1.1rem"
-        />
-      </Row>
+      <ScrollContent>
+        <Row>
+          <InputLabel>I want to chat with</InputLabel>
+          <ChoicePicker selected={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
+        </Row>
+        <Row>
+          <InputLabel>Their Age</InputLabel>
+          <NumberSlider numbers={[minAge, maxAge]} change={changeNumbers} showFill />
+        </Row>
+        <Row>
+          <InputLabel>My Audio Preference</InputLabel>
+          <ChoiceSlider
+            cur={audioPref}
+            change={setAudioPref}
+            choices={AUDIO_PREFS}
+            height="1.5rem"
+            width="100%"
+            fontSize="1.2rem"
+          />
+        </Row>
+        <Row>
+          <InputLabel>Preferences I&apos;ll do</InputLabel>
+          <ChoicePicker
+            selected={accAudioPrefs}
+            change={setAccAudioPrefs}
+            choices={AUDIO_PREFS}
+            height="1.5rem"
+            width="100%"
+            fontSize="1.1rem"
+          />
+        </Row>
+      </ScrollContent>
       {error}
       <SubmitButton hasChanges={hasChanges}>Update</SubmitButton>
     </StyledForm>
