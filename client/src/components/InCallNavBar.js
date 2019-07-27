@@ -37,7 +37,7 @@ const InCallNavBar = props => {
   if (!widgetsActive) return ''
 
   const featureToggle = elem => {
-    setWidgetsActive({ ...widgetsActive, [elem]: !widgetsActive[elem] })
+    setWidgetsActive({ [elem]: !widgetsActive[elem] })
   }
 
   return (
@@ -70,6 +70,13 @@ const InCallNavBar = props => {
         )}
       </LeftAligned>
       <RightAligned>
+        {buttons.profile && (
+          <ToggleButton
+            iconClass="fas fa-user-alt"
+            onClick={() => featureToggle('profile')}
+            active={widgetsActive.profile ? 1 : 0}
+          />
+        )}
         {buttons.countdown && (
           <ToggleButton
             iconClass="fas fa-stopwatch"

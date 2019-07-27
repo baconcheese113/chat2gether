@@ -10,6 +10,7 @@ import InCallNavBar from './InCallNavBar'
 import VideoPlayer from './VideoPlayer'
 import UserUpdateForm from './UserUpdateForm'
 import Countdown from './Countdown'
+import ProfileCard from './ProfileCard'
 
 // When user presses Share Video, request camera
 // When user presses Next Match, Initialize socket and Find Room
@@ -27,7 +28,13 @@ function ChatHub(props) {
   const [connectionMsg, setConnectionMsg] = useState('Welcome to Chat2Gether')
   const [countdown, setCountdown] = useState(-1)
   const [countdownTimer, setCountdownTimer] = useState(null)
-  const [widgetsActive, setWidgetsActive] = useState({ text: false, menu: false, video: false, countdown: false })
+  const [widgetsActive, setWidgetsActive] = useState({
+    text: false,
+    menu: false,
+    video: false,
+    countdown: false,
+    profile: false,
+  })
   const [countdownNotify, setCountdownNotify] = useState(false)
   const [videoNotify, setVideoNotify] = useState(false)
   const [chatSettings, setChatSettings] = useState({ micMute: false, speakerMute: false })
@@ -313,6 +320,7 @@ function ChatHub(props) {
               setLastReadMsg={setLastReadMsg}
             />
           )}
+          <ProfileCard user={otherUser} active={widgetsActive.profile} />
           <VideoPlayer
             socketHelper={socketHelper}
             userId={user.id}
@@ -340,7 +348,7 @@ function ChatHub(props) {
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
             localStream={localStream}
-            buttons={{ stop: true, mic: true, speaker: true, countdown: true, chat: true, video: true }}
+            buttons={{ stop: true, mic: true, speaker: true, profile: true, countdown: true, chat: true, video: true }}
           />
         </React.Fragment>
       )
