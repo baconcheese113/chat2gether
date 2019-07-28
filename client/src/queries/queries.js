@@ -60,6 +60,8 @@ export const GET_ME = gql`
       isConnected
       visited {
         id
+        gender
+        age
       }
     }
   }

@@ -1,6 +1,12 @@
 import React, { useRef } from 'react'
+import styled from 'styled-components'
 import { Query } from 'react-apollo'
 import { GET_USERS } from '../queries/queries'
+
+const StatsContainer = styled.section`
+  max-height: 45%;
+  overflow-y: auto;
+`
 
 function Stats() {
   // const [users, setUsers] = useState([])
@@ -33,8 +39,8 @@ function Stats() {
     const genderArrs = {
       MALE: Array(numIntervals).fill(0),
       FEMALE: Array(numIntervals).fill(0),
-      TRANSMALE: Array(numIntervals).fill(0),
-      TRANSFEMALE: Array(numIntervals).fill(0),
+      F2M: Array(numIntervals).fill(0),
+      M2F: Array(numIntervals).fill(0),
     }
     // Go through each user, get their updatedAt and createdAt
     // go through time intervals, if interval is between updatedAt and createdAt add 1 to specific gender array
@@ -157,7 +163,7 @@ function Stats() {
     .reduce((acc, cur, idx) => `${acc || ''} M${gEnd.x - 10} ${gStart.y + idx * intSpace.y} h 20`, 0)
 
   return (
-    <React.Fragment>
+    <StatsContainer>
       <div />
       <svg width="100%" style={{ height: 'auto' }} viewBox={`0 0 ${vb.x} ${vb.y}`} xmlns="http://www.w3.org/2000/svg">
         <path d={`M${gStart.x} ${gEnd.y} H ${gEnd.x} V ${gStart.y}`} className="graph-axis" />
@@ -165,7 +171,7 @@ function Stats() {
         <path d={ticksY} className="graph-tick" />
         {getUserCount()}
       </svg>
-    </React.Fragment>
+    </StatsContainer>
   )
 }
 

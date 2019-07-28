@@ -8,7 +8,7 @@ import ChoiceSlider from './ChoiceSlider'
 
 const StyledForm = styled.form`
   width: 90%;
-  max-height: 40%;
+  max-height: 45%;
   max-width: 600px;
   background-color: ${props => props.theme.colorGreyDark1};
   display: flex;
@@ -43,7 +43,7 @@ const SubmitButton = styled.button`
   padding: 0.5rem 1rem;
   font-size: 2rem;
   letter-spacing: 1.5px;
-  margin: 2px auto;
+  margin: 1rem auto 0;
   filter: grayscale(${props => (props.hasChanges ? 0 : 1)});
 `
 

@@ -127,6 +127,7 @@ video {
   /* left: calc(100% - 150px); */
   /* right: 50px; */
   box-shadow: 0 0 2px #949494;
+  opacity: .9;
   height: 120px;
   /* width: 120px; */
   border-radius: 20px;

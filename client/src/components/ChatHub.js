@@ -11,6 +11,8 @@ import VideoPlayer from './VideoPlayer'
 import UserUpdateForm from './UserUpdateForm'
 import Countdown from './Countdown'
 import ProfileCard from './ProfileCard'
+import MatchHistory from './MatchHistory'
+import Stats from './Stats'
 
 // When user presses Share Video, request camera
 // When user presses Next Match, Initialize socket and Find Room
@@ -34,6 +36,9 @@ function ChatHub(props) {
     video: false,
     countdown: false,
     profile: false,
+    matches: false,
+    stats: false,
+    updatePref: false,
   })
   const [countdownNotify, setCountdownNotify] = useState(false)
   const [videoNotify, setVideoNotify] = useState(false)
@@ -374,13 +379,17 @@ function ChatHub(props) {
             setChatSettings={setChatSettings}
           />
           {countdown > 0 && <div className="countdown">{countdown}</div>}
-          <UserUpdateForm
-            user={user}
-            setUser={newUser => {
-              setUser(newUser)
-              if (room.current) nextMatch()
-            }}
-          />
+          {widgetsActive.updatePref && (
+            <UserUpdateForm
+              user={user}
+              setUser={newUser => {
+                setUser(newUser)
+                if (room.current) nextMatch()
+              }}
+            />
+          )}
+          {widgetsActive.stats && <Stats />}
+          {widgetsActive.matches && <MatchHistory users={user.visited} />}
           <InCallNavBar
             nextMatch={nextMatch}
             resetState={resetState}
@@ -389,7 +398,7 @@ function ChatHub(props) {
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
             localStream={localStream}
-            buttons={{ stop: true, mic: true, speaker: true }}
+            buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
           />
         </div>
       </React.Fragment>

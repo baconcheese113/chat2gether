@@ -101,6 +101,27 @@ const InCallNavBar = props => {
             notification={videoNotify ? 1 : 0}
           />
         )}
+        {buttons.updatePref && (
+          <ToggleButton
+            iconClass="fas fa-user-edit"
+            onClick={() => featureToggle('updatePref')}
+            active={widgetsActive.updatePref ? 1 : 0}
+          />
+        )}
+        {buttons.stats && (
+          <ToggleButton
+            iconClass="fas fa-chart-area"
+            onClick={() => featureToggle('stats')}
+            active={widgetsActive.stats ? 1 : 0}
+          />
+        )}
+        {buttons.matches && (
+          <ToggleButton
+            iconClass="fas fa-users"
+            onClick={() => featureToggle('matches')}
+            active={widgetsActive.matches ? 1 : 0}
+          />
+        )}
       </RightAligned>
     </StyledNavBar>
   )
