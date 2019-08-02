@@ -115,8 +115,9 @@ video {
 }
 
 .video-remote {
-  top: 0;
-  left: 0;
+  /* top: 0; */
+  /* left: 0; */
+  position: relative;
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -133,6 +134,7 @@ video {
   border-radius: 20px;
   border: 2px solid #555;
   transition: border-style 1s, box-shadow 1.2s, filter .6s, animation 3s;
+  z-index: 20;
 }
 
 .video-local:hover {
@@ -218,6 +220,14 @@ svg {
   stroke: #1754ed;
 }
 
+.f2m {
+  stroke: #18ecf3;
+}
+
+.m2f {
+  stroke: #ff1a1a;
+}
+
 .graph-circle {
   stroke: #666;
   stroke-width: 5;
@@ -230,6 +240,14 @@ circle.female {
 
 circle.male {
   fill: #7fa3ff88;
+}
+
+circle.f2m {
+  fill: #6bfaff77;
+}
+
+circle.m2f {
+  fill: #ff76768a;
 }
 
 .graph-line {

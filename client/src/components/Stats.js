@@ -14,7 +14,7 @@ function Stats() {
 
   const numIntervals = 6
   const numIntervalsY = 2
-  const intervalRange = 60 * 24 * 1 // minutes
+  const intervalRange = 30 // minutes
   const vb = { x: 1200, y: 800 }
   const graph = { x: vb.x * (3 / 5), y: vb.y * (3 / 5) }
   const gStart = { x: vb.x / 5, y: vb.y / 5 }
@@ -147,6 +147,8 @@ function Stats() {
             <React.Fragment>
               {getLine(getGroupings(), 'MALE')}
               {getLine(getGroupings(), 'FEMALE')}
+              {getLine(getGroupings(), 'M2F')}
+              {getLine(getGroupings(), 'F2M')}
               {getAxis()}
             </React.Fragment>
           )

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
 import { compose, graphql, withApollo } from 'react-apollo'
 import VideoWindow from './VideoWindow'
 import TextChat from './TextChat'
@@ -13,6 +14,13 @@ import Countdown from './Countdown'
 import ProfileCard from './ProfileCard'
 import MatchHistory from './MatchHistory'
 import Stats from './Stats'
+
+const StyledChatHub = styled.div`
+  height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
 
 // When user presses Share Video, request camera
 // When user presses Next Match, Initialize socket and Find Room
@@ -307,6 +315,14 @@ function ChatHub(props) {
     if (remoteStream) {
       return (
         <React.Fragment>
+          <VideoPlayer
+            socketHelper={socketHelper}
+            userId={user.id}
+            roomId={room.current}
+            active={widgetsActive.video}
+            videoNotify={videoNotify}
+            setVideoNotify={setVideoNotify}
+          />
           <VideoWindow videoType="remoteVideo" stream={remoteStream} chatSettings={chatSettings} />
           <VideoWindow
             videoType="localVideo"
@@ -326,14 +342,6 @@ function ChatHub(props) {
             />
           )}
           <ProfileCard user={otherUser} active={widgetsActive.profile} />
-          <VideoPlayer
-            socketHelper={socketHelper}
-            userId={user.id}
-            roomId={room.current}
-            active={widgetsActive.video}
-            videoNotify={videoNotify}
-            setVideoNotify={setVideoNotify}
-          />
           <Countdown
             socketHelper={socketHelper}
             myUserId={user.id}
@@ -406,12 +414,12 @@ function ChatHub(props) {
   }
 
   return (
-    <div>
+    <StyledChatHub>
       {renderBackground()}
       {widgetsActive.menu && (
         <Settings setWidgetsActive={setWidgetsActive} requestCamera={requestCamera} stream={localStream} />
       )}
-    </div>
+    </StyledChatHub>
   )
 }
 

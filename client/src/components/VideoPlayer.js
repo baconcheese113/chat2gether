@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
-import HtmlParse from '../helpers/htmlParse'
+import HtmlParse from '../helpers/htmlParse2'
 import VideoGrid from './VideoGrid'
 
 const syncRotate = keyframes`
@@ -9,12 +9,9 @@ const syncRotate = keyframes`
 `
 
 const StyledVideoPlayer = styled.div`
-  display: ${props => (props.active ? 'flex' : 'none')};
-  flex-direction: column;
-  position: absolute;
-  left: 50%;
-  top: 10%;
-  transform: translateX(-50%);
+  display: ${props => (props.active ? 'block' : 'none')};
+  position: relative;
+  margin: 0 auto;
   min-height: 20rem;
   min-width: 25rem;
   max-width: 90%;
@@ -22,6 +19,7 @@ const StyledVideoPlayer = styled.div`
   border-radius: 0.5rem;
   background-color: #111;
   transition: all 0.4s;
+  z-index: 5;
 
   & > p {
     display: flex;
@@ -35,6 +33,7 @@ const StyledVideoPlayer = styled.div`
   }
 `
 const DragHandle = styled.div`
+  display: none;
   position: absolute;
   bottom: -1.8rem;
   left: 50%;
@@ -52,14 +51,14 @@ const DragHandle = styled.div`
 const SearchButton = styled.button`
   position: absolute;
   right: 0;
-  top: 0;
+  top: 95%;
   transform: translate(30%, -30%);
   box-shadow: 0 0 4px;
 `
 const SyncButton = styled.button`
   position: absolute;
   left: 0;
-  top: 0;
+  top: 95%;
   transform: translate(-30%, -30%);
   box-shadow: 0 0 4px;
   color: ${props => props.color};
@@ -187,6 +186,13 @@ const VideoPlayer = props => {
     return '#ffe400'
   }, [syncState])
 
+  let width = window.innerWidth - 30
+  let height = window.innerHeight / 4
+  if (window.innerWidth > window.innerHeight) {
+    height = window.innerHeight / 3
+    width = (window.innerHeight / 3) * 1.67
+  }
+
   return (
     <React.Fragment>
       <VideoGrid
@@ -213,8 +219,8 @@ const VideoPlayer = props => {
             title="PIP Video Player"
             src={HtmlParse.getUrl() + currentVideo}
             frameBorder="0"
-            width={window.innerWidth * 0.9 - 10}
-            height={window.innerWidth * 0.9 * 0.6}
+            width={width}
+            height={height}
             scrolling="no"
             allowFullScreen={false}
           />
