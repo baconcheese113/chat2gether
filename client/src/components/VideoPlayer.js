@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
-import HtmlParse from '../helpers/htmlParse2'
+import HtmlParse from '../helpers/htmlParse3'
 import VideoGrid from './VideoGrid'
 
 const syncRotate = keyframes`
@@ -27,26 +27,18 @@ const StyledVideoPlayer = styled.div`
     align-items: center;
     flex-grow: 1;
   }
-
-  & > iframe {
-    align-self: center;
-  }
 `
-const DragHandle = styled.div`
-  display: none;
-  position: absolute;
-  bottom: -1.8rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 6;
-  padding: 0.2rem 1rem;
-  border-radius: 0 0 1rem 1rem;
-  font-size: 1rem;
-  background-image: linear-gradient(
-    to bottom,
-    ${props => props.theme.colorGreyLight1},
-    ${props => props.theme.colorGreyDark2}
-  );
+const VideoContainer = styled.div`
+  & > div {
+    display: ${props => (props.disabled ? 'block' : 'none')};
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+  filter: ${props => props.disabled && 'brightness(40%)'};
+  pointer-events: ${props => props.disabled && 'none'};
 `
 const SearchButton = styled.button`
   position: absolute;
@@ -84,6 +76,7 @@ const Notification = styled.span`
 `
 
 const SYNC = { OFF: 'off', REQUESTED: 'requested', UNACCEPTED: 'unaccepted', ACCEPTED: 'accepted' }
+const UPDATE = { PAUSE: 'pause', PLAY: 'play', SEEKED: 'seeked' }
 
 /** ******************* Component Starts */
 const VideoPlayer = props => {
@@ -92,10 +85,14 @@ const VideoPlayer = props => {
   const [isShown, setIsShown] = useState(false)
   const [parser, setParser] = useState(new HtmlParse(null))
   const [syncState, setSyncState] = useState(SYNC.OFF)
+  const [videoUrl, setVideoUrl] = useState('')
+  const [disabled, setDisabled] = useState(false)
+
   const player = useRef()
 
   const coords = { x: window.innerWidth / 2, y: window.innerHeight / 3 }
 
+  // When user presses search
   const onSubmitSearch = async newQuery => {
     if (!newQuery || newQuery === parser.search) return
     const newParser = new HtmlParse(newQuery)
@@ -103,21 +100,27 @@ const VideoPlayer = props => {
     setParser(newParser)
   }
 
+  // Boilerplate socket message
   const msg = {
     roomId,
     userId,
   }
 
-  const selectVideo = videoId => {
+  // Selecting local video from grid
+  const selectVideo = async videoId => {
+    const newVideoUrl = await HtmlParse.getUrl(videoId)
+    setVideoUrl(newVideoUrl)
     setCurrentVideo(videoId)
     if (syncState === SYNC.ACCEPTED) {
       msg.videoId = videoId
+      msg.videoUrl = newVideoUrl
       msg.type = 'setVideo'
       socketHelper.emit('videoPlayerSync', msg)
     }
   }
 
-  const receiveMessage = newMsg => {
+  // Changing sync state when remote user clicks sync button
+  const receiveSyncMsg = newMsg => {
     if (newMsg.userId === userId) return
     let newState = syncState
     // Handle other user toggling on sync
@@ -126,7 +129,13 @@ const VideoPlayer = props => {
         newState = SYNC.UNACCEPTED
       } else if (syncState === SYNC.REQUESTED) {
         newState = SYNC.ACCEPTED
-        socketHelper.emit('videoPlayerSync', { ...msg, videoId: currentVideo, type: 'setVideo' })
+        socketHelper.emit('videoPlayerSync', {
+          ...msg,
+          videoId: currentVideo,
+          videoUrl,
+          currentTime: player.current.currentTime,
+          type: 'setVideo',
+        })
       }
       // Handle other user toggling off sync
     } else if (newMsg.type === 'stop') {
@@ -139,6 +148,10 @@ const VideoPlayer = props => {
     } else if (newMsg.type === 'setVideo' && syncState === SYNC.ACCEPTED) {
       if (!active) setVideoNotify(true)
       setCurrentVideo(newMsg.videoId)
+      setVideoUrl(newMsg.videoUrl)
+      setTimeout(() => {
+        player.current.currentTime = newMsg.currentTime
+      }, 1)
     }
     // Notify if state was changed
     if (syncState !== newState && !active) {
@@ -147,19 +160,51 @@ const VideoPlayer = props => {
     setSyncState(newState)
   }
 
+  // Changing local player when remote user updates player
+  const receiveUpdateMsg = newMsg => {
+    if (newMsg.userId === userId || syncState !== SYNC.ACCEPTED) return
+    // If other user paused the video
+    if (newMsg.type === UPDATE.PAUSE) {
+      player.current.pause()
+      player.current.currentTime = newMsg.currentTime
+    } else if (newMsg.type === UPDATE.PLAY) {
+      player.current.play()
+      player.current.currentTime = newMsg.currentTime
+    } else if (newMsg.type === UPDATE.SEEKED) {
+      player.current.currentTime = newMsg.currentTime
+    } else return
+    setDisabled(true)
+  }
+
+  const handlePlayerUpdate = e => {
+    if (disabled) {
+      setDisabled(false)
+      return
+    }
+    msg.type = e.type
+    msg.currentTime = e.target.currentTime
+    socketHelper.emit('videoPlayerUpdate', msg)
+  }
+
+  // Setting listeners for Sync and Update socket requests
   useEffect(() => {
     if (!socketHelper) return
-    socketHelper.socket.on('videoPlayerSync', receiveMessage)
+    socketHelper.socket.on('videoPlayerSync', receiveSyncMsg)
+    socketHelper.socket.on('videoPlayerUpdate', receiveUpdateMsg)
     return () => {
       socketHelper.socket.off('videoPlayerSync')
+      socketHelper.socket.off('videoPlayerUpdate')
     }
   }, [socketHelper, currentVideo, syncState, active])
 
+  // Clearing the notify when player is made active
   useEffect(() => {
     if (videoNotify && active) {
       setVideoNotify(false)
     }
   }, [active])
+
+  // Clicking the player's toggle sync button
   const toggleSync = () => {
     let newState = syncState
     if (syncState === SYNC.OFF) {
@@ -180,12 +225,14 @@ const VideoPlayer = props => {
     socketHelper.emit('videoPlayerSync', msg)
   }
 
+  // Color for the sync button
   const getColor = React.useMemo(() => {
     if (syncState === SYNC.OFF) return '#fff'
     if (syncState === SYNC.ACCEPTED) return 'green'
     return '#ffe400'
   }, [syncState])
 
+  // Player dimensions
   let width = window.innerWidth - 30
   let height = window.innerHeight / 4
   if (window.innerWidth > window.innerHeight) {
@@ -210,23 +257,25 @@ const VideoPlayer = props => {
           {syncState === SYNC.UNACCEPTED && <Notification />}
           <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
         </SyncButton>
-        <DragHandle>
-          <i className="fas fa-grip-horizontal" />
-        </DragHandle>
-        {currentVideo ? (
-          <iframe
-            ref={player}
-            title="PIP Video Player"
-            src={HtmlParse.getUrl() + currentVideo}
-            frameBorder="0"
-            width={width}
-            height={height}
-            scrolling="no"
-            allowFullScreen={false}
-          />
-        ) : (
-          <p>Watch something while you wait!</p>
-        )}
+        <VideoContainer disabled={disabled}>
+          <div />
+          {currentVideo ? (
+            <video
+              ref={player}
+              onPause={handlePlayerUpdate}
+              onPlay={handlePlayerUpdate}
+              onSeeked={handlePlayerUpdate}
+              src={videoUrl}
+              autoPlay
+              controls
+              width={width}
+              height={height}
+              allowFullScreen={false}
+            />
+          ) : (
+            <p>Watch something while you wait!</p>
+          )}
+        </VideoContainer>
       </StyledVideoPlayer>
     </React.Fragment>
   )

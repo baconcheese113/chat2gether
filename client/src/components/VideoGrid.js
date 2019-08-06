@@ -57,7 +57,7 @@ const ResultTitle = styled.figcaption`
   font-size: 1.6rem;
   background-color: rgba(0, 0, 0, 0.4);
 `
-const ResultImage = styled.iframe`
+const ResultImage = styled.img`
   height: 100%;
 `
 const ResultDuration = styled.span`
@@ -99,7 +99,7 @@ const VideoGrid = props => {
   const [query, setQuery] = useState('')
   const [submittedQuery, setSubmittedQuery] = useState('')
 
-  const handleClose = e => {
+  const handleClose = () => {
     setIsShown(false)
   }
 
@@ -114,8 +114,6 @@ const VideoGrid = props => {
     onSubmitSearch(query)
     setSubmittedQuery(query)
   }
-
-  console.log(videos.reduce((prev, cur) => [...prev, cur.img], []))
 
   return (
     <StyledVideoGrid isShown={isShown}>
