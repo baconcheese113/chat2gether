@@ -1,13 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
-
-const gradient = css`
-  background-image: linear-gradient(
-    to bottom right,
-    ${props => props.theme.colorPrimary},
-    ${props => props.theme.colorGreyDark1}
-  );
-`
+import styled from 'styled-components'
 
 const StyledChoicePicker = styled.div`
   border-radius: 500rem; /* Large number to ensure rounded ends */
@@ -36,10 +28,6 @@ const Option = styled.span`
   color: ${props => (props.active ? 'white' : props.theme.colorPrimaryLight)};
   ${props => (props.active ? `background-color: ${props.theme.colorPrimary};` : '')}
   transition: all .6s;
-
-  &:hover {
-    background-color: purple;
-  }
 `
 
 const ChoicePicker = props => {
@@ -69,7 +57,7 @@ const ChoicePicker = props => {
           onClick={e => handleClick(e, choice)}
           key={index}
         >
-          {choice.replace(/_/g, " ")}
+          {choice.replace(/_/g, ' ')}
         </Option>,
       )
     }
