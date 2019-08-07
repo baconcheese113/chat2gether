@@ -1,5 +1,5 @@
-# source: http://192.168.99.100:4466/livechat/dev
-# timestamp: Wed Jul 24 2019 23:20:04 GMT-0600 (Mountain Daylight Time)
+# source: http://192.168.99.100:4466/c2g/dev
+# timestamp: Tue Aug 06 2019 22:41:26 GMT-0600 (Mountain Daylight Time)
 
 type AggregateAudioPrefObject {
   count: Int!
@@ -520,7 +520,7 @@ input FeedbackWhereUniqueInput {
 
 type GenderObject implements Node {
   id: ID!
-  name: String!
+  name: GenderType!
 }
 
 """A connection to a list of items."""
@@ -535,7 +535,7 @@ type GenderObjectConnection {
 
 input GenderObjectCreateInput {
   id: ID
-  name: String!
+  name: GenderType!
 }
 
 input GenderObjectCreateManyInput {
@@ -561,7 +561,7 @@ enum GenderObjectOrderByInput {
 
 type GenderObjectPreviousValues {
   id: ID!
-  name: String!
+  name: GenderType!
 }
 
 input GenderObjectScalarWhereInput {
@@ -613,46 +613,16 @@ input GenderObjectScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  name: String
+  name: GenderType
 
   """All values that are not equal to given value."""
-  name_not: String
+  name_not: GenderType
 
   """All values that are contained in given list."""
-  name_in: [String!]
+  name_in: [GenderType!]
 
   """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
+  name_not_in: [GenderType!]
 }
 
 type GenderObjectSubscriptionPayload {
@@ -693,15 +663,15 @@ input GenderObjectSubscriptionWhereInput {
 }
 
 input GenderObjectUpdateDataInput {
-  name: String
+  name: GenderType
 }
 
 input GenderObjectUpdateInput {
-  name: String
+  name: GenderType
 }
 
 input GenderObjectUpdateManyDataInput {
-  name: String
+  name: GenderType
 }
 
 input GenderObjectUpdateManyInput {
@@ -717,7 +687,7 @@ input GenderObjectUpdateManyInput {
 }
 
 input GenderObjectUpdateManyMutationInput {
-  name: String
+  name: GenderType
 }
 
 input GenderObjectUpdateManyWithWhereNestedInput {
@@ -785,51 +755,21 @@ input GenderObjectWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  name: String
+  name: GenderType
 
   """All values that are not equal to given value."""
-  name_not: String
+  name_not: GenderType
 
   """All values that are contained in given list."""
-  name_in: [String!]
+  name_in: [GenderType!]
 
   """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
+  name_not_in: [GenderType!]
 }
 
 input GenderObjectWhereUniqueInput {
   id: ID
-  name: String
+  name: GenderType
 }
 
 enum GenderType {
@@ -837,7 +777,6 @@ enum GenderType {
   FEMALE
   M2F
   F2M
-  OTHER
 }
 
 """Raw JSON value"""

@@ -34,7 +34,6 @@ enum GenderType {
   FEMALE
   M2F
   F2M
-  OTHER
 }
 
 type AudioPrefObject {

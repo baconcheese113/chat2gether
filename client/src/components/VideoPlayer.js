@@ -268,6 +268,7 @@ const VideoPlayer = props => {
               src={videoUrl}
               autoPlay
               controls
+              playsinline
               width={width}
               height={height}
               allowFullScreen={false}

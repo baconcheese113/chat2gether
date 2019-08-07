@@ -1,6 +1,11 @@
 endpoint: ${env:PRISMA_ENDPOINT}
 datamodel: datamodel.prisma
 secret: ${env:PRISMA_SECRET}
+
 hooks:
   post-deploy:
-    - graphql get-schema --project prisma
+    - echo "Deployment finished"
+    - prisma generate
+
+seed:
+  run: node ./seed.js
