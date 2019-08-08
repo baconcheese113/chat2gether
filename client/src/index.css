@@ -115,12 +115,19 @@ video {
 }
 
 .video-remote {
-  /* top: 0; */
-  /* left: 0; */
+  flex: 1;
   position: relative;
-  height: 100%;
+  height: -webkit-fill-available;
   width: 100%;
   overflow: hidden;
+}
+
+.video-remote video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 
 .video-local {
@@ -181,6 +188,7 @@ video {
   overflow: hidden;
   right: 20px;
   top: 20px;
+  z-index: 1;
 }
 
 .next-match {

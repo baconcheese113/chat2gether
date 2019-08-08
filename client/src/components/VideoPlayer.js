@@ -10,16 +10,12 @@ const syncRotate = keyframes`
 
 const StyledVideoPlayer = styled.div`
   display: ${props => (props.active ? 'block' : 'none')};
+
   position: relative;
-  margin: 0 auto;
-  min-height: 20rem;
-  min-width: 25rem;
-  max-width: 90%;
-  border: 2px solid #555;
-  border-radius: 0.5rem;
+  flex: 1;
+  height: -webkit-fill-available;
   background-color: #111;
   transition: all 0.4s;
-  z-index: 5;
 
   & > p {
     display: flex;
@@ -29,6 +25,22 @@ const StyledVideoPlayer = styled.div`
   }
 `
 const VideoContainer = styled.div`
+  filter: ${props => props.disabled && 'brightness(40%)'};
+  pointer-events: ${props => props.disabled && 'none'};
+
+  width: 100%;
+  height: auto;
+
+  & > video {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: ${props => props.height};
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
   & > div {
     display: ${props => (props.disabled ? 'block' : 'none')};
     position: absolute;
@@ -37,25 +49,28 @@ const VideoContainer = styled.div`
     height: 100%;
     width: 100%;
   }
-  filter: ${props => props.disabled && 'brightness(40%)'};
-  pointer-events: ${props => props.disabled && 'none'};
+
+  & > p {
+    font-size: 2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 `
 const SearchButton = styled.button`
   position: absolute;
-  right: 0;
-  top: 95%;
-  transform: translate(30%, -30%);
+  left: 1rem;
+  top: 1rem;
   box-shadow: 0 0 4px;
 `
 const SyncButton = styled.button`
   position: absolute;
-  left: 0;
-  top: 95%;
-  transform: translate(-30%, -30%);
+  left: 6rem;
+  top: 1rem;
   box-shadow: 0 0 4px;
   color: ${props => props.color};
   .rotate {
-    /* position: relative; */
     color: inherit;
     transform-origin: center;
     transform-box: fill-box;
@@ -232,13 +247,7 @@ const VideoPlayer = props => {
     return '#ffe400'
   }, [syncState])
 
-  // Player dimensions
-  let width = window.innerWidth - 30
-  let height = window.innerHeight / 4
-  if (window.innerWidth > window.innerHeight) {
-    height = window.innerHeight / 3
-    width = (window.innerHeight / 3) * 1.67
-  }
+  const height = window.innerWidth > window.innerHeight ? 'auto' : '100%'
 
   return (
     <React.Fragment>
@@ -257,7 +266,7 @@ const VideoPlayer = props => {
           {syncState === SYNC.UNACCEPTED && <Notification />}
           <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
         </SyncButton>
-        <VideoContainer disabled={disabled}>
+        <VideoContainer disabled={disabled} height={height}>
           <div />
           {currentVideo ? (
             <video
@@ -268,9 +277,7 @@ const VideoPlayer = props => {
               src={videoUrl}
               autoPlay
               controls
-              playsinline
-              width={width}
-              height={height}
+              playsInline
               allowFullScreen={false}
             />
           ) : (

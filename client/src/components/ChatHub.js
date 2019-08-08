@@ -18,8 +18,9 @@ import Stats from './Stats'
 const StyledChatHub = styled.div`
   height: -webkit-fill-available;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${props => props.flowDirection};
   justify-content: center;
+  overflow: hidden;
 `
 
 // When user presses Share Video, request camera
@@ -52,6 +53,7 @@ function ChatHub(props) {
   const [videoNotify, setVideoNotify] = useState(false)
   const [chatSettings, setChatSettings] = useState({ micMute: false, speakerMute: false })
   const [lastReadMsg, setLastReadMsg] = useState(-1)
+  const [flowDirection, setFlowDirection] = useState(window.innerWidth > window.innerHeight ? 'row' : 'column')
 
   const probeTimer = useRef(null)
   const room = useRef(null)
@@ -311,6 +313,18 @@ function ChatHub(props) {
     })()
   }, [])
 
+  const updateFlowDirection = React.useCallback(() => {
+    const direction = window.innerWidth > window.innerHeight ? 'row' : 'column'
+    setFlowDirection(direction)
+  }, [window.innerHeight, window.innerHeight])
+
+  useEffect(() => {
+    window.addEventListener('resize', updateFlowDirection)
+    return () => {
+      window.removeEventListener('resize', updateFlowDirection)
+    }
+  }, [])
+
   const renderBackground = () => {
     if (remoteStream) {
       return (
@@ -414,7 +428,7 @@ function ChatHub(props) {
   }
 
   return (
-    <StyledChatHub>
+    <StyledChatHub flowDirection={flowDirection}>
       {renderBackground()}
       {widgetsActive.menu && (
         <Settings setWidgetsActive={setWidgetsActive} requestCamera={requestCamera} stream={localStream} />
