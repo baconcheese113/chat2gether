@@ -195,7 +195,7 @@ function Settings(props) {
             <p>SendFeedback</p>
             <input value={feedbackText} onChange={e => setFeedbackText(e.target.value)} />
             {feedbackMsg}
-            <button>Submit</button>
+            <button type="button">Submit</button>
           </FeedbackForm>
         </SettingsList>
         <Actions>

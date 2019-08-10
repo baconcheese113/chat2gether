@@ -148,7 +148,7 @@ const VideoPlayer = props => {
           ...msg,
           videoId: currentVideo,
           videoUrl,
-          currentTime: player.current.currentTime,
+          currentTime: player.current && player.current.currentTime,
           type: 'setVideo',
         })
       }
@@ -177,7 +177,7 @@ const VideoPlayer = props => {
 
   // Changing local player when remote user updates player
   const receiveUpdateMsg = newMsg => {
-    if (newMsg.userId === userId || syncState !== SYNC.ACCEPTED) return
+    if (!player.current || newMsg.userId === userId || syncState !== SYNC.ACCEPTED) return
     // If other user paused the video
     if (newMsg.type === UPDATE.PAUSE) {
       player.current.pause()

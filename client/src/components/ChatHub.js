@@ -14,6 +14,7 @@ import Countdown from './Countdown'
 import ProfileCard from './ProfileCard'
 import MatchHistory from './MatchHistory'
 import Stats from './Stats'
+import AirPlaneDing from '../assets/air-plane-ding.mp3'
 
 const StyledChatHub = styled.div`
   height: -webkit-fill-available;
@@ -129,6 +130,7 @@ function ChatHub(props) {
       }, 5000)
     }
     newSocketHelper.onIdentity = u => {
+      new Audio(AirPlaneDing).play()
       console.log(`Chatting with ${u.id}`)
       setOtherUser(u)
       setConnectionMsg(

@@ -77,7 +77,7 @@ enum AudioPrefType {
   NO_AUDIO
   MOANS
   CONVERSATION
-  ROLEPLAY
+  CHAT_FIRST
 }
 
 type Feedback {

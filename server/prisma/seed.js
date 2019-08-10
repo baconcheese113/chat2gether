@@ -8,7 +8,7 @@ const prisma = new Prisma({
 
 const setup = async () => {
   const genders = ['MALE', 'FEMALE', 'M2F', 'F2M'];
-  const audioPrefs = ['NO_AUDIO', 'MOANS', 'CONVERSATION', 'ROLEPLAY'];
+  const audioPrefs = ['NO_AUDIO', 'MOANS', 'CONVERSATION', 'CHAT_FIRST'];
 
   genders.forEach(async gender => {
     await prisma.mutation.createGenderObject({ data: { name: gender } });

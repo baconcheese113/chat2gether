@@ -4,6 +4,7 @@ import ChoiceSlider from './ChoiceSlider'
 import NumberSlider from './NumberSlider'
 import SVGTester from './SVGTester'
 import ChoicePicker from './ChoicePicker'
+import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
 
 const StyledForm = styled.form`
   background-color: ${props => props.theme.colorGreyDark1};
@@ -54,9 +55,6 @@ const Modal = styled.div`
     transform: translateY(-50%);
   }
 `
-
-const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
-const AUDIO_PREFS = ['NO_AUDIO', 'MOANS', 'CONVERSATION', 'ROLEPLAY']
 
 const UserCreateForm = props => {
   const { error, handleSubmit } = props

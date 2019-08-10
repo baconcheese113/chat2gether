@@ -5,6 +5,7 @@ import NumberSlider from './NumberSlider'
 import { UPDATE_USER } from '../queries/mutations'
 import ChoicePicker from './ChoicePicker'
 import ChoiceSlider from './ChoiceSlider'
+import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
 
 const StyledForm = styled.form`
   width: 90%;
@@ -13,6 +14,7 @@ const StyledForm = styled.form`
   background-color: ${props => props.theme.colorGreyDark1};
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 `
 const Row = styled.div`
   display: flex;
@@ -52,8 +54,6 @@ const stripArr = arr => {
     return { name: x.name }
   })
 }
-const GENDERS = ['MALE', 'FEMALE', 'F2M', 'M2F']
-const AUDIO_PREFS = ['NO_AUDIO', 'MOANS', 'CONVERSATION', 'ROLEPLAY']
 
 const UserUpdateForm = props => {
   const { user, setUser } = props

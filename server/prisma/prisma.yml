@@ -5,7 +5,7 @@ secret: ${env:PRISMA_SECRET}
 hooks:
   post-deploy:
     - echo "Deployment finished"
-    - prisma generate
 
 seed:
   run: node ./seed.js
+    - echo "Seeded DB"
