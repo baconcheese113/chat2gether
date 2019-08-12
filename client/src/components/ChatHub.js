@@ -17,6 +17,7 @@ import Stats from './Stats'
 import AirPlaneDing from '../assets/air-plane-ding.mp3'
 
 const StyledChatHub = styled.div`
+  height: 100vh; /* shitty, but temp fix for firefox */
   height: -webkit-fill-available;
   display: flex;
   flex-direction: ${props => props.flowDirection};
@@ -320,10 +321,13 @@ function ChatHub(props) {
     setFlowDirection(direction)
   }, [window.innerHeight, window.innerHeight])
 
+  const logWindowError = e => console.log(e)
   useEffect(() => {
     window.addEventListener('resize', updateFlowDirection)
+    window.addEventListener('error', logWindowError)
     return () => {
       window.removeEventListener('resize', updateFlowDirection)
+      window.removeEventListener('error', logWindowError)
     }
   }, [])
 
@@ -377,6 +381,7 @@ function ChatHub(props) {
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
             localStream={localStream}
+            requestCamera={requestCamera}
             buttons={{ stop: true, mic: true, speaker: true, profile: true, countdown: true, chat: true, video: true }}
           />
         </React.Fragment>
@@ -422,6 +427,7 @@ function ChatHub(props) {
             chatSettings={chatSettings}
             setChatSettings={setChatSettings}
             localStream={localStream}
+            requestCamera={requestCamera}
             buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
           />
         </div>

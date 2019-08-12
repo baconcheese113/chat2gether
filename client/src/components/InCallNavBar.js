@@ -33,12 +33,47 @@ const InCallNavBar = props => {
     setChatSettings,
     localStream,
     buttons,
+    requestCamera,
   } = props
-  if (!widgetsActive) return ''
+
+  const [isMobile, setIsMobile] = React.useState(false)
+
+  React.useEffect(() => {
+    ;(async () => {
+      try {
+        const allDevices = await navigator.mediaDevices.enumerateDevices()
+        // Both of these being true means we're on mobile
+        const rear = allDevices.some(d => d.kind === 'videoinput' && d.label.includes('back'))
+        const front = allDevices.some(d => d.kind === 'videoinput' && d.label.includes('front'))
+        setIsMobile(rear && front)
+      } catch (err) {
+        console.error(err)
+      }
+    })()
+  }, [navigator.mediaDevices])
 
   const featureToggle = elem => {
     setWidgetsActive({ [elem]: !widgetsActive[elem] })
   }
+
+  const flipCamera = async e => {
+    e.stopPropagation()
+    try {
+      const allDevices = await navigator.mediaDevices.enumerateDevices()
+      const rear = allDevices.find(d => d.kind === 'videoinput' && d.label.includes('back'))
+      const front = allDevices.find(d => d.kind === 'videoinput' && d.label.includes('front'))
+      const currentId = localStream.getVideoTracks()[0].getSettings().deviceId
+      console.log(currentId, rear.deviceId, front.deviceId)
+      if (rear && front) {
+        const newDeviceId = currentId === rear.deviceId ? front.deviceId : rear.deviceId
+        requestCamera(newDeviceId)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if (!widgetsActive) return ''
 
   return (
     <StyledNavBar>
@@ -68,6 +103,7 @@ const InCallNavBar = props => {
             active={chatSettings.speakerMute ? 0 : 1}
           />
         )}
+        {isMobile && <ToggleButton iconClass="fas fa-camera" onClick={flipCamera} />}
       </LeftAligned>
       <RightAligned>
         {buttons.profile && (

@@ -162,11 +162,12 @@ const VideoPlayer = props => {
       // Handle other user changing the video
     } else if (newMsg.type === 'setVideo' && syncState === SYNC.ACCEPTED) {
       if (!active) setVideoNotify(true)
+      if (!newMsg.videoId) return
       setCurrentVideo(newMsg.videoId)
       setVideoUrl(newMsg.videoUrl)
-      setTimeout(() => {
-        player.current.currentTime = newMsg.currentTime
-      }, 1)
+      if (player.current && newMsg.currentTime) {
+        player.current.currentTime = parseFloat(newMsg.currentTime)
+      }
     }
     // Notify if state was changed
     if (syncState !== newState && !active) {
@@ -281,7 +282,7 @@ const VideoPlayer = props => {
               allowFullScreen={false}
             />
           ) : (
-            <p>Watch something while you wait!</p>
+            <p>Click the search and sync buttons in the top left!</p>
           )}
         </VideoContainer>
       </StyledVideoPlayer>
