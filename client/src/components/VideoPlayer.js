@@ -248,8 +248,17 @@ const VideoPlayer = props => {
     return '#ffe400'
   }, [syncState])
 
+  const getSyncText = React.useCallback(() => {
+    if (syncState === SYNC.OFF) return 'Request Sync'
+    if (syncState === SYNC.REQUESTED) return 'Cancel Sync'
+    if (syncState === SYNC.UNACCEPTED) return 'Accept Sync'
+    return 'Synced'
+  }, [syncState])
+
   const height = window.innerWidth > window.innerHeight ? 'auto' : '100%'
 
+  // {syncState === SYNC.UNACCEPTED && <Notification />}
+  // <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
   return (
     <React.Fragment>
       <VideoGrid
@@ -264,8 +273,7 @@ const VideoPlayer = props => {
           <i className="fas fa-search" />
         </SearchButton>
         <SyncButton onClick={toggleSync} color={getColor}>
-          {syncState === SYNC.UNACCEPTED && <Notification />}
-          <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
+          {getSyncText()}
         </SyncButton>
         <VideoContainer disabled={disabled} height={height}>
           <div />

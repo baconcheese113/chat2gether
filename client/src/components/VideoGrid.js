@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import SVGTester from './SVGTester'
 
 const StyledVideoGrid = styled.div`
   position: absolute;
@@ -30,6 +31,14 @@ const CloseButton = styled.button`
   position: absolute;
   top: 5%;
   right: 5%;
+`
+const SearchContent = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
 `
 const ScrollList = styled.div`
   display: grid;
@@ -98,6 +107,7 @@ const VideoGrid = props => {
   const { videos, onSubmitSearch, isShown, setIsShown, selectVideo } = props
   const [query, setQuery] = useState('')
   const [submittedQuery, setSubmittedQuery] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleClose = () => {
     setIsShown(false)
@@ -108,11 +118,56 @@ const VideoGrid = props => {
     setIsShown(false)
   }
 
-  const handleSearchSubmit = e => {
+  const handleSearchSubmit = async e => {
     e.preventDefault()
     if (query.length < 1 || query === submittedQuery) return
-    onSubmitSearch(query)
     setSubmittedQuery(query)
+    setIsLoading(true)
+    try {
+      await onSubmitSearch(query)
+    } catch (err) {
+      console.error(err)
+    }
+    setIsLoading(false)
+  }
+
+  const getContent = () => {
+    if (isLoading) {
+      console.log('displayed')
+      const length = `${window.innerWidth / 3}px`
+      return (
+        <SearchContent>
+          <SVGTester height={length} width={length} />
+        </SearchContent>
+      )
+    }
+    if (!videos.length && submittedQuery) {
+      return (
+        <SearchContent>
+          <p>No results found</p>
+        </SearchContent>
+      )
+    }
+    if (videos.length) {
+      return (
+        <ScrollList>
+          {videos.map(video => {
+            return (
+              <Result key={video.id} onClick={() => handleSelectVideo(video.id)}>
+                <ResultTitle>{video.title}</ResultTitle>
+                <ResultImage src={video.img} alt={video.title} />
+                <ResultDuration>{video.duration}</ResultDuration>
+              </Result>
+            )
+          })}
+        </ScrollList>
+      )
+    }
+    return (
+      <SearchContent>
+        <p>Enter a search above to start!</p>
+      </SearchContent>
+    )
   }
 
   return (
@@ -121,21 +176,14 @@ const VideoGrid = props => {
       <CloseButton onClick={handleClose}>X</CloseButton>
       <Modal>
         <SearchBarForm onSubmit={handleSearchSubmit}>
-          <SearchBar value={query} onChange={e => setQuery(e.target.value)} />
+          <SearchBar
+            placeholder={`Search ${process.env.REACT_APP_SEARCH_DOMAIN} by keyword, URLs are not supported`}
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+          />
           <SubmitButton>Search</SubmitButton>
         </SearchBarForm>
-        <ScrollList>
-          {videos &&
-            videos.map(video => {
-              return (
-                <Result key={video.id} onClick={() => handleSelectVideo(video.id)}>
-                  <ResultTitle>{video.title}</ResultTitle>
-                  <ResultImage src={video.img} alt={video.title} />
-                  <ResultDuration>{video.duration}</ResultDuration>
-                </Result>
-              )
-            })}
-        </ScrollList>
+        {getContent()}
       </Modal>
     </StyledVideoGrid>
   )

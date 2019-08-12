@@ -117,7 +117,6 @@ video {
 .video-remote {
   flex: 1;
   position: relative;
-  height: 100vh;
   height: -webkit-fill-available;
   width: 100%;
   overflow: hidden;
