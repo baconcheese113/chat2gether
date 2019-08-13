@@ -24,6 +24,27 @@ const StyledChatHub = styled.div`
   justify-content: center;
   overflow: hidden;
 `
+const NextMatchButton = styled.button`
+  color: ${props => (props.disabled ? '#aaa' : '#fff')};
+`
+const NextMatchSVG = styled.svg`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transform: scale(1.01, 1.1);
+`
+const NextMatchRect = styled.rect`
+  stroke-width: 4px;
+  stroke-opacity: 1;
+  stroke-dashoffset: ${props => (props.disabled ? 0 : 349)}px;
+  stroke-dasharray: 349px;
+  stroke: ${props => props.theme.colorPrimary};
+  transition: all ${props => (props.disabled ? 1.8 : 0.2)}s;
+`
+const ConnectingText = styled.p`
+  padding: 0 1rem;
+`
 
 // When user presses Share Video, request camera
 // When user presses Next Match, Initialize socket and Find Room
@@ -56,6 +77,7 @@ function ChatHub(props) {
   const [chatSettings, setChatSettings] = useState({ micMute: false, speakerMute: false })
   const [lastReadMsg, setLastReadMsg] = useState(-1)
   const [flowDirection, setFlowDirection] = useState(window.innerWidth > window.innerHeight ? 'row' : 'column')
+  const [canNextMatch, setCanNextMatch] = useState(true)
 
   const probeTimer = useRef(null)
   const room = useRef(null)
@@ -112,7 +134,7 @@ function ChatHub(props) {
       })
       if (error) console.error(error)
       if (loading) console.log(loading)
-      setUser(data.updateUser)
+      setUser({ ...user, ...data.updateUser })
       console.log('ontrack dump', data.updateUser, room.current, e.streams[0])
       newSocketHelper.emit('identity', { user: data.updateUser, roomId: room.current })
       // setRemoteStream(e.streams[0])
@@ -163,7 +185,9 @@ function ChatHub(props) {
     return newSocketHelper
   }
 
-  const nextMatch = async () => {
+  const nextMatch = async e => {
+    if (e) e.stopPropagation()
+    setCanNextMatch(false)
     const data = { isHost: false, isConnected: false }
     if (otherUser) {
       data.visited = { connect: [{ id: otherUser.id }] }
@@ -180,7 +204,7 @@ function ChatHub(props) {
 
     // Start finding a room
     const d = new Date()
-    d.setMinutes(d.getMinutes() - 1)
+    d.setMinutes(d.getMinutes() - 0.25)
     const tempSocketHelper = await initializeSocket()
     // tempSocketHelper.leaveRooms()
     const compatibleHosts = await props.client.query({
@@ -207,6 +231,7 @@ function ChatHub(props) {
       },
     })
     if (compatibleHosts.error) {
+      setCanNextMatch(true)
       console.error(compatibleHosts.error)
       return
     }
@@ -224,7 +249,7 @@ function ChatHub(props) {
       const updatedUser = updateUserRes.data.updateUser
       setConnectionMsg('Waiting for matches...')
       console.log(updatedUser)
-      setUser(updatedUser)
+      setUser({ ...user, ...updatedUser })
       room.current = updatedUser.id
       console.log(`FUCK WE JOINING ${updatedUser.id} BRUH`)
       tempSocketHelper.joinRoom(updatedUser.id)
@@ -234,6 +259,7 @@ function ChatHub(props) {
       setOtherUser(hosts[0])
       tempSocketHelper.joinRoom(hosts[0].id)
     }
+    setCanNextMatch(true)
   }
 
   useEffect(() => {
@@ -242,7 +268,7 @@ function ChatHub(props) {
       clearTimeout(probeTimer.current)
       probeTimer.current = setTimeout(() => {
         nextMatch()
-      }, 60000)
+      }, 15000)
     }
   }, [connectionMsg])
 
@@ -289,9 +315,12 @@ function ChatHub(props) {
   const getChatNav = () => {
     return (
       <div className="chat-nav">
-        <button className="next-match" type="button" onClick={nextMatch}>
+        <NextMatchButton className="next-match" type="button" onClick={nextMatch} disabled={!canNextMatch}>
           Next Match
-        </button>
+          <NextMatchSVG width="100%" height="100%" fill="transparent">
+            <NextMatchRect disabled={!canNextMatch} height="100%" width="100%" rx="15px" />
+          </NextMatchSVG>
+        </NextMatchButton>
         <button
           type="button"
           className="settings-button"
@@ -310,7 +339,7 @@ function ChatHub(props) {
       if (error) console.error(error)
       if (data.me) {
         console.log(data.me)
-        setUser(data.me)
+        setUser({ ...user, ...data.me })
       }
       return data.me
     })()
@@ -371,7 +400,6 @@ function ChatHub(props) {
             active={widgetsActive.countdown}
           />
           <InCallNavBar
-            nextMatch={nextMatch}
             resetState={resetState}
             setWidgetsActive={setWidgetsActive}
             widgetsActive={widgetsActive}
@@ -400,7 +428,7 @@ function ChatHub(props) {
       <React.Fragment>
         <div className="video-connecting">
           {getChatNav()}
-          <p className="connecting-text">{connectionMsg}</p>
+          <ConnectingText>{connectionMsg}</ConnectingText>
           <VideoWindow
             videoType="localVideo"
             stream={localStream}
@@ -412,7 +440,7 @@ function ChatHub(props) {
             <UserUpdateForm
               user={user}
               setUser={newUser => {
-                setUser(newUser)
+                setUser({ ...user, ...newUser })
                 if (room.current) nextMatch()
               }}
             />
@@ -420,7 +448,6 @@ function ChatHub(props) {
           {widgetsActive.stats && <Stats />}
           {widgetsActive.matches && <MatchHistory users={user.visited} />}
           <InCallNavBar
-            nextMatch={nextMatch}
             resetState={resetState}
             setWidgetsActive={setWidgetsActive}
             widgetsActive={widgetsActive}

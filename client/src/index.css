@@ -185,7 +185,6 @@ video {
 
 .chat-nav {
   position: absolute;
-  overflow: hidden;
   right: 20px;
   top: 20px;
   z-index: 1;

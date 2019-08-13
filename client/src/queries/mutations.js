@@ -32,6 +32,8 @@ export const UPDATE_USER = gql`
       isConnected
       visited {
         id
+        gender
+        age
       }
     }
   }
