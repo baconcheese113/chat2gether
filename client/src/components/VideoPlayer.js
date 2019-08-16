@@ -77,18 +77,18 @@ const SyncButton = styled.button`
     animation: ${syncRotate} 3s linear;
   }
 `
-const Notification = styled.span`
-  color: #fff;
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: red;
-  font-size: 1.3rem;
-  border-radius: 50%;
-  width: 1.2rem;
-  height: 1.2rem;
-  z-index: 10;
-`
+// const Notification = styled.span`
+//   color: #fff;
+//   position: absolute;
+//   top: 0;
+//   right: 0;
+//   background-color: red;
+//   font-size: 1.3rem;
+//   border-radius: 50%;
+//   width: 1.2rem;
+//   height: 1.2rem;
+//   z-index: 10;
+// `
 
 const SYNC = { OFF: 'off', REQUESTED: 'requested', UNACCEPTED: 'unaccepted', ACCEPTED: 'accepted' }
 const UPDATE = { PAUSE: 'pause', PLAY: 'play', SEEKED: 'seeked' }

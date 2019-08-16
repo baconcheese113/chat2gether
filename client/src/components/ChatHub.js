@@ -263,14 +263,14 @@ function ChatHub(props) {
   }
 
   useEffect(() => {
-    if (connectionMsg === 'Waiting for matches...') {
+    if (connectionMsg === 'Waiting for matches...' && !otherUser) {
       console.log('effect cleared')
       clearTimeout(probeTimer.current)
       probeTimer.current = setTimeout(() => {
         nextMatch()
       }, 15000)
     }
-  }, [connectionMsg])
+  }, [connectionMsg, otherUser])
 
   // InitializeSocket needs to be called first
   const requestCamera = async (videoSource = undefined, audioSource = undefined) => {
@@ -359,6 +359,22 @@ function ChatHub(props) {
       window.removeEventListener('error', logWindowError)
     }
   }, [])
+
+  const onUnload = React.useCallback(
+    e => {
+      if (!otherUser) return null
+      e.returnValue = 'Are you sure you want to end your call?'
+      return 'Are you sure you want to end your call?'
+    },
+    [otherUser],
+  )
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', onUnload)
+    return () => {
+      window.removeEventListener('beforeunload', onUnload)
+    }
+  }, [onUnload])
 
   const renderBackground = () => {
     if (remoteStream) {

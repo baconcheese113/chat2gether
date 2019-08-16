@@ -47,12 +47,12 @@ const UserCreateNumbers = styled.div`
   border-radius: 20px 0;
 `
 
-const MoreFeatures = styled.button`
-  display: inline-block;
-  font: inherit;
-  font-size: 2rem;
-  color: inherit;
-`
+// const MoreFeatures = styled.button`
+//   display: inline-block;
+//   font: inherit;
+//   font-size: 2rem;
+//   color: inherit;
+// `
 
 const UserCreate = props => {
   const [errorMsg, setErrorMsg] = useState('')

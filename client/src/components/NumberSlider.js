@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import Slider from '@material-ui/core/Slider'
 
 const StyledNumberSlider = styled.div`
@@ -19,7 +19,7 @@ const StyledSlider = styled(Slider)`
 `
 
 const NumberSlider = props => {
-  const { numbers, change, showFill } = props
+  const { numbers, change } = props
   const MIN_AGE = 18
   const MAX_AGE = 90
 

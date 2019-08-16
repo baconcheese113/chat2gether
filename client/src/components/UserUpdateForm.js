@@ -126,13 +126,13 @@ const UserUpdateForm = props => {
     setUser({ ...user, ...changes })
 
     // Now change shape to fit update (if lookingFor was changed)
-    if (user.lookingFor != lookingFor) {
+    if (user.lookingFor !== lookingFor) {
       changes.lookingFor = {
         set: stripArr(lookingFor),
       }
     }
     // Now change shape to fit update (if accAudioPrefs was changed)
-    if (user.accAudioPrefs != accAudioPrefs) {
+    if (user.accAudioPrefs !== accAudioPrefs) {
       changes.accAudioPrefs = {
         set: stripArr(accAudioPrefs),
       }
@@ -149,10 +149,10 @@ const UserUpdateForm = props => {
   useEffect(() => {
     if (
       !areEqualArr(user.lookingFor, lookingFor) ||
-      minAge != user.minAge ||
-      maxAge != user.maxAge ||
+      minAge !== user.minAge ||
+      maxAge !== user.maxAge ||
       !areEqualArr(user.accAudioPrefs, accAudioPrefs) ||
-      audioPref != AUDIO_PREFS.indexOf(user.audioPref)
+      audioPref !== AUDIO_PREFS.indexOf(user.audioPref)
     ) {
       if (!hasChanges) setHasChanges(true)
     } else if (hasChanges) setHasChanges(false)
