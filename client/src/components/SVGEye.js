@@ -52,7 +52,7 @@ const StyledSVG = styled.div`
   }
 `
 
-const SVGEye = props => {
+const SVGEye = () => {
   return (
     <StyledSVG>
       <svg xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 100.928 100.885">
