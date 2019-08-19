@@ -55,24 +55,9 @@ const UserCreateNumbers = styled.div`
 // `
 
 const UserCreate = props => {
+  const { setUser } = props
   const [errorMsg, setErrorMsg] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  useEffect(() => {
-    if (document.cookie.split(';').filter(item => item.trim().startsWith('token=')).length === 0) {
-      return
-    }
-    console.log('Cookie found, proceeding')
-    const fetchData = async () => {
-      const { data, error } = await props.client.query({ query: GET_ME })
-      if (data.me) {
-        props.storeUser(data.me)
-      }
-      console.log(data, error)
-      return data.me
-    }
-    fetchData()
-  }, [])
 
   const handleSubmit = async (e, { gender, lookingFor, age, minAge, maxAge, audioPref, accAudioPrefs }) => {
     e.preventDefault()
@@ -104,7 +89,7 @@ const UserCreate = props => {
           return { name: x }
         })
         console.log(user)
-        props.storeUser(user)
+        setUser(user)
       }
     } else {
       setErrorMsg('Please fill out all fields')

@@ -19,7 +19,7 @@ const ButtonElem = styled.button`
     ${({ theme }) => theme.colorPrimary},
     ${({ theme }) => theme.colorGreyLight3}
   );
-  
+  z-index: inherit;
   filter: grayscale(${props => (props.active ? '0%' : '90%')});
 `
 
@@ -33,7 +33,6 @@ const Notification = styled.p`
   border-radius: 50%;
   width: 2rem;
   height: 2rem;
-  z-index: 10;
 `
 
 const ToggleButton = props => {

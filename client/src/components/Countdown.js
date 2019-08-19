@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
+import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import { useNotify } from '../hooks/NotifyContext'
 
 /*
   Button absolutely positioned on screen "Countdown"
@@ -91,11 +93,16 @@ const ScanLine = styled.div`
 `
 
 const Countdown = props => {
-  const { userId, socketHelper, roomId, setCountdownNotify, active } = props
+  const { userId, socketHelper, roomId } = props
   const [isRequester, setIsRequester] = useState(false)
   const [status, setStatus] = useState('none')
   const [countdownText, setCountdownText] = useState('Countdown')
+
   const timer = useRef()
+
+  const { setCountdownNotify } = useNotify()
+  const { enabledWidgets } = useEnabledWidgets()
+  const active = enabledWidgets.countdown
 
   const spacing = 1.6 // parsedText ? (4 / countdownText) * 0.2 + 1 : 1
 

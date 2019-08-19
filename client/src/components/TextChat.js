@@ -1,5 +1,7 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
+import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import { useNotify } from '../hooks/NotifyContext'
 
 // const consoleCollapse = keyframes`
 //   0%{transform: translateY(0)}
@@ -30,6 +32,7 @@ const historyShow = keyframes`
 `
 
 const StyledTextChat = styled.section`
+  display: ${props => (props.active ? 'block' : 'none')};
   position: absolute;
   overflow: hidden;
   background-color: transparent;
@@ -111,63 +114,57 @@ const ConsoleButton = styled.button`
   padding: 0.5rem 2rem 0.5rem 0.5rem;
 `
 
-/** ******************** Component start */
-class TextChat extends React.Component {
-  messagesEnd = React.createRef()
+export default function TextChat(props) {
+  const { user, socketHelper, room } = props
 
-  state = {
-    comment: '',
+  const [comment, setComment] = React.useState('')
+  const [textChat, setTextChat] = React.useState([])
+  const [lastReadMsg, setLastReadMsg] = React.useState(-1)
+
+  const messagesEnd = React.useRef()
+
+  const { setTextNotify } = useNotify()
+  const { enabledWidgets } = useEnabledWidgets()
+
+  const onComment = e => {
+    console.log(...textChat)
+    setTextChat(prev => [...prev, { comment: e.text, userId: e.userId }])
   }
 
-  componentDidMount() {
-    const {lastReadMsg, setLastReadMsg, textChat } = this.props
-    if(lastReadMsg < textChat.length - 1)
-      setLastReadMsg(textChat.length - 1)
+  React.useEffect(() => {
+    socketHelper.socket.on('comment', onComment)
+    return () => {
+      socketHelper.socket.off('comment', onComment)
+    }
+  }, [socketHelper.socket])
+
+  const scrollToBottom = () => {
+    messagesEnd.current.scrollIntoView({ behavior: 'smooth' })
   }
 
-  componentDidUpdate() {
-    this.scrollToBottom()
-    const {lastReadMsg, setLastReadMsg, textChat } = this.props
-    if(lastReadMsg < textChat.length - 1)
-      setLastReadMsg(textChat.length - 1)
-  }
+  React.useEffect(() => {
+    if (enabledWidgets.text) {
+      scrollToBottom()
+      console.log('text console visible')
+      if (lastReadMsg < textChat.length - 1) setLastReadMsg(textChat.length - 1)
+    } else {
+      setTextNotify(textChat.length - 1 - lastReadMsg)
+    }
+    console.log(lastReadMsg)
+  }, [enabledWidgets.text, textChat, lastReadMsg])
 
-  scrollToBottom = () => {
-    this.messagesEnd.current.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  renderTextChat = () => {
-    // return (
-    //   <div>
-    //     <p className="text-comment text-remote" key={1}>Lorem ipsum dolor</p>
-    //     <p className="text-comment text-local" key={2}>Oin, foawiienn, falw fiejf wfoien fwoie eifowf ifweni.</p>
-    //     <p className="text-comment text-local" key={3}>owief. ofienwfni, fiwn fiwnfoi.</p>
-    //     <p className="text-comment text-remote" key={4}>Login ifo ifen aofien aofh fghei aofei</p>
-    //     <p className="text-comment text-local" key={5}>Goins ifnwo non fnife fif i fiw.</p>
-    //     <p className="text-comment text-remote" key={6}>Lorem ipsum dolor</p>
-    //     <p className="text-comment text-local" key={7}>owief. ofienwfni, fiwn fiwnfoi.</p>
-    //     <p className="text-comment text-local" key={8}>Lorem ipsum dolor</p>
-    //     <p className="text-comment text-remote" key={9}>Oin, foawiienn, falw fiejf wfoien fwoie eifowf ifweni.</p>
-    //     <p className="text-comment text-local" key={10}>Login ifo ifen aofien aofh fghei aofei</p>
-    //   </div>
-    // )
-    // console.log(this.props.textChat);
-    const { user, textChat } = this.props
-    return textChat.map((comment, index) => {
-      console.log(comment, index)
+  const renderTextChat = React.useCallback(() => {
+    return textChat.map((sentComment, index) => {
       return (
-        <TextComment key={index} className={`text-${comment.userId === user.id ? 'local' : 'remote'}`}>
-          {comment.comment}
+        <TextComment key={index} className={`text-${sentComment.userId === user.id ? 'local' : 'remote'}`}>
+          {sentComment.comment}
         </TextComment>
       )
     })
-  }
+  }, [textChat])
 
-  handleSubmit = e => {
-    const { socketHelper, user, room } = this.props
-    const { comment } = this.state
+  const handleSubmit = e => {
     e.preventDefault()
-    // this.props.onSubmit(e, this.state.comment);
     if (!socketHelper || !comment) {
       console.log(`No sockethelper! ${socketHelper} ${comment}`)
       return
@@ -178,30 +175,19 @@ class TextChat extends React.Component {
       roomId: room,
     })
 
-    this.setState({ comment: '' })
+    setComment('')
   }
 
-  render() {
-    const { comment } = this.state
-    return (
-      <StyledTextChat>
-        <TextHistory>
-          {this.renderTextChat()}
-          <div ref={this.messagesEnd} />
-        </TextHistory>
-        <TextConsole onSubmit={this.handleSubmit}>
-          <ConsoleInput
-            type="text"
-            value={comment}
-            onChange={e => {
-              this.setState({ comment: e.target.value })
-            }}
-          />
-          <ConsoleButton type="submit">Send</ConsoleButton>
-        </TextConsole>
-      </StyledTextChat>
-    )
-  }
+  return (
+    <StyledTextChat active={enabledWidgets.text}>
+      <TextHistory>
+        {renderTextChat()}
+        <div ref={messagesEnd} />
+      </TextHistory>
+      <TextConsole onSubmit={handleSubmit}>
+        <ConsoleInput type="text" value={comment} onChange={e => setComment(e.target.value)} />
+        <ConsoleButton type="submit">Send</ConsoleButton>
+      </TextConsole>
+    </StyledTextChat>
+  )
 }
-
-export default TextChat

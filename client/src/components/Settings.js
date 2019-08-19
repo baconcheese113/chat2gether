@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { compose, graphql, withApollo } from 'react-apollo'
 import { CREATE_FEEDBACK } from '../queries/mutations'
 import SVGTester from './SVGTester'
+import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import { useLocalStream } from '../hooks/LocalStreamContext'
 
 const StyledSettings = styled.div`
   position: absolute;
@@ -60,6 +62,8 @@ const SettingsList = styled.div`
 
 const Actions = styled.div`
   display: flex;
+  /* for Edge */
+  /* justify-content: space-around; */
   justify-content: space-evenly;
   justify-self: flex-end;
   font-size: 1.2rem;
@@ -120,6 +124,9 @@ function Settings(props) {
   const [feedbackMsg, setFeedbackMsg] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
+  const { localStream, requestCamera } = useLocalStream()
+  const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
+
   const getDevices = async () => {
     try {
       console.log(selectedVideo)
@@ -143,17 +150,17 @@ function Settings(props) {
   }
 
   useEffect(() => {
-    if (!props.stream) return
-    const videoId = props.stream.getVideoTracks()[0].getSettings().deviceId
+    if (!localStream) return
+    const videoId = localStream.getVideoTracks()[0].getSettings().deviceId
     setSelectedVideo(videoId)
     getDevices()
   }, [])
 
   const handleClose = (shouldApply = true) => {
     if (shouldApply) {
-      props.requestCamera(selectedVideo)
+      requestCamera(selectedVideo)
     }
-    props.setWidgetsActive({ ...props.widgetsActive, menu: false })
+    setEnabledWidgets({ ...enabledWidgets, menu: false })
   }
 
   const handleFeedback = async e => {
@@ -167,6 +174,7 @@ function Settings(props) {
       setFeedbackText('')
       setFeedbackMsg('Thanks for your feedback!')
     }
+    return null
   }
 
   console.log(feedbackText)

@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { compose, graphql, withApollo } from 'react-apollo'
 import VideoWindow from './VideoWindow'
 import TextChat from './TextChat'
-import { UPDATE_USER } from '../queries/mutations'
-import { GET_ME, FIND_ROOM } from '../queries/queries'
-import SocketHelper from '../helpers/socketHelper'
+import { GET_ME } from '../queries/queries'
 import Settings from './Settings'
 import InCallNavBar from './InCallNavBar'
 import VideoPlayer from './VideoPlayer'
@@ -14,7 +12,10 @@ import Countdown from './Countdown'
 import ProfileCard from './ProfileCard'
 import MatchHistory from './MatchHistory'
 import Stats from './Stats'
-import AirPlaneDing from '../assets/air-plane-ding.mp3'
+// import AirPlaneDing from '../assets/air-plane-ding.mp3'
+import { useLocalStream } from '../hooks/LocalStreamContext'
+import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import { useSocket } from '../hooks/SocketContext'
 
 const StyledChatHub = styled.div`
   height: 100vh; /* shitty, but temp fix for firefox */
@@ -54,268 +55,31 @@ const ConnectingText = styled.p`
 
 function ChatHub(props) {
   const [user, setUser] = useState(null)
-  const [otherUser, setOtherUser] = useState(null)
-  const [socketHelper, setSocketHelper] = useState(null)
-  const [remoteStream, setRemoteStream] = useState(null)
-  const [localStream, setLocalStream] = useState(null)
-  const [textChat, setTextChat] = useState([])
-  const [connectionMsg, setConnectionMsg] = useState('Welcome to Chat2Gether')
-  const [countdown, setCountdown] = useState(-1)
-  const [countdownTimer, setCountdownTimer] = useState(null)
-  const [widgetsActive, setWidgetsActive] = useState({
-    text: false,
-    menu: false,
-    video: false,
-    countdown: false,
-    profile: false,
-    matches: false,
-    stats: false,
-    updatePref: false,
-  })
-  const [countdownNotify, setCountdownNotify] = useState(false)
-  const [videoNotify, setVideoNotify] = useState(false)
-  const [chatSettings, setChatSettings] = useState({ micMute: false, speakerMute: false })
-  const [lastReadMsg, setLastReadMsg] = useState(-1)
   const [flowDirection, setFlowDirection] = useState(window.innerWidth > window.innerHeight ? 'row' : 'column')
-  const [canNextMatch, setCanNextMatch] = useState(true)
 
-  const probeTimer = useRef(null)
-  const room = useRef(null)
+  const { localStream, requestCamera } = useLocalStream()
+  const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
+  const {
+    socketHelper,
+    connectionMsg,
+    remoteStream,
+    nextMatch,
+    canNextMatch,
+    roomId,
+    resetSocket,
+    otherUser,
+    matchCountdown,
+  } = useSocket()
 
-  const startCountdown = () => {
-    setCountdown(5)
-    // setConnectionMsg(5)
-    let num = 5
-    const timer = setInterval(() => {
-      if (num <= 1) {
-        window.clearInterval(timer)
-      }
-      num -= 1
-      // setConnectionMsg(`${num}`)
-      setCountdown(num)
-    }, 1000)
-    setCountdownTimer(timer)
-  }
-
-  const resetState = () => {
-    console.log('reset state')
-    // Clean up any existing room
-    window.clearInterval(countdownTimer)
-    clearTimeout(probeTimer.current)
-    setRemoteStream(null)
-    setTextChat([])
-    room.current = null
-    setOtherUser(null)
-    if (socketHelper) socketHelper.leaveRooms()
-  }
-
-  // Starts socket.io up
-  const initializeSocket = () => {
-    const newSocketHelper = new SocketHelper()
-    newSocketHelper.localStream = localStream
-    newSocketHelper.onNextRoom = async roomId => {
-      console.log('onNextRoom')
-      if (roomId) {
-        const { error } = await props.client.mutate({
-          mutation: UPDATE_USER,
-          variables: { data: { visited: { connect: { id: roomId } } } },
-        })
-        if (error) console.error(error)
-      }
-      // eslint-disable-next-line no-use-before-define
-      nextMatch()
-    }
-    newSocketHelper.onTrack = async e => {
-      console.log('ontrack', e)
-      clearTimeout(probeTimer.current)
-      const { data, loading, error } = await props.client.mutate({
-        mutation: UPDATE_USER,
-        variables: { data: { isConnected: true } },
-      })
-      if (error) console.error(error)
-      if (loading) console.log(loading)
-      setUser({ ...user, ...data.updateUser })
-      console.log('ontrack dump', data.updateUser, room.current, e.streams[0])
-      newSocketHelper.emit('identity', { user: data.updateUser, roomId: room.current })
-      // setRemoteStream(e.streams[0])
-      setTimeout(() => {
-        console.log(`other user is ${otherUser}`)
-        let hackyUser = null
-        // Using this hack to get state from inside closure
-        setOtherUser(prev => {
-          hackyUser = prev
-          return prev
-        })
-        console.log(`hackyUser is ${hackyUser}`)
-        if (hackyUser) {
-          setRemoteStream(e.streams[0])
-        }
-      }, 5000)
-    }
-    newSocketHelper.onIdentity = u => {
-      new Audio(AirPlaneDing).play()
-      console.log(`Chatting with ${u.id}`)
-      setOtherUser(u)
-      setConnectionMsg(
-        `Matched with a ${u.age} year old ${u.gender.toLowerCase()}.
-        Prefers ${u.audioPref.replace(/_/g, ' ').toLowerCase()}...`,
-      )
-      startCountdown()
-    }
-    newSocketHelper.onIceConnectionStateChange = e => {
-      console.log(e.target.iceConnectionState)
-      // setTextChat([...textChat, {comment: e.target.iceConnectionState, userId: -1}]);
-    }
-    newSocketHelper.onComment = e => {
-      console.log(...textChat)
-      setTextChat(prev => [...prev, { comment: e.text, userId: e.userId }])
-    }
-    newSocketHelper.updateConnectionMsg = connectMsg => {
-      setConnectionMsg(connectMsg)
-    }
-    newSocketHelper.onDisconnect = () => {
-      console.log('Disconnecting...')
-      setConnectionMsg('User Disconnected')
-      // newSocketHelper.pc.close()
-      resetState()
-    }
-    newSocketHelper.initializeEvents()
-    setSocketHelper(newSocketHelper)
-    console.log('initialize socket')
-    return newSocketHelper
-  }
-
-  const nextMatch = async e => {
-    if (e) e.stopPropagation()
-    setCanNextMatch(false)
-    const data = { isHost: false, isConnected: false }
-    if (otherUser) {
-      data.visited = { connect: [{ id: otherUser.id }] }
-    }
-
-    // Clean up any existing room
-    resetState()
-    setConnectionMsg('Finding a match...')
-    const resetUserRes = await props.client.mutate({
-      mutation: UPDATE_USER,
-      variables: { data },
-    })
-    if (resetUserRes.error) console.error(resetUserRes)
-
-    // Start finding a room
-    const d = new Date()
-    d.setMinutes(d.getMinutes() - 0.25)
-    const tempSocketHelper = await initializeSocket()
-    // tempSocketHelper.leaveRooms()
-    const compatibleHosts = await props.client.query({
-      query: FIND_ROOM,
-      variables: {
-        where: {
-          AND: [
-            { id_not: user.id },
-            { id_not_in: user.visited.map(x => x.id) },
-            { gender_in: user.lookingFor.map(x => x.name) },
-            { lookingFor_some: { name: user.gender } },
-            { minAge_lte: user.age },
-            { maxAge_gte: user.age },
-            { age_lte: user.maxAge },
-            { age_gte: user.minAge },
-            { audioPref_in: user.accAudioPrefs.map(x => x.name) },
-            { accAudioPrefs_some: { name: user.audioPref } },
-            { isHost: true },
-            { isConnected: false },
-            { visited_none: { id: user.id } },
-            { updatedAt_gt: d.toISOString() },
-          ],
-        },
-      },
-    })
-    if (compatibleHosts.error) {
-      setCanNextMatch(true)
-      console.error(compatibleHosts.error)
-      return
-    }
-    const hosts = compatibleHosts.data.users
-    console.log(hosts)
-
-    if (hosts.length < 1) {
-      setConnectionMsg('No Hosts Found')
-      // Become a host
-      const updateUserRes = await props.client.mutate({
-        mutation: UPDATE_USER,
-        variables: { data: { isHost: true } },
-      })
-      console.log(updateUserRes)
-      const updatedUser = updateUserRes.data.updateUser
-      setConnectionMsg('Waiting for matches...')
-      console.log(updatedUser)
-      setUser({ ...user, ...updatedUser })
-      room.current = updatedUser.id
-      console.log(`FUCK WE JOINING ${updatedUser.id} BRUH`)
-      tempSocketHelper.joinRoom(updatedUser.id)
-    } else {
-      // Join a host
-      room.current = hosts[0].id
-      setOtherUser(hosts[0])
-      tempSocketHelper.joinRoom(hosts[0].id)
-    }
-    setCanNextMatch(true)
-  }
-
-  useEffect(() => {
-    if (connectionMsg === 'Waiting for matches...' && !otherUser) {
-      console.log('effect cleared')
-      clearTimeout(probeTimer.current)
-      probeTimer.current = setTimeout(() => {
-        nextMatch()
-      }, 15000)
-    }
-  }, [connectionMsg, otherUser])
-
-  // InitializeSocket needs to be called first
-  const requestCamera = async (videoSource = undefined, audioSource = undefined) => {
-    console.log('request camera')
-    const constraints = {
-      video: {
-        deviceId: videoSource ? { exact: videoSource } : undefined,
-        aspectRatio: { min: 0.5, max: 2 },
-      },
-      audio: {
-        deviceId: audioSource ? { exact: audioSource } : undefined,
-      },
-    }
-    console.log(constraints)
-    // Get stream
-    try {
-      console.log(navigator.mediaDevices)
-      // Have to stop tracks before switching on mobile
-      if (localStream) localStream.getTracks().forEach(track => track.stop())
-      console.log('tracks stopped')
-      const stream = await navigator.mediaDevices.getUserMedia(constraints)
-      // If we have an existing connection
-      console.log(stream)
-      if (remoteStream && videoSource) {
-        socketHelper.replaceTrack(stream)
-      }
-      setLocalStream(stream)
-      const audio = stream.getAudioTracks()
-      console.log(audio)
-      if (audio.length > 0) {
-        audio[0].enabled = !chatSettings.micMute
-        console.log(`audio enabled is now ${audio[0].enabled}`)
-      }
-    } catch (e) {
-      alert(
-        "Video is required to use this app. On iOS only Safari can share video. Also make sure you're at 'https://'. If you're still receiving this error, please contact me.",
-      )
-      console.error(e)
-    }
+  const handleNextMatch = e => {
+    e.stopPropagation()
+    if (localStream && canNextMatch) nextMatch(localStream)
   }
 
   const getChatNav = () => {
     return (
       <div className="chat-nav">
-        <NextMatchButton className="next-match" type="button" onClick={nextMatch} disabled={!canNextMatch}>
+        <NextMatchButton className="next-match" type="button" onClick={handleNextMatch} disabled={!canNextMatch}>
           Next Match
           <NextMatchSVG width="100%" height="100%" fill="transparent">
             <NextMatchRect disabled={!canNextMatch} height="100%" width="100%" rx="15px" />
@@ -324,7 +88,7 @@ function ChatHub(props) {
         <button
           type="button"
           className="settings-button"
-          onClick={() => setWidgetsActive({ ...widgetsActive, menu: true })}
+          onClick={() => setEnabledWidgets({ ...enabledWidgets, menu: true })}
         >
           <i className="fas fa-ellipsis-v" />
         </button>
@@ -380,52 +144,15 @@ function ChatHub(props) {
     if (remoteStream) {
       return (
         <React.Fragment>
-          <VideoPlayer
-            socketHelper={socketHelper}
-            userId={user.id}
-            roomId={room.current}
-            active={widgetsActive.video}
-            videoNotify={videoNotify}
-            setVideoNotify={setVideoNotify}
-          />
-          <VideoWindow videoType="remoteVideo" stream={remoteStream} chatSettings={chatSettings} />
-          <VideoWindow
-            videoType="localVideo"
-            stream={localStream}
-            chatSettings={chatSettings}
-            setChatSettings={setChatSettings}
-          />
+          <VideoPlayer socketHelper={socketHelper} userId={user.id} roomId={roomId} />
+          <VideoWindow videoType="remoteVideo" stream={remoteStream} />
+          <VideoWindow videoType="localVideo" stream={localStream} />
           {getChatNav()}
-          {widgetsActive.text && (
-            <TextChat
-              user={user}
-              socketHelper={socketHelper}
-              room={room.current}
-              textChat={textChat}
-              lastReadMsg={lastReadMsg}
-              setLastReadMsg={setLastReadMsg}
-            />
-          )}
-          <ProfileCard user={otherUser} active={widgetsActive.profile} />
-          <Countdown
-            socketHelper={socketHelper}
-            myUserId={user.id}
-            roomId={room.current}
-            countdownNotify={countdownNotify}
-            setCountdownNotify={setCountdownNotify}
-            active={widgetsActive.countdown}
-          />
+          <TextChat user={user} socketHelper={socketHelper} room={roomId} />
+          <ProfileCard user={otherUser} />
+          <Countdown socketHelper={socketHelper} myUserId={user.id} roomId={roomId} />
           <InCallNavBar
-            resetState={resetState}
-            setWidgetsActive={setWidgetsActive}
-            widgetsActive={widgetsActive}
-            textNotify={textChat.length - (lastReadMsg + 1)}
-            countdownNotify={countdownNotify}
-            videoNotify={videoNotify}
-            chatSettings={chatSettings}
-            setChatSettings={setChatSettings}
-            localStream={localStream}
-            requestCamera={requestCamera}
+            resetState={resetSocket}
             buttons={{ stop: true, mic: true, speaker: true, profile: true, countdown: true, chat: true, video: true }}
           />
         </React.Fragment>
@@ -445,32 +172,21 @@ function ChatHub(props) {
         <div className="video-connecting">
           {getChatNav()}
           <ConnectingText>{connectionMsg}</ConnectingText>
-          <VideoWindow
-            videoType="localVideo"
-            stream={localStream}
-            chatSettings={chatSettings}
-            setChatSettings={setChatSettings}
-          />
-          {countdown > 0 && <div className="countdown">{countdown}</div>}
-          {widgetsActive.updatePref && (
+          <VideoWindow videoType="localVideo" stream={localStream} />
+          {matchCountdown > 0 && <div className="countdown">{matchCountdown}</div>}
+          {enabledWidgets.updatePref && (
             <UserUpdateForm
               user={user}
               setUser={newUser => {
                 setUser({ ...user, ...newUser })
-                if (room.current) nextMatch()
+                if (roomId) nextMatch()
               }}
             />
           )}
-          {widgetsActive.stats && <Stats />}
-          {widgetsActive.matches && <MatchHistory users={user.visited} />}
+          {enabledWidgets.stats && <Stats />}
+          {enabledWidgets.matches && <MatchHistory users={user.visited} />}
           <InCallNavBar
-            resetState={resetState}
-            setWidgetsActive={setWidgetsActive}
-            widgetsActive={widgetsActive}
-            chatSettings={chatSettings}
-            setChatSettings={setChatSettings}
-            localStream={localStream}
-            requestCamera={requestCamera}
+            resetState={resetSocket}
             buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
           />
         </div>
@@ -481,9 +197,7 @@ function ChatHub(props) {
   return (
     <StyledChatHub flowDirection={flowDirection}>
       {renderBackground()}
-      {widgetsActive.menu && (
-        <Settings setWidgetsActive={setWidgetsActive} requestCamera={requestCamera} stream={localStream} />
-      )}
+      {enabledWidgets.menu && <Settings />}
     </StyledChatHub>
   )
 }

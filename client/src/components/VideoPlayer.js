@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
 import HtmlParse from '../helpers/htmlParse3'
 import VideoGrid from './VideoGrid'
+import { useNotify } from '../hooks/NotifyContext'
+import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 
 const syncRotate = keyframes`
   0% {transform: rotate(0deg);}
@@ -95,7 +97,7 @@ const UPDATE = { PAUSE: 'pause', PLAY: 'play', SEEKED: 'seeked' }
 
 /** ******************* Component Starts */
 const VideoPlayer = props => {
-  const { socketHelper, roomId, userId, active, videoNotify, setVideoNotify } = props
+  const { socketHelper, roomId, userId } = props
   const [currentVideo, setCurrentVideo] = useState(null)
   const [isShown, setIsShown] = useState(false)
   const [parser, setParser] = useState(new HtmlParse(null))
@@ -104,6 +106,10 @@ const VideoPlayer = props => {
   const [disabled, setDisabled] = useState(false)
 
   const player = useRef()
+
+  const { enabledWidgets } = useEnabledWidgets()
+  const active = enabledWidgets.video
+  const { videoNotify, setVideoNotify } = useNotify()
 
   const coords = { x: window.innerWidth / 2, y: window.innerHeight / 3 }
 
