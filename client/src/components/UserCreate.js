@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useApolloClient } from '@apollo/react-hooks'
 import styled from 'styled-components'
-import { graphql, compose, withApollo } from 'react-apollo'
-import { GET_ME } from '../queries/queries'
 import { CREATE_USER } from '../queries/mutations'
 import UserCreateForm from './UserCreateForm'
 
@@ -54,17 +53,20 @@ const UserCreateNumbers = styled.div`
 //   color: inherit;
 // `
 
-const UserCreate = props => {
+export default function UserCreate(props) {
   const { setUser } = props
-  const [errorMsg, setErrorMsg] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMsg, setErrorMsg] = React.useState('')
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+
+  const client = useApolloClient()
 
   const handleSubmit = async (e, { gender, lookingFor, age, minAge, maxAge, audioPref, accAudioPrefs }) => {
     e.preventDefault()
     console.log(gender, lookingFor, age, minAge, maxAge, audioPref, accAudioPrefs)
     if (age && minAge && maxAge) {
       setIsSubmitting(true)
-      const { data, loading, error } = await props.CREATE_USER({
+      const { data, loading, error } = await client.mutate({
+        mutation: CREATE_USER,
         variables: {
           data: {
             gender,
@@ -129,5 +131,3 @@ const UserCreate = props => {
     </Main>
   )
 }
-
-export default compose(graphql(CREATE_USER, { name: 'CREATE_USER' }))(withApollo(UserCreate))

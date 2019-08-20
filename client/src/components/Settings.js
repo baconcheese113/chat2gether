@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { compose, graphql, withApollo } from 'react-apollo'
+import { useApolloClient } from '@apollo/react-hooks'
 import { CREATE_FEEDBACK } from '../queries/mutations'
 import SVGTester from './SVGTester'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
@@ -117,7 +117,7 @@ const Modal = styled.div`
   }
 `
 
-function Settings(props) {
+export default function Settings() {
   const [devices, setDevices] = useState([])
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [feedbackText, setFeedbackText] = useState('')
@@ -126,6 +126,7 @@ function Settings(props) {
 
   const { localStream, requestCamera } = useLocalStream()
   const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
+  const client = useApolloClient()
 
   const getDevices = async () => {
     try {
@@ -167,7 +168,10 @@ function Settings(props) {
     e.preventDefault()
     if (feedbackText.length < 1) return 0
     setIsLoading(true)
-    const { loading, error } = await props.CREATE_FEEDBACK({ variables: { data: { text: feedbackText } } })
+    const { loading, error } = await client.mutate({
+      mutation: CREATE_FEEDBACK,
+      variables: { data: { text: feedbackText } },
+    })
     setIsLoading(false)
     if (loading || error) console.log(loading, error)
     else {
@@ -218,5 +222,3 @@ function Settings(props) {
     </StyledSettings>
   )
 }
-
-export default compose(graphql(CREATE_FEEDBACK, { name: 'CREATE_FEEDBACK' }))(withApollo(Settings))

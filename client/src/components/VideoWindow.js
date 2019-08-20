@@ -5,7 +5,7 @@ function clamp(number, min, max) {
   return Math.max(min, Math.min(number, max))
 }
 
-function VideoWindow(props) {
+export default function VideoWindow(props) {
   const { stream, videoType } = props
 
   const [top, setTop] = React.useState(50)

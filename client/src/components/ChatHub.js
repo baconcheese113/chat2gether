@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { compose, graphql, withApollo } from 'react-apollo'
 import VideoWindow from './VideoWindow'
 import TextChat from './TextChat'
-import { GET_ME } from '../queries/queries'
 import Settings from './Settings'
 import InCallNavBar from './InCallNavBar'
 import VideoPlayer from './VideoPlayer'
@@ -16,6 +14,7 @@ import Stats from './Stats'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useSocket } from '../hooks/SocketContext'
+import { useMyUser } from '../hooks/MyUserContext'
 
 const StyledChatHub = styled.div`
   height: 100vh; /* shitty, but temp fix for firefox */
@@ -53,10 +52,10 @@ const ConnectingText = styled.p`
 // Start Call
 // On connection end or Find Next -> Find Room()
 
-function ChatHub(props) {
-  const [user, setUser] = useState(null)
+export default function ChatHub() {
   const [flowDirection, setFlowDirection] = useState(window.innerWidth > window.innerHeight ? 'row' : 'column')
 
+  const { user, updateUser } = useMyUser()
   const { localStream, requestCamera } = useLocalStream()
   const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
   const {
@@ -95,19 +94,6 @@ function ChatHub(props) {
       </div>
     )
   }
-
-  // On mount, run through flow
-  useEffect(() => {
-    ;(async () => {
-      const { data, error } = await props.client.query({ query: GET_ME })
-      if (error) console.error(error)
-      if (data.me) {
-        console.log(data.me)
-        setUser({ ...user, ...data.me })
-      }
-      return data.me
-    })()
-  }, [])
 
   const updateFlowDirection = React.useCallback(() => {
     const direction = window.innerWidth > window.innerHeight ? 'row' : 'column'
@@ -178,7 +164,7 @@ function ChatHub(props) {
             <UserUpdateForm
               user={user}
               setUser={newUser => {
-                setUser({ ...user, ...newUser })
+                updateUser(newUser)
                 if (roomId) nextMatch()
               }}
             />
@@ -201,5 +187,3 @@ function ChatHub(props) {
     </StyledChatHub>
   )
 }
-
-export default compose(graphql(GET_ME, { name: 'GET_ME' }))(withApollo(ChatHub))

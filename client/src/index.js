@@ -3,8 +3,7 @@ import * as Sentry from '@sentry/browser'
 import ReactDOM from 'react-dom'
 import { ThemeProvider } from 'styled-components'
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
-import { ApolloProvider } from 'react-apollo'
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks'
+import { ApolloProvider } from '@apollo/react-hooks'
 import StylesProvider from '@material-ui/styles/StylesProvider'
 import './index.css'
 import App from './components/App'
@@ -26,13 +25,11 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <ApolloHooksProvider client={client}>
-      <ThemeProvider theme={darkTheme}>
-        <StylesProvider injectFirst>
-          <App />
-        </StylesProvider>
-      </ThemeProvider>
-    </ApolloHooksProvider>
+    <ThemeProvider theme={darkTheme}>
+      <StylesProvider injectFirst>
+        <App />
+      </StylesProvider>
+    </ThemeProvider>
   </ApolloProvider>,
   document.getElementById('root'),
 )

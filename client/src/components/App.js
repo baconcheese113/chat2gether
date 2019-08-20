@@ -1,5 +1,5 @@
 import React from 'react'
-import { compose, graphql, withApollo } from 'react-apollo'
+import { useApolloClient } from '@apollo/react-hooks'
 import Header from './Header'
 import UserCreate from './UserCreate'
 import ChatHub from './ChatHub'
@@ -18,9 +18,11 @@ import MyUserProvider from '../hooks/MyUserContext'
  * VideoWindow handles rendering streams (local and remote)
  */
 
-function App(props) {
+export default function App() {
   const [user, setUser] = React.useState(null)
   const [canRender, setCanRender] = React.useState(false)
+
+  const client = useApolloClient()
 
   React.useEffect(() => {
     if (document.cookie.split(';').filter(item => item.trim().startsWith('token=')).length === 0) {
@@ -29,7 +31,7 @@ function App(props) {
     }
     console.log('Cookie found, proceeding')
     const fetchData = async () => {
-      const { data, error } = await props.client.query({ query: GET_ME })
+      const { data, error } = await client.query({ query: GET_ME })
       if (data.me) {
         setUser(data.me)
       }
@@ -64,5 +66,3 @@ function App(props) {
   }
   return ''
 }
-
-export default compose(graphql(GET_ME, { name: 'GET_ME' }))(withApollo(App))

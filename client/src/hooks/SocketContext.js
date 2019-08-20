@@ -1,8 +1,8 @@
 import React from 'react'
-import { withApollo, graphql, compose } from 'react-apollo'
+import { useApolloClient } from '@apollo/react-hooks'
 import SocketHelper from '../helpers/socketHelper'
 import { UPDATE_USER } from '../queries/mutations'
-import { FIND_ROOM, GET_ME } from '../queries/queries'
+import { FIND_ROOM } from '../queries/queries'
 import { useMyUser } from './MyUserContext'
 
 const SocketContext = React.createContext()
@@ -10,7 +10,7 @@ export function useSocket() {
   return React.useContext(SocketContext)
 }
 
-function SocketProvider(props) {
+export default function SocketProvider(props) {
   const { children } = props
 
   const [socketHelper, setSocketHelper] = React.useState(null)
@@ -25,6 +25,7 @@ function SocketProvider(props) {
   const room = React.useRef(null)
 
   const { user, updateUser } = useMyUser()
+  const client = useApolloClient()
   console.log('SocketProvider render')
 
   const resetSocket = () => {
@@ -55,7 +56,7 @@ function SocketProvider(props) {
   const onNextRoom = async roomId => {
     console.log('onNextRoom')
     if (roomId) {
-      const { error } = await props.client.mutate({
+      const { error } = await client.mutate({
         mutation: UPDATE_USER,
         variables: { data: { visited: { connect: { id: roomId } } } },
       })
@@ -89,7 +90,7 @@ function SocketProvider(props) {
     newSocketHelper.onTrack = async e => {
       console.log('ontrack', e)
       clearTimeout(probeTimer.current)
-      const { data, loading, error } = await props.client.mutate({
+      const { data, loading, error } = await client.mutate({
         mutation: UPDATE_USER,
         variables: { data: { isConnected: true } },
       })
@@ -146,7 +147,7 @@ function SocketProvider(props) {
     // Clean up any existing room
     resetSocket()
     setConnectionMsg('Finding a match...')
-    const resetUserRes = await props.client.mutate({
+    const resetUserRes = await client.mutate({
       mutation: UPDATE_USER,
       variables: { data },
     })
@@ -158,7 +159,7 @@ function SocketProvider(props) {
     d.setMinutes(d.getMinutes() - 0.25)
     const tempSocketHelper = await initializeSocket(localStream)
     // tempSocketHelper.leaveRooms()
-    const compatibleHosts = await props.client.query({
+    const compatibleHosts = await client.query({
       query: FIND_ROOM,
       variables: {
         where: {
@@ -192,7 +193,7 @@ function SocketProvider(props) {
     if (hosts.length < 1) {
       setConnectionMsg('No Hosts Found')
       // Become a host
-      const updateUserRes = await props.client.mutate({
+      const updateUserRes = await client.mutate({
         mutation: UPDATE_USER,
         variables: { data: { isHost: true } },
       })
@@ -240,5 +241,3 @@ function SocketProvider(props) {
     </SocketContext.Provider>
   )
 }
-
-export default compose(graphql(GET_ME, { name: 'GET_ME' }))(withApollo(SocketProvider))

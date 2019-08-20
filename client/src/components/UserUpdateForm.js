@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { graphql, compose, withApollo } from 'react-apollo'
+import { useApolloClient } from '@apollo/react-hooks'
 import NumberSlider from './NumberSlider'
 import { UPDATE_USER } from '../queries/mutations'
 import ChoicePicker from './ChoicePicker'
@@ -55,25 +55,27 @@ const stripArr = arr => {
   })
 }
 
-const UserUpdateForm = props => {
+export default function UserUpdateForm(props) {
   const { user, setUser } = props
-  const [lookingFor, setLookingFor] = useState(
+  const [lookingFor, setLookingFor] = React.useState(
     stripArr(user.lookingFor) ||
       GENDERS.map(x => {
         return { name: x }
       }),
   )
-  const [minAge, setMinAge] = useState(user.minAge || 18)
-  const [maxAge, setMaxAge] = useState(user.maxAge || 90)
-  const [audioPref, setAudioPref] = useState(AUDIO_PREFS.indexOf(user.audioPref) || 0)
-  const [accAudioPrefs, setAccAudioPrefs] = useState(
+  const [minAge, setMinAge] = React.useState(user.minAge || 18)
+  const [maxAge, setMaxAge] = React.useState(user.maxAge || 90)
+  const [audioPref, setAudioPref] = React.useState(AUDIO_PREFS.indexOf(user.audioPref) || 0)
+  const [accAudioPrefs, setAccAudioPrefs] = React.useState(
     stripArr(user.accAudioPrefs) ||
       AUDIO_PREFS.map(x => {
         return { name: x }
       }),
   )
-  const [error, setError] = useState(null)
-  const [hasChanges, setHasChanges] = useState(false)
+  const [error, setError] = React.useState(null)
+  const [hasChanges, setHasChanges] = React.useState(false)
+
+  const client = useApolloClient()
 
   const changeNumbers = newArr => {
     if (newArr.length === 2) {
@@ -139,14 +141,14 @@ const UserUpdateForm = props => {
     }
 
     // Send request
-    const { data, newError } = await props.UPDATE_USER({ variables: { data: changes } })
+    const { data, newError } = await client.mutate({ mutation: UPDATE_USER, variables: { data: changes } })
     if (newError) {
       setError(newError)
     }
     console.log(data)
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (
       !areEqualArr(user.lookingFor, lookingFor) ||
       minAge !== user.minAge ||
@@ -201,5 +203,3 @@ const UserUpdateForm = props => {
     </StyledForm>
   )
 }
-
-export default compose(graphql(UPDATE_USER, { name: 'UPDATE_USER' }))(withApollo(UserUpdateForm))
