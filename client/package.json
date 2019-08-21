@@ -22,13 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint-staged": {
-      "*.{js,jsx}": [
-        "pretty-quick --staged",
-        "eslint src/ --fix",
-        "git add"
-      ]
-    }
+    "lint": "node_modules/react-scripts/node_modules/.bin/eslint client"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -42,15 +36,12 @@
   "proxy": "http://localhost:4000",
   "devDependencies": {
     "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.1",
-    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
-    "husky": "^3.0.1",
-    "lint-staged": "^9.2.0",
-    "prettier": "^1.18.2",
-    "pretty-quick": "^1.11.1"
+    "prettier": "^1.18.2"
   }
 }

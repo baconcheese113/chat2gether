@@ -145,8 +145,10 @@ export default function TextChat(props) {
   React.useEffect(() => {
     if (enabledWidgets.text) {
       scrollToBottom()
-      console.log('text console visible')
-      if (lastReadMsg < textChat.length - 1) setLastReadMsg(textChat.length - 1)
+      if (lastReadMsg < textChat.length - 1) {
+        setLastReadMsg(textChat.length - 1)
+        setTextNotify(0)
+      }
     } else {
       setTextNotify(textChat.length - 1 - lastReadMsg)
     }
