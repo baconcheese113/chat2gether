@@ -199,7 +199,7 @@ export default function UserUpdateForm(props) {
         </Row>
       </ScrollContent>
       {error}
-      <SubmitButton hasChanges={hasChanges}>Update</SubmitButton>
+      <SubmitButton hasChanges={hasChanges}>Apply</SubmitButton>
     </StyledForm>
   )
 }

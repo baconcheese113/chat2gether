@@ -5,7 +5,7 @@ const pointerLength = 10
 
 const StyledStatsWindow = styled.div`
   position: absolute;
-  bottom: ${props => props.bottom + pointerLength}%;
+  bottom: ${props => props.bottom + 2 + pointerLength}%;
   left: ${props => props.center}%;
   transform: translate(-50%, -60%);
   border-radius: 1rem;
@@ -34,7 +34,7 @@ export default function StatsWindow(props) {
       <Pointer />
       {values &&
         values.map(v => (
-          <Text color={v.color}>
+          <Text key={v.title} color={v.color}>
             {v.title} : {v.text}
           </Text>
         ))}
