@@ -1,22 +1,21 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useApolloClient } from '@apollo/react-hooks'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import { GET_USERS } from '../../queries/queries'
-import { GENDERS, GENDER_COLORS } from '../../helpers/constants'
+import { GENDERS, GENDER_COLORS, GENDER_DASHARRAY } from '../../helpers/constants'
 import StatsWindow from './StatsWindow'
 
 const containerXY = { x: 500, y: 500 }
-const numIntervals = 4
+const numIntervals = 6
 const numIntervalsY = 4
-const barWidth = 12
 const vb = { x: 500, y: 500 }
 const graph = { x: vb.x * (3 / 5), y: vb.y * (3 / 5) }
 const gStart = { x: vb.x / 5, y: vb.y / 5 }
 const gEnd = { x: vb.x * (4 / 5), y: vb.y * (4 / 5) }
-const intSpace = { x: (graph.x - 4 * barWidth) / (numIntervals - 1), y: graph.y / numIntervalsY }
+const intSpace = { x: graph.x / (numIntervals - 1), y: graph.y / numIntervalsY }
 const titleSize = `${vb.y * 0.005}rem`
 const intervalSize = `${vb.y * 0.003}rem`
 const legendSize = `${vb.y * 0.002}rem`
@@ -28,33 +27,58 @@ const pixelToPercent = (x, y) => {
   return { xPercent, yPercent }
 }
 
-const StyledBarGraph = styled.div`
+const StyledLineGraph = styled.div`
   height: ${containerXY.y}px;
   width: ${containerXY.x}px;
   margin: 0 auto;
   position: relative;
   box-shadow: 0 0 1rem #000;
   border-radius: 1rem;
-  background-color: #313131;
+  background-color: #1b2b38;
 `
-
 const SVGContainer = styled.svg`
   height: 100%;
   width: 100%;
-  /* background-color: red; */
 `
-const Bar = styled.rect`
-  stroke-linecap: round;
-  transition: all 1s;
+const drawLine = dashArray => keyframes`
+  0% {stroke-dashoffset: 421px;}
+  50% {stroke-dasharray: 20 20;}
+  100% {
+    stroke-dashoffset: 0px;
+    stroke-dasharray: ${dashArray};
+  }
+`
+const fillShadowLine = keyframes`
+  0% {stroke-opacity: 0;}
+  100% {stroke-opacity: 0.3;}
+`
+const fillCircle = yPercent => keyframes`
+  0% {transform: translateY(-${yPercent}%);}
+  100% {transform: translateY(0);}
+`
+const LeadLine = styled.path`
+  stroke-dasharray: 421px;
+  animation: ${props => drawLine(props.dashArray)} 6s forwards;
+`
+const ShadowLine = styled.path`
+  animation: ${fillShadowLine} 6s linear forwards;
+`
+const LineCircle = styled.circle`
+  animation: ${props => fillCircle(props.timeSlot * 20 + 100)} ${props => props.wave / 2 / (props.timeSlot + 1) + 1}s
+    linear forwards;
 `
 
-export default function BarGraph() {
+export default function LineGraph() {
   const [statsWindow, setStatsWindow] = React.useState(null)
   const [timeGroupings, setTimeGroupings] = React.useState(Array(numIntervals).fill({}))
-  const [minuteSpread, setMinuteSpread] = React.useState(60 * 24)
+  const [minuteSpread, setMinuteSpread] = React.useState(60 * 24 * 30)
 
   const intervalRange = minuteSpread / numIntervals // minutes
 
+  const gradAnimateMale = React.useRef(null)
+  const gradAnimateFemale = React.useRef(null)
+  const gradAnimateM2F = React.useRef(null)
+  const gradAnimateF2M = React.useRef(null)
   const maxLineHeight = React.useRef(10)
 
   const client = useApolloClient()
@@ -85,7 +109,7 @@ export default function BarGraph() {
       const l = v.users.length
       if (l > maxLineHeight.current) maxLineHeight.current = l
     })
-    setTimeGroupings(timeGroups)
+    setTimeGroupings(timeGroups.slice(0, -1))
   }
 
   const refreshUserCount = async () => {
@@ -98,6 +122,10 @@ export default function BarGraph() {
     if (err) {
       console.error(err)
     }
+    gradAnimateMale.current.beginElement()
+    gradAnimateFemale.current.beginElement()
+    gradAnimateF2M.current.beginElement()
+    gradAnimateM2F.current.beginElement()
     getTimeGroupings(data.users)
   }
 
@@ -105,58 +133,103 @@ export default function BarGraph() {
     refreshUserCount()
   }, [minuteSpread])
 
-  const buildBars = timeSlot => {
-    if (!timeGroupings) return <g key={`empty${timeSlot}`} />
-    const timeUsers = timeGroupings[timeSlot].users
-    if (!timeUsers) return <g key={`empty${timeSlot}`} />
+  const makeStatsObj = timeSlot => {
+    const timeUsers = timeGroupings[timeGroupings.length - timeSlot - 1].users
     const genderObj = timeUsers.reduce((prev, cur) => {
       return { ...prev, [cur.gender]: (prev[cur.gender] || 0) + 1 }
     }, {})
     const timeSlotSpread = timeSlot * intSpace.x
-    // Calculations for Stats window
     const statsObjGenders = GENDERS.map(v => {
       return { title: v, text: genderObj[v] || '0', color: GENDER_COLORS[v] }
     })
     const tallestBar = GENDERS.reduce((prev, cur) => (prev > (genderObj[cur] || 0) ? prev : genderObj[cur]), 1)
     const yLoc = gEnd.y - graph.y * (tallestBar / maxLineHeight.current)
-    const { xPercent: center, yPercent: bottom } = pixelToPercent(gEnd.x - timeSlotSpread - 2 * barWidth, yLoc)
-    const statsObj = { center, bottom, values: statsObjGenders }
+    const { xPercent: center, yPercent: bottom } = pixelToPercent(gStart.x + timeSlotSpread, yLoc)
+    return { center, bottom, values: statsObjGenders }
+  }
+
+  const makeSelectRect = timeSlot => {
+    if (!timeGroupings || !timeGroupings[0].users) return ''
+    const timeUsers = timeGroupings[timeGroupings.length - timeSlot - 1].users
+    const genderObj = timeUsers.reduce((prev, cur) => {
+      return { ...prev, [cur.gender]: (prev[cur.gender] || 0) + 1 }
+    }, {})
+    const timeSlotSpread = timeSlot * intSpace.x
+    const tallestBar = GENDERS.reduce((prev, cur) => (prev > (genderObj[cur] || 0) ? prev : genderObj[cur]), 1)
     const selectHeight = Math.max(graph.y * (tallestBar / maxLineHeight.current), 20)
+    const statsObj = makeStatsObj(timeSlot)
     return (
-      <g
+      <rect
         key={timeSlot}
         onMouseOver={() => setStatsWindow(statsObj)}
         onMouseOut={() => setStatsWindow(null)}
         onFocus={() => setStatsWindow(statsObj)}
         onBlur={() => setStatsWindow(null)}
-      >
-        <rect
-          height={selectHeight}
-          width={barWidth * 4}
-          y={gEnd.y - selectHeight}
-          x={gEnd.x - timeSlotSpread - 4 * barWidth}
-          opacity=".3"
-          rx="5"
-          ry="5"
+        height={selectHeight}
+        width={intSpace.x}
+        y={gEnd.y - selectHeight}
+        x={gStart.x + timeSlotSpread - intSpace.x / 2}
+        opacity="0"
+        rx="5"
+        ry="5"
+      />
+    )
+  }
+
+  const buildLine = gender => {
+    if (!timeGroupings || !timeGroupings[0].users) return ''
+
+    const genderArr = timeGroupings.reduce((prev, cur) => {
+      return [...prev, cur.users.filter(v => v.gender === gender)]
+    }, [])
+    const computedLines = genderArr
+      .slice()
+      .reverse()
+      .reduce(
+        (prev, cur, idx) => {
+          const yLoc = gEnd.y - Math.max(graph.y * (cur.length / maxLineHeight.current), 5)
+          const xLoc = idx * intSpace.x + gStart.x
+          const halfLoc = xLoc - intSpace.x / 2
+          const offset = 10
+          // prettier-ignore
+          const leadLine = `${prev.leadLine}${idx === 0 ? `M ${gStart.x} ${yLoc} ` : ''}S ${halfLoc} ${yLoc}, ${xLoc} ${yLoc} `
+          // prettier-ignore
+          const shadowLine = `${prev.shadowLine}${idx === 0 ? `M ${gStart.x} ${yLoc + offset} ` : ''}S ${halfLoc} ${yLoc + offset}, ${xLoc} ${yLoc + offset} `
+          const circles = [
+            ...prev.circles,
+            <LineCircle
+              key={`circle${gender}${idx}${minuteSpread}`}
+              cx={xLoc}
+              cy={yLoc}
+              timeSlot={idx}
+              wave={GENDERS.findIndex(v => v === gender) + 1}
+              r="5"
+              fill={GENDER_COLORS[gender]}
+            />,
+          ]
+          return { leadLine, shadowLine, circles }
+        },
+        { leadLine: '', shadowLine: '', circles: [] },
+      )
+    const { leadLine, shadowLine, circles } = computedLines
+    return (
+      <g key={`line${gender}${minuteSpread}`}>
+        <LeadLine
+          d={`${leadLine} V ${vb.y} H 0`}
+          stroke={GENDER_COLORS[gender]}
+          strokeLinecap="round"
+          strokeWidth="3"
+          dashArray={GENDER_DASHARRAY[gender]}
+          fill={`url(#grad${gender})`}
         />
-        {GENDERS.map((v, idx) => {
-          const height = Math.max(graph.y * ((genderObj[v] || 0) / maxLineHeight.current), 5)
-          const genderSpread = idx * barWidth
-          return (
-            <Bar
-              key={v}
-              stroke="black"
-              strokeWidth=".5"
-              fill={`url(#grad${v})`}
-              x={gEnd.x - timeSlotSpread - genderSpread - barWidth}
-              y={gEnd.y - height}
-              height={height}
-              width={barWidth}
-              rx={barWidth / 3}
-              ry={barWidth / 3}
-            />
-          )
-        })}
+        <ShadowLine
+          d={`${shadowLine}`}
+          stroke={`url(#grad${gender})`}
+          strokeLinecap="round"
+          strokeWidth="15"
+          fill="none"
+        />
+        {circles}
       </g>
     )
   }
@@ -176,7 +249,7 @@ export default function BarGraph() {
         const roundedTimeAgo = Math.round((timeAgo * 100) / 100)
         return (
           <text
-            x={gStart.x + intSpace.x * idx + 2 * barWidth}
+            x={gStart.x + intSpace.x * idx}
             y={gEnd.y + vb.y * 0.02}
             key={idx}
             fill="#ccc"
@@ -273,7 +346,7 @@ export default function BarGraph() {
   }
 
   return (
-    <StyledBarGraph>
+    <StyledLineGraph>
       <SVGContainer
         width="100%"
         style={{ height: 'auto' }}
@@ -281,22 +354,40 @@ export default function BarGraph() {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id="gradMALE" x1="0%" y1="0%" x2="0" y2="100%">
-            <stop offset="0%" stopColor={GENDER_COLORS.MALE} stopOpacity="1" />
-            <stop offset="100%" stopColor={GENDER_COLORS.MALE} stopOpacity=".2" />
+          <linearGradient id="gradMALE" x2="0" y2="100%">
+            <stop offset="0%" stopColor={GENDER_COLORS.MALE} stopOpacity=".4">
+              <animate ref={gradAnimateMale} attributeName="stop-opacity" values="0; 0; .4" dur="6s" repeatCount="1" />
+            </stop>
+            <stop offset="100%" stopColor={GENDER_COLORS.MALE} stopOpacity="0" />
           </linearGradient>
-          <linearGradient id="gradFEMALE" x1="0%" y1="0%" x2="0" y2="100%">
-            <stop offset="0%" stopColor={GENDER_COLORS.FEMALE} stopOpacity="1" />
-            <stop offset="100%" stopColor={GENDER_COLORS.FEMALE} stopOpacity=".2" />
+          <linearGradient id="gradFEMALE" x2="0" y2="100%">
+            <stop offset="0%" stopColor={GENDER_COLORS.FEMALE} stopOpacity=".4">
+              <animate
+                ref={gradAnimateFemale}
+                attributeName="stop-opacity"
+                values="0; 0; .4"
+                dur="6s"
+                repeatCount="1"
+              />
+            </stop>
+            <stop offset="100%" stopColor={GENDER_COLORS.FEMALE} stopOpacity="0" />
           </linearGradient>
-          <linearGradient id="gradM2F" x1="0%" y1="0%" x2="0" y2="100%">
-            <stop offset="0%" stopColor={GENDER_COLORS.M2F} stopOpacity="1" />
-            <stop offset="100%" stopColor={GENDER_COLORS.M2F} stopOpacity=".2" />
+          <linearGradient id="gradM2F" x2="0" y2="100%">
+            <stop offset="0%" stopColor={GENDER_COLORS.M2F} stopOpacity=".4">
+              <animate ref={gradAnimateM2F} attributeName="stop-opacity" values="0; 0; .4" dur="6s" repeatCount="1" />
+            </stop>
+            <stop offset="100%" stopColor={GENDER_COLORS.M2F} stopOpacity="0" />
           </linearGradient>
-          <linearGradient id="gradF2M" x1="0%" y1="0%" x2="0" y2="100%">
-            <stop offset="0%" stopColor={GENDER_COLORS.F2M} stopOpacity="1" />
-            <stop offset="100%" stopColor={GENDER_COLORS.F2M} stopOpacity=".2" />
+          <linearGradient id="gradF2M" x2="0" y2="100%">
+            <stop offset="0%" stopColor={GENDER_COLORS.F2M} stopOpacity=".4">
+              <animate ref={gradAnimateF2M} attributeName="stop-opacity" values="0; 0; .4" dur="6s" repeatCount="1" />
+            </stop>
+            <stop offset="100%" stopColor={GENDER_COLORS.F2M} stopOpacity="0" />
           </linearGradient>
+
+          <mask id="mask">
+            <rect width={graph.x} height={graph.y} x={gStart.x} y={gStart.y} fill="white" />
+          </mask>
         </defs>
         <path d={`M${gStart.x} ${gEnd.y} H ${gEnd.x} V ${gStart.y}`} className="graph-axis" />
         <text x={vb.x * 0.1} y={vb.y * 0.1} fill="#ccc" textAnchor="left" fontSize={titleSize}>
@@ -305,7 +396,8 @@ export default function BarGraph() {
         <g>{printGrid()}</g>
         {printAxis()}
         {printLegend()}
-        {timeGroupings && timeGroupings.map((_, idx) => idx < timeGroupings.length - 1 && buildBars(idx))}
+        <g mask="url(#mask)">{timeGroupings && GENDERS.map(gender => buildLine(gender))}</g>
+        {timeGroupings && timeGroupings.map((_v, idx) => makeSelectRect(idx))}
       </SVGContainer>
       <FormControl
         style={{
@@ -329,6 +421,6 @@ export default function BarGraph() {
       {statsWindow && (
         <StatsWindow bottom={statsWindow.bottom} center={statsWindow.center} values={statsWindow.values} />
       )}
-    </StyledBarGraph>
+    </StyledLineGraph>
   )
 }
