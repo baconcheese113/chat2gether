@@ -18,7 +18,7 @@ import AirPlaneDing from '../assets/air-plane-ding.mp3'
 
 const StyledChatHub = styled.div`
   height: 100vh; /* shitty, but temp fix for firefox */
-  height: -webkit-fill-available;
+  height: ${props => props.height}px;
   display: flex;
   flex-direction: ${props => props.flowDirection};
   justify-content: center;
@@ -479,7 +479,7 @@ function ChatHub(props) {
   }
 
   return (
-    <StyledChatHub flowDirection={flowDirection}>
+    <StyledChatHub height={window.innerHeight} flowDirection={flowDirection}>
       {renderBackground()}
       {widgetsActive.menu && (
         <Settings setWidgetsActive={setWidgetsActive} requestCamera={requestCamera} stream={localStream} />

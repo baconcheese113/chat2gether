@@ -26,6 +26,7 @@ const Option = styled.span`
   opacity: 0.8;
   z-index: 10;
   color: ${props => (props.active ? 'white' : props.theme.colorPrimaryLight)};
+  opacity: ${props => (props.active ? 1 : 0.3)};
   ${props => (props.active ? `background-color: ${props.theme.colorPrimary};` : '')}
   transition: all .6s;
 `

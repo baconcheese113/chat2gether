@@ -13,7 +13,8 @@ const StyledVideoPlayer = styled.div`
 
   position: relative;
   flex: 1;
-  height: -webkit-fill-available;
+  /* height: -webkit-fill-available; */
+  height: ${props => props.height}px;
   background-color: #111;
   transition: all 0.4s;
 
@@ -268,7 +269,7 @@ const VideoPlayer = props => {
         setIsShown={setIsShown}
         selectVideo={selectVideo}
       />
-      <StyledVideoPlayer coords={coords} active={active}>
+      <StyledVideoPlayer height={window.innerHeight} coords={coords} active={active}>
         <SearchButton onClick={() => setIsShown(true)}>
           <i className="fas fa-search" />
         </SearchButton>
