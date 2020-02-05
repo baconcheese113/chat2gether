@@ -1,7 +1,14 @@
 import React from 'react'
+import { useApolloClient } from '@apollo/react-hooks'
 import Header from './Header'
 import UserCreate from './UserCreate'
 import ChatHub from './ChatHub'
+import { LocalStreamProvider } from '../hooks/LocalStreamContext'
+import { EnabledWidgetsProvider } from '../hooks/EnabledWidgetsContext'
+import { NotifyProvider } from '../hooks/NotifyContext'
+import SocketProvider from '../hooks/SocketContext'
+import { GET_ME } from '../queries/queries'
+import MyUserProvider from '../hooks/MyUserContext'
 
 /**
  * App just handles passing to UserCreate, and passing to ChatHub
@@ -11,33 +18,51 @@ import ChatHub from './ChatHub'
  * VideoWindow handles rendering streams (local and remote)
  */
 
-class App extends React.Component {
-  state = {
-    user: null,
-  }
+export default function App() {
+  const [user, setUser] = React.useState(null)
+  const [canRender, setCanRender] = React.useState(false)
 
-  // Called from UserCreate.js after user has been created
-  storeUser = user => {
-    console.log(user)
-    this.setState({ user })
-  }
+  const client = useApolloClient()
 
-  renderContents = () => {
-    const { user } = this.state
+  React.useEffect(() => {
+    if (document.cookie.split(';').filter(item => item.trim().startsWith('token=')).length === 0) {
+      setCanRender(true)
+      return
+    }
+    console.log('Cookie found, proceeding')
+    const fetchData = async () => {
+      const { data, error } = await client.query({ query: GET_ME })
+      if (data.me) {
+        setUser(data.me)
+      }
+      console.log(data, error)
+      setCanRender(true)
+    }
+    fetchData()
+  }, [])
+
+  if (canRender) {
     if (user) {
-      return <ChatHub user={user} />
+      return (
+        <MyUserProvider user={user}>
+          <EnabledWidgetsProvider>
+            <SocketProvider>
+              <LocalStreamProvider>
+                <NotifyProvider>
+                  <ChatHub user={user} />
+                </NotifyProvider>
+              </LocalStreamProvider>
+            </SocketProvider>
+          </EnabledWidgetsProvider>
+        </MyUserProvider>
+      )
     }
     return (
       <div>
         <Header />
-        <UserCreate storeUser={this.storeUser} />
+        <UserCreate setUser={setUser} />
       </div>
     )
   }
-
-  render() {
-    return <div>{this.renderContents()}</div>
-  }
+  return ''
 }
-
-export default App

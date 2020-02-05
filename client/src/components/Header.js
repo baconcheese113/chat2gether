@@ -9,12 +9,10 @@ const StyledHeader = styled.header`
   text-shadow: 0 0 2rem #111;
 `
 
-const Header = () => {
+export default function Header() {
   return (
     <StyledHeader>
       <h1>Chat2Gether</h1>
     </StyledHeader>
   )
 }
-
-export default Header

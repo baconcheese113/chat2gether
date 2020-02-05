@@ -1,6 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import ToggleButton from './ToggleButton'
+import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import { useLocalStream } from '../hooks/LocalStreamContext'
+import { useNotify } from '../hooks/NotifyContext'
 
 const StyledNavBar = styled.div`
   position: absolute;
@@ -22,21 +25,13 @@ const RightAligned = styled.div`
 `
 
 const InCallNavBar = props => {
-  const {
-    widgetsActive,
-    setWidgetsActive,
-    resetState,
-    textNotify,
-    countdownNotify,
-    videoNotify,
-    chatSettings,
-    setChatSettings,
-    localStream,
-    buttons,
-    requestCamera,
-  } = props
+  const { resetState, buttons } = props
 
   const [isMobile, setIsMobile] = React.useState(false)
+
+  const { localStream, requestCamera } = useLocalStream()
+  const { videoNotify, countdownNotify, textNotify } = useNotify()
+  const { enabledWidgets, featureToggle, chatSettings, setChatSettings } = useEnabledWidgets()
 
   React.useEffect(() => {
     ;(async () => {
@@ -51,10 +46,6 @@ const InCallNavBar = props => {
       }
     })()
   }, [navigator.mediaDevices])
-
-  const featureToggle = elem => {
-    setWidgetsActive({ [elem]: !widgetsActive[elem] })
-  }
 
   const flipCamera = async e => {
     e.stopPropagation()
@@ -73,7 +64,7 @@ const InCallNavBar = props => {
     }
   }
 
-  if (!widgetsActive) return ''
+  if (!enabledWidgets) return ''
 
   return (
     <StyledNavBar>
@@ -110,14 +101,14 @@ const InCallNavBar = props => {
           <ToggleButton
             iconClass="fas fa-user-alt"
             onClick={() => featureToggle('profile')}
-            active={widgetsActive.profile ? 1 : 0}
+            active={enabledWidgets.profile ? 1 : 0}
           />
         )}
         {buttons.countdown && (
           <ToggleButton
             iconClass="fas fa-stopwatch"
             onClick={() => featureToggle('countdown')}
-            active={widgetsActive.countdown ? 1 : 0}
+            active={enabledWidgets.countdown ? 1 : 0}
             notification={countdownNotify ? 1 : 0}
           />
         )}
@@ -125,7 +116,7 @@ const InCallNavBar = props => {
           <ToggleButton
             iconClass="fas fa-comment"
             onClick={() => featureToggle('text')}
-            active={widgetsActive.text ? 1 : 0}
+            active={enabledWidgets.text ? 1 : 0}
             notification={textNotify}
           />
         )}
@@ -133,7 +124,7 @@ const InCallNavBar = props => {
           <ToggleButton
             iconClass="fab fa-youtube"
             onClick={() => featureToggle('video')}
-            active={widgetsActive.video ? 1 : 0}
+            active={enabledWidgets.video ? 1 : 0}
             notification={videoNotify ? 1 : 0}
           />
         )}
@@ -141,21 +132,21 @@ const InCallNavBar = props => {
           <ToggleButton
             iconClass="fas fa-user-edit"
             onClick={() => featureToggle('updatePref')}
-            active={widgetsActive.updatePref ? 1 : 0}
+            active={enabledWidgets.updatePref ? 1 : 0}
           />
         )}
         {buttons.stats && (
           <ToggleButton
             iconClass="fas fa-chart-area"
             onClick={() => featureToggle('stats')}
-            active={widgetsActive.stats ? 1 : 0}
+            active={enabledWidgets.stats ? 1 : 0}
           />
         )}
         {buttons.matches && (
           <ToggleButton
             iconClass="fas fa-users"
             onClick={() => featureToggle('matches')}
-            active={widgetsActive.matches ? 1 : 0}
+            active={enabledWidgets.matches ? 1 : 0}
           />
         )}
       </RightAligned>

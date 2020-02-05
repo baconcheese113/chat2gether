@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { compose, graphql, withApollo } from 'react-apollo'
+import { useApolloClient } from '@apollo/react-hooks'
 import { CREATE_FEEDBACK } from '../queries/mutations'
 import SVGTester from './SVGTester'
+import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import { useLocalStream } from '../hooks/LocalStreamContext'
 
 const StyledSettings = styled.div`
   position: absolute;
@@ -60,6 +62,8 @@ const SettingsList = styled.div`
 
 const Actions = styled.div`
   display: flex;
+  /* for Edge */
+  /* justify-content: space-around; */
   justify-content: space-evenly;
   justify-self: flex-end;
   font-size: 1.2rem;
@@ -113,12 +117,16 @@ const Modal = styled.div`
   }
 `
 
-function Settings(props) {
+export default function Settings() {
   const [devices, setDevices] = useState([])
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [feedbackText, setFeedbackText] = useState('')
   const [feedbackMsg, setFeedbackMsg] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  const { localStream, requestCamera } = useLocalStream()
+  const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
+  const client = useApolloClient()
 
   const getDevices = async () => {
     try {
@@ -143,30 +151,34 @@ function Settings(props) {
   }
 
   useEffect(() => {
-    if (!props.stream) return
-    const videoId = props.stream.getVideoTracks()[0].getSettings().deviceId
+    if (!localStream) return
+    const videoId = localStream.getVideoTracks()[0].getSettings().deviceId
     setSelectedVideo(videoId)
     getDevices()
   }, [])
 
   const handleClose = (shouldApply = true) => {
     if (shouldApply) {
-      props.requestCamera(selectedVideo)
+      requestCamera(selectedVideo)
     }
-    props.setWidgetsActive({ ...props.widgetsActive, menu: false })
+    setEnabledWidgets({ ...enabledWidgets, menu: false })
   }
 
   const handleFeedback = async e => {
     e.preventDefault()
     if (feedbackText.length < 1) return 0
     setIsLoading(true)
-    const { loading, error } = await props.CREATE_FEEDBACK({ variables: { data: { text: feedbackText } } })
+    const { loading, error } = await client.mutate({
+      mutation: CREATE_FEEDBACK,
+      variables: { data: { text: feedbackText } },
+    })
     setIsLoading(false)
     if (loading || error) console.log(loading, error)
     else {
       setFeedbackText('')
       setFeedbackMsg('Thanks for your feedback!')
     }
+    return null
   }
 
   console.log(feedbackText)
@@ -210,5 +222,3 @@ function Settings(props) {
     </StyledSettings>
   )
 }
-
-export default compose(graphql(CREATE_FEEDBACK, { name: 'CREATE_FEEDBACK' }))(withApollo(Settings))

@@ -14,6 +14,11 @@ export const GET_USERS = gql`
       accAudioPrefs {
         name
       }
+      visited {
+        id
+        gender
+        age
+      }
     }
   }
 `

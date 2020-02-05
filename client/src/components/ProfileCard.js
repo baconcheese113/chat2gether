@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import { useMyUser } from '../hooks/MyUserContext'
 
 const StyledProfileCard = styled.article`
   position: absolute;
@@ -54,9 +56,11 @@ const Pill = styled.div`
   font-size: 1.8rem;
 `
 
-const ProfileCard = props => {
-  const { user, active } = props
-  console.log(user)
+const ProfileCard = () => {
+  const { user } = useMyUser()
+
+  const { enabledWidgets } = useEnabledWidgets()
+  const active = enabledWidgets.profile
 
   return (
     <StyledProfileCard>

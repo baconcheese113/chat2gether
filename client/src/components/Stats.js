@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Query } from 'react-apollo'
+import { useApolloClient } from '@apollo/react-hooks'
 import { GET_USERS } from '../queries/queries'
 
 const StatsContainer = styled.section`
@@ -8,7 +8,7 @@ const StatsContainer = styled.section`
   overflow-y: auto;
 `
 
-function Stats() {
+export default function Stats() {
   // const [users, setUsers] = useState([])
   // const [genderCounts, setGenderCounts] = useState([])
 
@@ -21,8 +21,10 @@ function Stats() {
   const gEnd = { x: vb.x * (4 / 5), y: vb.y * (4 / 5) }
   const intSpace = { x: graph.x / (numIntervals - 1), y: graph.y / numIntervalsY }
 
-  const list = useRef([])
-  const maxLineHeight = useRef(0)
+  const list = React.useRef([])
+  const maxLineHeight = React.useRef(0)
+
+  const client = useApolloClient()
   // Pull all users in past x hours, associate timestamp
   // Count using both updatedAt and createdAt, based on intervals
   // Consolidate into 4 1d arrays (one per gender) using intervals of i
@@ -132,28 +134,23 @@ function Stats() {
     )
   }
 
-  const getUserCount = () => {
+  const getUserCount = async () => {
     const d = new Date()
     d.setMinutes(d.getMinutes() - intervalRange * numIntervals)
     const where = { where: { updatedAt_gt: d.toISOString() } }
+    const { loading, error, data } = await client.query({ query: GET_USERS, variables: where })
+    if (loading) return <p>Loading...</p>
+    if (error) return <p>Error</p>
+    // setUsers({timestamp: new Date(), list: data.users})
+    list.current = data.users
     return (
-      <Query query={GET_USERS} variables={where}>
-        {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>
-          if (error) return <p>Error :(</p>
-          // setUsers({timestamp: new Date(), list: data.users})
-          list.current = data.users
-          return (
-            <React.Fragment>
-              {getLine(getGroupings(), 'MALE')}
-              {getLine(getGroupings(), 'FEMALE')}
-              {getLine(getGroupings(), 'M2F')}
-              {getLine(getGroupings(), 'F2M')}
-              {getAxis()}
-            </React.Fragment>
-          )
-        }}
-      </Query>
+      <React.Fragment>
+        {getLine(getGroupings(), 'MALE')}
+        {getLine(getGroupings(), 'FEMALE')}
+        {getLine(getGroupings(), 'M2F')}
+        {getLine(getGroupings(), 'F2M')}
+        {getAxis()}
+      </React.Fragment>
     )
   }
   const ticksX = Array(numIntervals - 1)
@@ -176,5 +173,3 @@ function Stats() {
     </StatsContainer>
   )
 }
-
-export default Stats

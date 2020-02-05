@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 
-class SocketHelper {
+export default class SocketHelper {
   constructor() {
     this.socket = io()
     // this.socket.emit('create or join');
@@ -109,7 +109,7 @@ class SocketHelper {
       console.log('addTracks')
       // Recommended implementation since addStream is obsolete
       this.localStream.getTracks().forEach(track => {
-        console.log(track)
+        console.log('track gotten', track)
         this.pc.addTrack(track, this.localStream)
       })
       // }
@@ -189,7 +189,6 @@ class SocketHelper {
     })
 
     // Other non-setup functions
-    this.socket.on('comment', this.onComment)
     this.socket.on('identity', this.onIdentity)
   }
 
@@ -224,5 +223,3 @@ class SocketHelper {
     }
   }
 }
-
-export default SocketHelper
