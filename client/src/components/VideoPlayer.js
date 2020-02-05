@@ -15,7 +15,8 @@ const StyledVideoPlayer = styled.div`
 
   position: relative;
   flex: 1;
-  height: -webkit-fill-available;
+  height: 100%;
+  /* height: -webkit-fill-available; */
   background-color: #111;
   transition: all 0.4s;
 
