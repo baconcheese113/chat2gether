@@ -9,6 +9,7 @@ const StyledChoicePicker = styled.div`
   background-color: ${props => props.theme.colorGreyDark1};
   display: flex;
   justify-content: space-around;
+  align-items: stretch;
   position: relative;
   border: 2px solid ${props => props.theme.colorPrimary};
   font-size: ${props => props.fontSize || '1.6rem'};
@@ -16,22 +17,21 @@ const StyledChoicePicker = styled.div`
 `
 
 const Option = styled.span`
-  border: none;
-  border-radius: 0;
   ${props => (props.optionStart ? 'border-radius: 3rem 0 0 3rem;' : '')}
   ${props => (props.optionEnd ? 'border-radius: 0 3rem 3rem 0;' : '')}
-  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
   padding: ${({ height }) => height || '1rem'} 0;
-  margin: 0;
-  opacity: 0.8;
   z-index: 10;
   color: ${props => (props.active ? 'white' : props.theme.colorPrimaryLight)};
-  opacity: ${props => (props.active ? 1 : 0.3)};
+  opacity: ${props => (props.active ? 1 : 0.2)};
   ${props => (props.active ? `background-color: ${props.theme.colorPrimary};` : '')}
+  font-size: ${props => (props.active ? '1.2rem' : '1rem')};
   transition: all .6s;
 `
 
-const ChoicePicker = props => {
+export default function ChoicePicker(props) {
   const { selected, change, choices } = props
   // props.choices is a list of strings to display as choices
   // props.selected is a list of the selected choices
@@ -46,26 +46,20 @@ const ChoicePicker = props => {
     }
   }
 
-  const renderOptions = () => {
-    const options = []
-    for (const [index, choice] of choices.entries()) {
-      options.push(
+  return (
+    <StyledChoicePicker {...props}>
+      {choices.map((choice, index) => (
         <Option
           {...props}
+          key={choice}
           optionStart={index === 0}
           optionEnd={index === choices.length - 1}
           active={selected.find(obj => obj.name === choice)}
           onClick={e => handleClick(e, choice)}
-          key={index}
         >
           {choice.replace(/_/g, ' ')}
-        </Option>,
-      )
-    }
-    return options
-  }
-
-  return <StyledChoicePicker {...props}>{renderOptions()}</StyledChoicePicker>
+        </Option>
+      ))}
+    </StyledChoicePicker>
+  )
 }
-
-export default ChoicePicker

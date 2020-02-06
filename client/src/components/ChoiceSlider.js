@@ -32,11 +32,12 @@ const Option = styled.span`
 `
 
 const Slider = styled.div`
-  background-image: linear-gradient(
+  /* background-image: linear-gradient(
     to bottom right,
     ${props => props.theme.colorPrimary},
     ${props => props.theme.colorGreyDark1}
-  );
+  ); */
+  background-color: ${props => props.theme.colorPrimary};
   position: absolute;
   width: ${props => 100 / props.choices.length}%;
   top: 0;
@@ -47,29 +48,20 @@ const Slider = styled.div`
   transition: all 0.8s;
 `
 
-const ChoiceSlider = props => {
+export default function ChoiceSlider(props) {
   const { cur, change, choices } = props
   // props.choices is a list of strings to display as choices
   // props.cur is the selected element
   // props.change is how to change the cur selected element
 
-  const renderOptions = () => {
-    const options = []
-    for (const [index, choice] of choices.entries()) {
-      options.push(
-        <Option {...props} active={cur === index} onClick={() => change(index)} key={index}>
-          {choice.replace(/_/g, ' ')}
-        </Option>,
-      )
-    }
-    return options
-  }
-
   return (
     <StyledChoiceSlider {...props}>
-      {renderOptions()}
+      {choices.map((choice, index) => (
+        <Option active={cur === index} onPress={() => change(index)} key={choice}>
+          {choice.replace(/_/g, ' ')}
+        </Option>
+      ))}
       <Slider {...props} selected={cur} />
     </StyledChoiceSlider>
   )
 }
-export default ChoiceSlider
