@@ -11,14 +11,18 @@ const StyledNumberSlider = styled.div`
 `
 
 const StyledSlider = styled(Slider)`
-  color: ${props => props.theme.colorPrimary};
+  color: ${props => props.theme.colorPrimary1};
+
+  & .MuiSlider-rail {
+    color: ${props => props.theme.colorWhite1};
+  }
 
   & .slider-label {
     font-size: 2rem;
   }
 `
 
-const NumberSlider = props => {
+export default function NumberSlider(props) {
   const { numbers, change } = props
   const MIN_AGE = 18
   const MAX_AGE = 90
@@ -43,5 +47,3 @@ const NumberSlider = props => {
     </StyledNumberSlider>
   )
 }
-
-export default NumberSlider

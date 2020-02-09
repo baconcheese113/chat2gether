@@ -9,7 +9,7 @@ const StyledChoiceSlider = styled.div`
   display: flex;
   justify-content: space-around;
   position: relative;
-  border: 2px solid ${props => props.theme.colorPrimary};
+  border: 2px solid ${props => props.theme.colorWhite1};
   font-size: ${props => props.fontSize || 'inherit'};
   cursor: pointer;
 `
@@ -57,7 +57,7 @@ export default function ChoiceSlider(props) {
   return (
     <StyledChoiceSlider {...props}>
       {choices.map((choice, index) => (
-        <Option active={cur === index} onPress={() => change(index)} key={choice}>
+        <Option active={cur === index} onClick={() => change(index)} key={choice}>
           {choice.replace(/_/g, ' ')}
         </Option>
       ))}

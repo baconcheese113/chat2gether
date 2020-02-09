@@ -11,7 +11,7 @@ const StyledChoicePicker = styled.div`
   justify-content: space-around;
   align-items: stretch;
   position: relative;
-  border: 2px solid ${props => props.theme.colorPrimary};
+  border: 2px solid ${props => props.theme.colorWhite1};
   font-size: ${props => props.fontSize || '1.6rem'};
   cursor: pointer;
 `
@@ -22,13 +22,17 @@ const Option = styled.span`
   flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: ${({ height }) => height || '1rem'} 0;
   z-index: 10;
+  border-right: ${props => (props.showBorderRight ? `2px solid ${props.theme.colorWhite1}` : undefined)};
   color: ${props => (props.active ? 'white' : props.theme.colorPrimaryLight)};
-  opacity: ${props => (props.active ? 1 : 0.2)};
   ${props => (props.active ? `background-color: ${props.theme.colorPrimary};` : '')}
   font-size: ${props => (props.active ? '1.2rem' : '1rem')};
   transition: all .6s;
+`
+const OptionText = styled.span`
+  opacity: ${props => (props.active ? 1 : 0.2)};
 `
 
 export default function ChoicePicker(props) {
@@ -56,8 +60,9 @@ export default function ChoicePicker(props) {
           optionEnd={index === choices.length - 1}
           active={selected.find(obj => obj.name === choice)}
           onClick={e => handleClick(e, choice)}
+          showBorderRight={index < choices.length - 1}
         >
-          {choice.replace(/_/g, ' ')}
+          <OptionText active={selected.find(obj => obj.name === choice)}>{choice.replace(/_/g, ' ')}</OptionText>
         </Option>
       ))}
     </StyledChoicePicker>
