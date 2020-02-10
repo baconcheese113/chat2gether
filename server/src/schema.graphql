@@ -46,8 +46,6 @@ input CreateUserInput {
 }
 type User {
   id: ID!
-  ip: String
-  fingerprint: String
   gender: GenderType!
   lookingFor: [GenderObject!]!
   age: Int!
