@@ -165,7 +165,7 @@ export default function SocketProvider(props) {
         where: {
           AND: [
             { id_not: updatedUser.id },
-            { id_not_in: updatedUser.visited.map(x => x.id) },
+            { id_not_in: updatedUser.visited ? updatedUser.visited.map(x => x.id) : [] },
             { gender_in: updatedUser.lookingFor.map(x => x.name) },
             { lookingFor_some: { name: updatedUser.gender } },
             { minAge_lte: updatedUser.age },

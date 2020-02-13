@@ -1,12 +1,12 @@
-import { ApolloServer, PubSub } from 'apollo-server-express';
+import ApolloServerExpress from 'apollo-server-express';
 import { resolvers, fragmentReplacements } from './resolvers/index';
 import prisma from './prisma';
-import { importSchema } from 'graphql-import';
+import GQLImport from 'graphql-import';
 
-const pubsub = new PubSub();
+const pubsub = new ApolloServerExpress.PubSub();
 
-export default new ApolloServer({
-  typeDefs: importSchema('./src/schema.graphql'),
+export default new ApolloServerExpress.ApolloServer({
+  typeDefs: GQLImport.importSchema('./src/schema.graphql'),
   resolvers,
   context(request) {
     return { pubsub, prisma, request };

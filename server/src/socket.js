@@ -1,4 +1,4 @@
-module.exports = io => {
+export default io => {
   io.on('connection', socket => {
     socket.on('create or join', roomId => {
       socket.leave(socket.room);

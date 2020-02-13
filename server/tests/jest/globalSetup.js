@@ -1,7 +1,5 @@
-require('@babel/register')
-require('@babel/polyfill')
-const server = require('../../src/server').default
+import server from '../../src/server';
 
-module.exports = async () => {
-  global.httpServer = await server.start({ port: 4000 })
-}
+export default async () => {
+  global.httpServer = await server.start({ port: 4000 });
+};

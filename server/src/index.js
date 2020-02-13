@@ -1,4 +1,3 @@
-import '@babel/polyfill/noConflict';
 import server from './server';
 import express from 'express';
 import jwt from 'jsonwebtoken';
@@ -6,9 +5,12 @@ import cookieParser from 'cookie-parser';
 import fs from 'fs';
 import path from 'path';
 import Fingerprint from 'express-fingerprint';
+import SocketIO from 'socket.io';
+import http from 'http';
+import socket from './socket';
 
 const app = express();
-const httpServer = require('http').createServer(app);
+const httpServer = http.createServer(app);
 // const httpServer = require('https').createServer(
 //   {
 //     key: fs.readFileSync(path.join(__dirname, '../config/server.key')),
@@ -18,8 +20,9 @@ const httpServer = require('http').createServer(app);
 //   },
 //   app
 // );
-const io = require('socket.io')(httpServer);
-require('./socket')(io);
+
+const io = new SocketIO(httpServer);
+socket(io);
 io.listen(httpServer);
 
 console.log(`env is ${process.env.IS_UNDER_CONSTRUCTION}`);
