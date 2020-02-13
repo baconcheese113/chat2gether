@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node dist/index.js",
-    "build": "npm install && npm install --only=dev --no-shrinkwrap",
+    "start": "node src/index.js",
+    "build": "npm install",
     "test": "env-cmd -f ./config/test.env jest --watch --runInBand",
     "dev": "env-cmd -f ./config/dev.env nodemon --experimental-modules --es-module-specifier-resolution=node --async-stack-traces --inspect src --ext .js,.json,.graphql",
     "get-schema": "graphql get-schema -p prisma --dotenv config/dev.env"
