@@ -11,7 +11,7 @@ import socket from './socket';
 
 const app = express();
 const httpServer = http.createServer(app);
-const dirname = __dirname || '/app/server/src';
+const dirname = process.env.PWD || '/app/server/src';
 // const httpServer = require('https').createServer(
 //   {
 //     key: fs.readFileSync(path.join(dirname, '../config/server.key')),
