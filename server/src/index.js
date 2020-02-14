@@ -11,7 +11,7 @@ import socket from './socket';
 
 const app = express();
 const httpServer = http.createServer(app);
-const dirname = process.env.PWD || '/app/server/src';
+const dirname = '/app';
 // const httpServer = require('https').createServer(
 //   {
 //     key: fs.readFileSync(path.join(dirname, '../config/server.key')),
@@ -33,9 +33,9 @@ if (process.env.IS_UNDER_CONSTRUCTION === 'true') {
     res.sendFile(path.join(dirname, '../../client/build', 'construction.html'));
   });
 } else if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(dirname, '../../client/build')));
+  app.use(express.static(path.join(dirname, 'client', 'build')));
   app.get('/', function(req, res) {
-    res.sendFile(path.join(dirname, '../../client/build', 'index.html'));
+    res.sendFile(path.join(dirname, 'client', 'build', 'index.html'));
   });
 } else {
   app.get('/', (req, res) => {
