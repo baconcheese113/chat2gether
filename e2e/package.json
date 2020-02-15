@@ -1,10 +1,10 @@
 {
-  "name": "chat2gether-e2e",
+  "name": "e2e",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "cypress": "cypress open"
+    "cypress:open": "cypress open"
   },
   "author": "",
   "license": "ISC",

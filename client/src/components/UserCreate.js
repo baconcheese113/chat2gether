@@ -119,7 +119,7 @@ export default function UserCreate(props) {
         <UserCreateStats>
           <UserCreateNumbers>
             <i className="fas fa-users" />
-            <h5>2</h5>
+            <h5>58</h5>
           </UserCreateNumbers>
           <p>Active users today</p>
         </UserCreateStats>
