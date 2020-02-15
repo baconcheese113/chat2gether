@@ -1,5 +1,5 @@
 {
-  "name": "graphql-basics",
+  "name": "chat2gether-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "apollo-boost": "^0.4.7",
-    "apollo-server-express": "^2.10.0",
+    "apollo-server-express": "^2.10.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
