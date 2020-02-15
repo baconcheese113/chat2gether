@@ -9,12 +9,14 @@ import SocketIO from 'socket.io';
 import http from 'http';
 import socket from './socket';
 
+const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname)));
+
 const app = express();
 const httpServer = http.createServer(app);
 // const httpServer = require('https').createServer(
 //   {
-//     key: fs.readFileSync(path.join(dirname, '../config/server.key')),
-//     cert: fs.readFileSync(path.join(dirname, '../config/server.cert')),
+//     key: fs.readFileSync(path.join(__dirname, '../config/server.key')),
+//     cert: fs.readFileSync(path.join(__dirname, '../config/server.cert')),
 //     requestCert: false,
 //     rejectUnauthorized: false
 //   },
@@ -26,16 +28,15 @@ socket(io);
 io.listen(httpServer);
 
 console.log(`env is ${process.env.IS_UNDER_CONSTRUCTION}`);
-console.log(`dirname is ${__dirname}`);
 if (process.env.IS_UNDER_CONSTRUCTION === 'true') {
   app.get('*', (req, res) => {
-    app.use(express.static(path.join('app', 'client', 'build')));
-    res.sendFile(path.join('app', 'client', 'build', 'construction.html'));
+    app.use(express.static(path.join(__dirname, '../../client/build')));
+    res.sendFile(path.join(__dirname, '../../client/build', 'construction.html'));
   });
 } else if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join('app', 'client', 'build')));
+  app.use(express.static(path.join(__dirname, '../../client/build')));
   app.get('/', function(req, res) {
-    res.sendFile(path.join('app', 'client', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
   });
 } else {
   app.get('/', (req, res) => {
