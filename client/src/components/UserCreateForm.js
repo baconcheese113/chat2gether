@@ -56,7 +56,7 @@ const Modal = styled.div`
   }
 `
 
-const UserCreateForm = props => {
+export default function UserCreateForm(props) {
   const { error, handleSubmit } = props
   const [gender, setGender] = useState(0)
   const [lookingFor, setLookingFor] = useState(
@@ -109,27 +109,49 @@ const UserCreateForm = props => {
       )}
       <Row>
         <InputLabel>I&apos;m</InputLabel>
-        <ChoiceSlider cur={gender} change={setGender} choices={GENDERS} height="1.5rem" width="100%" />
+        <ChoiceSlider
+          data-cy="myGenderSlider"
+          cur={gender}
+          change={setGender}
+          choices={GENDERS}
+          height="1.5rem"
+          width="100%"
+        />
       </Row>
       <Row>
         <InputLabel>I want to chat with</InputLabel>
-        <ChoicePicker selected={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
+        <ChoicePicker
+          data-cy="theirGenderPicker"
+          selected={lookingFor}
+          change={setLookingFor}
+          choices={GENDERS}
+          height="1.5rem"
+          width="100%"
+        />
       </Row>
       <Row>
         <InputLabel>My Age</InputLabel>
-        <NumberSlider numbers={[age]} change={changeNumbers} />
+        <NumberSlider data-cy="myAgeSlider" numbers={[age]} change={changeNumbers} />
       </Row>
       <Row>
         <InputLabel>Their age</InputLabel>
-        <NumberSlider numbers={[minAge, maxAge]} change={changeNumbers} showFill />
+        <NumberSlider data-cy="theirAgeSlider" numbers={[minAge, maxAge]} change={changeNumbers} showFill />
       </Row>
       <Row>
         <InputLabel>My Audio Preference</InputLabel>
-        <ChoiceSlider cur={audioPref} change={setAudioPref} choices={AUDIO_PREFS} height="1.5rem" width="100%" />
+        <ChoiceSlider
+          data-cy="myAudioSlider"
+          cur={audioPref}
+          change={setAudioPref}
+          choices={AUDIO_PREFS}
+          height="1.5rem"
+          width="100%"
+        />
       </Row>
       <Row>
         <InputLabel>Preferences I&apos;ll do</InputLabel>
         <ChoicePicker
+          data-cy="theirAudioPicker"
           selected={accAudioPrefs}
           change={setAccAudioPrefs}
           choices={AUDIO_PREFS}
@@ -143,5 +165,3 @@ const UserCreateForm = props => {
     </StyledForm>
   )
 }
-
-export default UserCreateForm

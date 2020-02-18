@@ -4,11 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "build": "webpack --output-filename out.js --entry ./integration/*.ts",
+    "precypress:run": "npm run lint",
+    "cypress:run": "cypress run",
+    "lint": "tslint --project ./tsconfig.json",
+    "postlint": "npm run tsc",
+    "test:ci": "cypress run",
+    "tsc": "tsc --pretty --noEmit"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^4.0.2"
+    "@cypress/webpack-preprocessor": "^4.1.1",
+    "cypress": "^4.0.2",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.6"
   }
 }
