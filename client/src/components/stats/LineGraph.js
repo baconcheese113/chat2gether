@@ -122,6 +122,8 @@ export default function LineGraph() {
     if (err) {
       console.error(err)
     }
+    if (!gradAnimateMale.current || !gradAnimateFemale.current || !gradAnimateF2M.current || !gradAnimateM2F.current)
+      return
     gradAnimateMale.current.beginElement()
     gradAnimateFemale.current.beginElement()
     gradAnimateF2M.current.beginElement()
@@ -409,7 +411,12 @@ export default function LineGraph() {
           padding: '0 1rem',
         }}
       >
-        <Select value={minuteSpread} onChange={handleMinuteSpreadChange} style={{ color: 'white' }}>
+        <Select
+          value={minuteSpread}
+          data-cy="timeSelect"
+          onChange={handleMinuteSpreadChange}
+          style={{ color: 'white' }}
+        >
           <MenuItem value={60}>1 Hour</MenuItem>
           <MenuItem value={60 * 6}>6 Hours</MenuItem>
           <MenuItem value={60 * 24}>1 Day</MenuItem>

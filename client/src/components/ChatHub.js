@@ -80,7 +80,13 @@ export default function ChatHub() {
   const getChatNav = () => {
     return (
       <div className="chat-nav">
-        <NextMatchButton className="next-match" type="button" onClick={handleNextMatch} disabled={!canNextMatch}>
+        <NextMatchButton
+          data-cy="nextMatchButton"
+          className="next-match"
+          type="button"
+          onClick={handleNextMatch}
+          disabled={!canNextMatch}
+        >
           Next Match
           <NextMatchSVG width="100%" height="100%" fill="transparent">
             <NextMatchRect disabled={!canNextMatch} height="100%" width="100%" rx="15px" />
@@ -149,7 +155,7 @@ export default function ChatHub() {
     if (!localStream) {
       return (
         <div className="video-connecting">
-          <button type="button" onClick={() => requestCamera()}>
+          <button data-cy="shareVideoButton" type="button" onClick={() => requestCamera()}>
             Share Video to Begin
           </button>
         </div>
@@ -162,15 +168,7 @@ export default function ChatHub() {
           <ConnectingText>{connectionMsg}</ConnectingText>
           <VideoWindow videoType="localVideo" stream={localStream} />
           {matchCountdown > 0 && <div className="countdown">{matchCountdown}</div>}
-          {enabledWidgets.updatePref && (
-            <UserUpdateForm
-              user={user}
-              setUser={newUser => {
-                updateUser(newUser)
-                if (roomId) nextMatch()
-              }}
-            />
-          )}
+          {enabledWidgets.updatePref && <UserUpdateForm />}
           {enabledWidgets.stats && <LineGraph />}
           {enabledWidgets.matches && <MatchHistory users={user.visited} />}
           <InCallNavBar

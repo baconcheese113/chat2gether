@@ -36,7 +36,7 @@ const OptionText = styled.span`
 `
 
 export default function ChoicePicker(props) {
-  const { selected, change, choices } = props
+  const { selected, change, choices, height } = props
   // props.choices is a list of strings to display as choices
   // props.selected is a list of the selected choices
   // props.change is how to change the selected elements
@@ -54,8 +54,9 @@ export default function ChoicePicker(props) {
     <StyledChoicePicker {...props}>
       {choices.map((choice, index) => (
         <Option
-          {...props}
           key={choice}
+          className={selected.find(obj => obj.name === choice) && 'active'}
+          height={height}
           optionStart={index === 0}
           optionEnd={index === choices.length - 1}
           active={selected.find(obj => obj.name === choice)}

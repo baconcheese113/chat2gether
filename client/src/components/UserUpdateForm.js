@@ -6,6 +6,8 @@ import { UPDATE_USER } from '../queries/mutations'
 import ChoicePicker from './ChoicePicker'
 import ChoiceSlider from './ChoiceSlider'
 import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
+import { useSocket } from '../hooks/SocketContext'
+import { useMyUser } from '../hooks/MyUserContext'
 
 const StyledForm = styled.form`
   width: 90%;
@@ -55,8 +57,11 @@ const stripArr = arr => {
   })
 }
 
-export default function UserUpdateForm(props) {
-  const { user, setUser } = props
+export default function UserUpdateForm() {
+  const client = useApolloClient()
+  const { user, updateUser } = useMyUser()
+  const { nextMatch, roomId } = useSocket()
+
   const [lookingFor, setLookingFor] = React.useState(
     stripArr(user.lookingFor) ||
       GENDERS.map(x => {
@@ -74,8 +79,6 @@ export default function UserUpdateForm(props) {
   )
   const [error, setError] = React.useState(null)
   const [hasChanges, setHasChanges] = React.useState(false)
-
-  const client = useApolloClient()
 
   const changeNumbers = newArr => {
     if (newArr.length === 2) {
@@ -125,7 +128,8 @@ export default function UserUpdateForm(props) {
     if (Object.entries(changes).length === 0) return
 
     // setUser based off changes
-    setUser({ ...user, ...changes })
+    updateUser(changes)
+    if (roomId) nextMatch()
 
     // Now change shape to fit update (if lookingFor was changed)
     if (user.lookingFor !== lookingFor) {
@@ -169,15 +173,23 @@ export default function UserUpdateForm(props) {
       <ScrollContent>
         <Row>
           <InputLabel>I want to chat with</InputLabel>
-          <ChoicePicker selected={lookingFor} change={setLookingFor} choices={GENDERS} height="1.5rem" width="100%" />
+          <ChoicePicker
+            data-cy="theirGenderPicker"
+            selected={lookingFor}
+            change={setLookingFor}
+            choices={GENDERS}
+            height="1.5rem"
+            width="100%"
+          />
         </Row>
         <Row>
           <InputLabel>Their Age</InputLabel>
-          <NumberSlider numbers={[minAge, maxAge]} change={changeNumbers} showFill />
+          <NumberSlider dataCy="theirAgeSlider" numbers={[minAge, maxAge]} change={changeNumbers} showFill />
         </Row>
         <Row>
           <InputLabel>My Audio Preference</InputLabel>
           <ChoiceSlider
+            data-cy="myAudioSlider"
             cur={audioPref}
             change={setAudioPref}
             choices={AUDIO_PREFS}
@@ -189,6 +201,7 @@ export default function UserUpdateForm(props) {
         <Row>
           <InputLabel>Preferences I&apos;ll do</InputLabel>
           <ChoicePicker
+            data-cy="theirAudioPicker"
             selected={accAudioPrefs}
             change={setAccAudioPrefs}
             choices={AUDIO_PREFS}
@@ -199,7 +212,9 @@ export default function UserUpdateForm(props) {
         </Row>
       </ScrollContent>
       {error}
-      <SubmitButton hasChanges={hasChanges}>Apply</SubmitButton>
+      <SubmitButton data-cy="applyChangesButton" hasChanges={hasChanges} disabled={!hasChanges}>
+        Apply
+      </SubmitButton>
     </StyledForm>
   )
 }

@@ -131,11 +131,11 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>My Age</InputLabel>
-        <NumberSlider data-cy="myAgeSlider" numbers={[age]} change={changeNumbers} />
+        <NumberSlider dataCy="myAgeSlider" numbers={[age]} change={changeNumbers} />
       </Row>
       <Row>
         <InputLabel>Their age</InputLabel>
-        <NumberSlider data-cy="theirAgeSlider" numbers={[minAge, maxAge]} change={changeNumbers} showFill />
+        <NumberSlider dataCy="theirAgeSlider" numbers={[minAge, maxAge]} change={changeNumbers} showFill />
       </Row>
       <Row>
         <InputLabel>My Audio Preference</InputLabel>
@@ -161,7 +161,7 @@ export default function UserCreateForm(props) {
         />
       </Row>
       {error}
-      <SubmitButton>Start</SubmitButton>
+      <SubmitButton data-cy="startButton">Start</SubmitButton>
     </StyledForm>
   )
 }

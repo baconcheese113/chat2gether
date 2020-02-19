@@ -24,7 +24,7 @@ const RightAligned = styled.div`
   margin-right: 0.5rem;
 `
 
-const InCallNavBar = props => {
+export default function InCallNavBar(props) {
   const { resetState, buttons } = props
 
   const [isMobile, setIsMobile] = React.useState(false)
@@ -69,9 +69,10 @@ const InCallNavBar = props => {
   return (
     <StyledNavBar>
       <LeftAligned>
-        {buttons.stop && <ToggleButton iconClass="fas fa-stop" onClick={resetState} />}
+        {buttons.stop && <ToggleButton iconClass="fas fa-stop" dataCy="navStopButton" onClick={resetState} />}
         {buttons.mic && (
           <ToggleButton
+            dataCy="navMicButton"
             iconClass={`fas fa-microphone${chatSettings.micMute ? '-slash' : ''}`}
             onClick={() => {
               if (localStream) {
@@ -89,16 +90,18 @@ const InCallNavBar = props => {
         )}
         {buttons.speaker && (
           <ToggleButton
+            dataCy="navSpeakerButton"
             iconClass={`fas fa-volume${chatSettings.speakerMute ? '-mute' : '-up'}`}
             onClick={() => setChatSettings({ ...chatSettings, speakerMute: !chatSettings.speakerMute })}
             active={chatSettings.speakerMute ? 0 : 1}
           />
         )}
-        {isMobile && <ToggleButton iconClass="fas fa-camera" onClick={flipCamera} />}
+        {isMobile && <ToggleButton dataCy="navCameraFlipButton" iconClass="fas fa-camera" onClick={flipCamera} />}
       </LeftAligned>
       <RightAligned>
         {buttons.profile && (
           <ToggleButton
+            dataCy="navProfileButton"
             iconClass="fas fa-user-alt"
             onClick={() => featureToggle('profile')}
             active={enabledWidgets.profile ? 1 : 0}
@@ -106,6 +109,7 @@ const InCallNavBar = props => {
         )}
         {buttons.countdown && (
           <ToggleButton
+            dataCy="navCountdownButton"
             iconClass="fas fa-stopwatch"
             onClick={() => featureToggle('countdown')}
             active={enabledWidgets.countdown ? 1 : 0}
@@ -114,6 +118,7 @@ const InCallNavBar = props => {
         )}
         {buttons.chat && (
           <ToggleButton
+            dataCy="navCommentButton"
             iconClass="fas fa-comment"
             onClick={() => featureToggle('text')}
             active={enabledWidgets.text ? 1 : 0}
@@ -122,6 +127,7 @@ const InCallNavBar = props => {
         )}
         {buttons.video && (
           <ToggleButton
+            dataCy="navPlayerButton"
             iconClass="fab fa-youtube"
             onClick={() => featureToggle('video')}
             active={enabledWidgets.video ? 1 : 0}
@@ -130,6 +136,7 @@ const InCallNavBar = props => {
         )}
         {buttons.updatePref && (
           <ToggleButton
+            dataCy="navUpdateUserButton"
             iconClass="fas fa-user-edit"
             onClick={() => featureToggle('updatePref')}
             active={enabledWidgets.updatePref ? 1 : 0}
@@ -137,6 +144,7 @@ const InCallNavBar = props => {
         )}
         {buttons.stats && (
           <ToggleButton
+            dataCy="navStatsButton"
             iconClass="fas fa-chart-area"
             onClick={() => featureToggle('stats')}
             active={enabledWidgets.stats ? 1 : 0}
@@ -144,6 +152,7 @@ const InCallNavBar = props => {
         )}
         {buttons.matches && (
           <ToggleButton
+            dataCy="navMatchesButton"
             iconClass="fas fa-users"
             onClick={() => featureToggle('matches')}
             active={enabledWidgets.matches ? 1 : 0}
@@ -153,5 +162,3 @@ const InCallNavBar = props => {
     </StyledNavBar>
   )
 }
-
-export default InCallNavBar

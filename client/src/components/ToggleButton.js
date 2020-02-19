@@ -36,11 +36,11 @@ const Notification = styled.p`
 `
 
 const ToggleButton = props => {
-  const { title, iconClass, onClick, notification } = props
+  const { title, iconClass, onClick, notification, active, dataCy } = props
   return (
     <React.Fragment>
-      <StyledToggleButton {...props}>
-        <ButtonElem onClick={onClick} {...props}>
+      <StyledToggleButton data-cy={dataCy}>
+        <ButtonElem onClick={onClick} active={active}>
           {title}
           {iconClass && <i className={iconClass} />}
         </ButtonElem>

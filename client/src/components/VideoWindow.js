@@ -70,6 +70,7 @@ export default function VideoWindow(props) {
   if (videoType === 'localVideo') {
     return (
       <div
+        data-cy="localVideo"
         onTouchMove={onTouchMove}
         style={{ top: `${top}px`, left: `${left}px` }}
         ref={containerRef}
@@ -80,7 +81,7 @@ export default function VideoWindow(props) {
     )
   }
   return (
-    <div ref={containerRef} className="video-container video-remote">
+    <div ref={containerRef} className="video-container video-remote" data-cy="remoteVideo">
       {getVideo()}
     </div>
   )
