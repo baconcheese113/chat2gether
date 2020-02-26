@@ -22,10 +22,7 @@ export default io => {
       }
     });
     socket.on('ready', roomId => {
-      console.log('ready ' + roomId);
-      socket.to(roomId).emit('announce', {
-        message: 'New client in the room'
-      });
+      console.log('ready', roomId);
       socket.to(roomId).emit('ready', roomId);
     });
     socket.on('candidate', msg => {
@@ -42,7 +39,7 @@ export default io => {
     });
 
     socket.on('send', msg => {
-      console.log(msg);
+      console.log('send', msg);
       io.in(msg.roomId).emit('comment', {
         text: msg.text,
         userId: msg.userId
