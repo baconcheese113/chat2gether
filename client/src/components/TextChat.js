@@ -187,8 +187,10 @@ export default function TextChat(props) {
         <div ref={messagesEnd} />
       </TextHistory>
       <TextConsole onSubmit={handleSubmit}>
-        <ConsoleInput type="text" value={comment} onChange={e => setComment(e.target.value)} />
-        <ConsoleButton type="submit">Send</ConsoleButton>
+        <ConsoleInput data-cy="commentInput" type="text" value={comment} onChange={e => setComment(e.target.value)} />
+        <ConsoleButton data-cy="commentSubmitButton" type="submit">
+          Send
+        </ConsoleButton>
       </TextConsole>
     </StyledTextChat>
   )
