@@ -1,5 +1,5 @@
 import React from 'react'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/client'
 import { GET_ME } from '../queries/queries'
 
 const MyUserContext = React.createContext({})

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/client'
 import NumberSlider from './NumberSlider'
 import { UPDATE_USER } from '../queries/mutations'
 import ChoicePicker from './ChoicePicker'

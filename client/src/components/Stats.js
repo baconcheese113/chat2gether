@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/client'
 import { GET_USERS } from '../queries/queries'
 
 const StatsContainer = styled.section`

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/client'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'

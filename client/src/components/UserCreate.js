@@ -1,5 +1,5 @@
 import React from 'react'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/client'
 import styled from 'styled-components'
 import { CREATE_USER } from '../queries/mutations'
 import UserCreateForm from './UserCreateForm'

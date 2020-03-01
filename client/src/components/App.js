@@ -1,5 +1,5 @@
 import React from 'react'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/client'
 import Header from './Header'
 import UserCreate from './UserCreate'
 import ChatHub from './ChatHub'

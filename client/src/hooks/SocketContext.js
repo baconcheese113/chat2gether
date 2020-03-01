@@ -1,5 +1,5 @@
 import React from 'react'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/client'
 import SocketHelper from '../helpers/socketHelper'
 import { UPDATE_USER } from '../queries/mutations'
 import { FIND_ROOM } from '../queries/queries'
