@@ -69,6 +69,10 @@ describe('matchmaking_spec', function() {
     Cypress.Cookies.preserveOnce('token');
   });
 
+  after(() => {
+    theirSocketHelper.socket.close();
+  });
+
   it("doesn't match with users that don't want me", function() {
     // Create their user and have them try to join
     cy.getCookie('token').then(token => {

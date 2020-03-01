@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
-import { useMyUser } from '../hooks/MyUserContext'
+import { useSocket } from '../hooks/SocketContext'
 
 const StyledProfileCard = styled.article`
   position: absolute;
@@ -56,12 +56,13 @@ const Pill = styled.div`
   font-size: 1.8rem;
 `
 
-const ProfileCard = () => {
-  const { user } = useMyUser()
+export default function ProfileCard(props) {
+  const { otherUser } = useSocket()
 
   const { enabledWidgets } = useEnabledWidgets()
   const active = enabledWidgets.profile
 
+  if (!otherUser) return ''
   return (
     <StyledProfileCard>
       <Card active={active}>
@@ -72,17 +73,17 @@ const ProfileCard = () => {
             <i className="fas fa-user-astronaut" />
           </CardTitle>
           <PillContainer>
-            <Pill>
+            <Pill data-cy="profileGender">
               <i className="fas fa-angle-right" />
-              {user.gender}
+              {otherUser.gender}
             </Pill>
             <Pill>
               <i className="fas fa-angle-right" />
-              {user.age}
+              {otherUser.age}
             </Pill>
             <Pill>
               <i className="fas fa-angle-right" />
-              {user.audioPref}
+              {otherUser.audioPref}
             </Pill>
           </PillContainer>
           <CardTitle>
@@ -93,15 +94,15 @@ const ProfileCard = () => {
           <PillContainer>
             <Pill>
               <i className="fas fa-angle-right" />
-              {user.lookingFor.map(x => x.name).join(', ')}
+              {otherUser.lookingFor.map(x => x.name).join(', ')}
             </Pill>
             <Pill>
               <i className="fas fa-angle-right" />
-              {`${user.minAge}-${user.maxAge}`}
+              {`${otherUser.minAge}-${otherUser.maxAge}`}
             </Pill>
             <Pill>
               <i className="fas fa-angle-right" />
-              {user.accAudioPrefs.map(x => x.name).join(', ')}
+              {otherUser.accAudioPrefs.map(x => x.name).join(', ')}
             </Pill>
           </PillContainer>
         </CardContent>
@@ -109,5 +110,3 @@ const ProfileCard = () => {
     </StyledProfileCard>
   )
 }
-
-export default ProfileCard

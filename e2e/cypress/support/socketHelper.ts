@@ -6,11 +6,15 @@ interface ISocketHelper {
   emit: (label: string, data: string | number | Object) => void;
 }
 
+interface User {
+  id: string;
+}
+
 export default class SocketHelper implements ISocketHelper {
   public socket: any;
   public mediaStream: MediaStream;
   public roomId: string = '';
-  public userId: string = '';
+  public user: User = { id: '' };
 
   constructor(mediaStream: MediaStream) {
     this.socket = io();
@@ -39,37 +43,8 @@ export default class SocketHelper implements ISocketHelper {
       };
 
       pc.ontrack = async (e: RTCTrackEvent) => {
-        const updateQuery = `
-          mutation UpdateUserMutation($data: UserUpdateInput!) {
-            updateUser(data: $data) {
-              id
-              gender
-              age
-              lookingFor {
-                name
-              }
-              minAge
-              maxAge
-              audioPref
-              accAudioPrefs {
-                name
-              }
-            }
-          }
-        `;
-        const updateVars = {
-          data: {
-            isConnected: true
-          }
-        };
-        const res = await fetch('/graphql', {
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query: updateQuery, variables: updateVars }),
-          method: 'POST'
-        });
-        const { data } = await res.json();
-        this.emit('identity', { user: data.updateUser, roomId });
-        this.userId = data.updateUser.id;
+        this.emit('identity', { user: this.user, roomId });
+        console.log('their id is', this.user.id);
       };
 
       const offer = await pc.createOffer();
@@ -96,13 +71,41 @@ export default class SocketHelper implements ISocketHelper {
   }
 
   public emit(label: string, data: string | number | Object) {
+    console.log(this.user.id, ' is emitting ', label, ' -> ', data);
     this.socket.emit(label, data);
   }
 
   public sendComment(text: string) {
     this.emit('send', {
-      userId: this.userId,
       text,
+      userId: this.user.id,
+      roomId: this.roomId
+    });
+  }
+
+  public sendPlayerSync(type: string) {
+    this.emit('videoPlayerSync', {
+      type,
+      userId: this.user.id,
+      roomId: this.roomId
+    });
+  }
+
+  /**
+   * Perform html video element function where currentTime is in seconds
+   */
+  public sendPlayerUpdate(partial: { type: 'play' | 'pause' | 'seeked'; currentTime: number }) {
+    this.emit('videoPlayerUpdate', {
+      ...partial,
+      userId: this.user.id,
+      roomId: this.roomId
+    });
+  }
+
+  public sendCountdownUpdate(type: 'requestedCountdown' | 'startedCountdown' | 'cancelledCountdown') {
+    this.emit('countdown', {
+      type,
+      userId: this.user.id,
       roomId: this.roomId
     });
   }

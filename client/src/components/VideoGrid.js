@@ -103,7 +103,7 @@ const SubmitButton = styled.button`
   z-index: 0;
 `
 
-const VideoGrid = props => {
+export default function VideoGrid(props) {
   const { videos, onSubmitSearch, isShown, setIsShown, selectVideo } = props
   const [query, setQuery] = useState('')
   const [submittedQuery, setSubmittedQuery] = useState('')
@@ -153,7 +153,7 @@ const VideoGrid = props => {
         <ScrollList>
           {videos.map(video => {
             return (
-              <Result key={video.id} onClick={() => handleSelectVideo(video.id)}>
+              <Result data-cy="playerSearchResult" key={video.id} onClick={() => handleSelectVideo(video.id)}>
                 <ResultTitle>{video.title}</ResultTitle>
                 <ResultImage src={video.img} alt={video.title} />
                 <ResultDuration>{video.duration}</ResultDuration>
@@ -177,16 +177,15 @@ const VideoGrid = props => {
       <Modal>
         <SearchBarForm onSubmit={handleSearchSubmit}>
           <SearchBar
+            data-cy="playerSearchInput"
             placeholder={`Search ${process.env.REACT_APP_SEARCH_DOMAIN} by keyword, URLs are not supported`}
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
-          <SubmitButton>Search</SubmitButton>
+          <SubmitButton data-cy="playerSearchSubmit">Search</SubmitButton>
         </SearchBarForm>
         {getContent()}
       </Modal>
     </StyledVideoGrid>
   )
 }
-
-export default VideoGrid

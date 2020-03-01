@@ -39,7 +39,7 @@ export default io => {
     });
 
     socket.on('send', msg => {
-      console.log('send', msg);
+      console.log('send', msg, ' using ', socket.client.conn.transport.constructor.name);
       io.in(msg.roomId).emit('comment', {
         text: msg.text,
         userId: msg.userId
@@ -67,7 +67,11 @@ export default io => {
 
     // Called when a user closes the connection
     socket.on('disconnecting', reason => {
-      console.log(`${socket.username} disconnected from ${Object.values(socket.rooms)[1]}`);
+      console.log(
+        `${socket.username} disconnected from ${Object.values(socket.rooms)[1]} using ${
+          socket.client.conn.transport.constructor.name
+        }`
+      );
       // socket.to(Object.values(socket.rooms)[1]).emit('disconnect')
       io.in(Object.values(socket.rooms)[1]).emit('disconnect');
       console.log(reason);

@@ -223,6 +223,7 @@ const Countdown = props => {
     <StyledCountdown active={active}>
       <TextContainer>
         <CountdownText
+          data-cy="countdownText"
           fontSize={status === 'started' ? '4.5rem' : '1.4rem'}
           className={status === 'started' && 'animated'}
           spacing={spacing}
@@ -233,9 +234,13 @@ const Countdown = props => {
       <ScanLine className={status === 'started' && 'animated'} spacing={spacing} />
       <ButtonsContainer>
         {status === 'none' && <ActionButton onClick={handleRequest}>Request</ActionButton>}
-        {status === 'requested' && !isRequester && <ActionButton onClick={handleStart}>Start</ActionButton>}
+        {status === 'requested' && !isRequester && (
+          <ActionButton data-cy="countdownStartButton" onClick={handleStart}>
+            Start
+          </ActionButton>
+        )}
         {(status === 'started' || status === 'requested') && (
-          <ActionButton className="animated" spacing={spacing} onClick={handleCancel}>
+          <ActionButton data-cy="countdownCancelButton" className="animated" spacing={spacing} onClick={handleCancel}>
             Cancel
           </ActionButton>
         )}

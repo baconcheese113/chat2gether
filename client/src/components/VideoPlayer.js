@@ -276,16 +276,17 @@ const VideoPlayer = props => {
         selectVideo={selectVideo}
       />
       <StyledVideoPlayer height={window.innerHeight} coords={coords} active={active}>
-        <SearchButton onClick={() => setIsShown(true)}>
+        <SearchButton data-cy="playerSearchButton" onClick={() => setIsShown(true)}>
           <i className="fas fa-search" />
         </SearchButton>
-        <SyncButton onClick={toggleSync} color={getColor}>
+        <SyncButton data-cy="playerSyncButton" onClick={toggleSync} color={getColor}>
           {getSyncText()}
         </SyncButton>
         <VideoContainer disabled={disabled} height={height}>
           <div />
           {currentVideo ? (
             <video
+              data-cy="playerVideo"
               ref={player}
               onPause={handlePlayerUpdate}
               onPlay={handlePlayerUpdate}

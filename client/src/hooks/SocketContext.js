@@ -235,6 +235,7 @@ export default function SocketProvider(props) {
         roomId: room.current,
         resetSocket,
         matchCountdown,
+        otherUser,
       }}
     >
       {children}
