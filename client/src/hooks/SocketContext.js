@@ -24,7 +24,7 @@ export default function SocketProvider(props) {
   const probeTimer = React.useRef(null)
   const room = React.useRef(null)
 
-  const { user, updateUser } = useMyUser()
+  const { user, getMe } = useMyUser()
   const client = useApolloClient()
   console.log('SocketProvider render')
 
@@ -53,7 +53,7 @@ export default function SocketProvider(props) {
     matchTimer.current = timer
   }
 
-  const onNextRoom = async roomId => {
+  const onNextRoom = async (roomId, localStream) => {
     console.log('onNextRoom')
     if (roomId) {
       const { error } = await client.mutate({
@@ -63,7 +63,7 @@ export default function SocketProvider(props) {
       if (error) console.error(error)
     }
     // eslint-disable-next-line no-use-before-define
-    nextMatch()
+    nextMatch(localStream)
   }
 
   const onIdentity = u => {
@@ -96,7 +96,7 @@ export default function SocketProvider(props) {
       })
       if (error) console.error(error)
       if (loading) console.log(loading)
-      const updatedUser = await updateUser(data.updateUser)
+      const updatedUser = await getMe()
       console.log('ontrack dump', updatedUser, room.current, e.streams[0])
       newSocketHelper.emit('identity', { user: updatedUser, roomId: room.current })
       // setRemoteStream(e.streams[0])
@@ -133,8 +133,6 @@ export default function SocketProvider(props) {
     return newSocketHelper
   }
 
-  console.log('in render with ', user)
-
   const nextMatch = async localStream => {
     console.log('in nextMatch with ', user)
     if (!canNextMatch) return
@@ -152,7 +150,7 @@ export default function SocketProvider(props) {
       variables: { data },
     })
     if (resetUserRes.error) console.error(resetUserRes)
-    let updatedUser = await updateUser(resetUserRes.data)
+    let updatedUser = await getMe()
 
     // Start finding a room
     const d = new Date()
@@ -198,9 +196,8 @@ export default function SocketProvider(props) {
         variables: { data: { isHost: true } },
       })
       console.log('updateUserRes is ', updateUserRes)
-      updatedUser = await updateUser(updateUserRes.data.updateUser)
+      updatedUser = await getMe()
       setConnectionMsg('Waiting for matches...')
-      // updateUser(updatedUser)
       room.current = updatedUser.id
       console.log(`FUCK WE JOINING ${updatedUser.id} BRUH`)
       tempSocketHelper.joinRoom(updatedUser.id)
@@ -218,7 +215,7 @@ export default function SocketProvider(props) {
       console.log('effect cleared')
       clearTimeout(probeTimer.current)
       probeTimer.current = setTimeout(() => {
-        nextMatch()
+        nextMatch(socketHelper.localStream)
       }, 15000)
     }
   }, [connectionMsg, otherUser])

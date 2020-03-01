@@ -25,7 +25,6 @@ const httpServer = http.createServer(app);
 
 const io = new SocketIO(httpServer);
 socket(io);
-io.listen(httpServer);
 
 console.log(`env is ${process.env.IS_UNDER_CONSTRUCTION}`);
 if (process.env.IS_UNDER_CONSTRUCTION === 'true') {

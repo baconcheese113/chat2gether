@@ -8,22 +8,26 @@ export function useMyUser() {
 }
 
 export default function MyUserProvider(props) {
-  const { children, user: initialUser } = props
+  const { children } = props
 
-  const [user, setUser] = React.useState(initialUser)
+  const [user, setUser] = React.useState()
   console.log('MyUserProvider render')
+
+  React.useEffect(() => {
+    getMe()
+  }, [])
 
   const client = useApolloClient()
 
-  const updateUser = async updatedUser => {
-    setUser(updatedUser)
+  const getMe = async () => {
+    // setUser(updatedUser)
     const { data, error } = await client.query({ query: GET_ME })
     if (data.me) {
       setUser(data.me)
     }
     console.log(data, error)
-    return data.me || updatedUser
+    return data.me
   }
 
-  return <MyUserContext.Provider value={{ user, updateUser }}>{children}</MyUserContext.Provider>
+  return <MyUserContext.Provider value={{ user, getMe }}>{user ? children : ''}</MyUserContext.Provider>
 }

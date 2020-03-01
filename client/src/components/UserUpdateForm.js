@@ -8,6 +8,7 @@ import ChoiceSlider from './ChoiceSlider'
 import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
 import { useSocket } from '../hooks/SocketContext'
 import { useMyUser } from '../hooks/MyUserContext'
+import { useLocalStream } from '../hooks/LocalStreamContext'
 
 const StyledForm = styled.form`
   width: 90%;
@@ -59,7 +60,8 @@ const stripArr = arr => {
 
 export default function UserUpdateForm() {
   const client = useApolloClient()
-  const { user, updateUser } = useMyUser()
+  const { user, getMe } = useMyUser()
+  const { localStream } = useLocalStream()
   const { nextMatch, roomId } = useSocket()
 
   const [lookingFor, setLookingFor] = React.useState(
@@ -127,9 +129,7 @@ export default function UserUpdateForm() {
     // If changes is empty return
     if (Object.entries(changes).length === 0) return
 
-    // setUser based off changes
-    const updatedUser = await updateUser(changes)
-    if (roomId) nextMatch()
+    const updatedUser = await getMe()
 
     // Now change shape to fit update (if lookingFor was changed)
     if (updatedUser.lookingFor !== lookingFor) {
@@ -150,6 +150,10 @@ export default function UserUpdateForm() {
       setError(newError)
     }
     console.log(data)
+
+    // setUser based off changes
+    await getMe()
+    if (roomId && localStream) nextMatch(localStream)
   }
 
   React.useEffect(() => {

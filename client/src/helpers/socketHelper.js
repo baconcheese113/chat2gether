@@ -62,7 +62,7 @@ export default class SocketHelper {
     this.socket.on('full room', roomId => {
       console.log(`full room at ${roomId}`)
       this.updateConnectionMsg('Room full, finding next...')
-      this.onNextRoom(null)
+      this.onNextRoom(null, this.localStream)
     })
     this.socket.on('disconnect', () => {
       console.log('disconnect')

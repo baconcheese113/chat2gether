@@ -44,7 +44,7 @@ export default function App() {
   if (canRender) {
     if (user) {
       return (
-        <MyUserProvider user={user}>
+        <MyUserProvider>
           <EnabledWidgetsProvider>
             <SocketProvider>
               <LocalStreamProvider>
