@@ -128,17 +128,17 @@ export default function UserUpdateForm() {
     if (Object.entries(changes).length === 0) return
 
     // setUser based off changes
-    updateUser(changes)
+    const updatedUser = await updateUser(changes)
     if (roomId) nextMatch()
 
     // Now change shape to fit update (if lookingFor was changed)
-    if (user.lookingFor !== lookingFor) {
+    if (updatedUser.lookingFor !== lookingFor) {
       changes.lookingFor = {
         set: stripArr(lookingFor),
       }
     }
     // Now change shape to fit update (if accAudioPrefs was changed)
-    if (user.accAudioPrefs !== accAudioPrefs) {
+    if (updatedUser.accAudioPrefs !== accAudioPrefs) {
       changes.accAudioPrefs = {
         set: stripArr(accAudioPrefs),
       }

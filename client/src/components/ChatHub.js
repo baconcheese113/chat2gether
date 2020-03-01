@@ -57,7 +57,7 @@ const ConnectingText = styled.p`
 export default function ChatHub() {
   const [flowDirection, setFlowDirection] = useState(window.innerWidth > window.innerHeight ? 'row' : 'column')
 
-  const { user, updateUser } = useMyUser()
+  const { user } = useMyUser()
   const { localStream, requestCamera } = useLocalStream()
   const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
   const {

@@ -16,13 +16,13 @@ export default function MyUserProvider(props) {
   const client = useApolloClient()
 
   const updateUser = async updatedUser => {
-    setUser({ ...user, ...updatedUser })
+    setUser(updatedUser)
     const { data, error } = await client.query({ query: GET_ME })
     if (data.me) {
-      setUser({ ...user, ...data.me })
+      setUser(data.me)
     }
     console.log(data, error)
-    return user
+    return data.me || updatedUser
   }
 
   return <MyUserContext.Provider value={{ user, updateUser }}>{children}</MyUserContext.Provider>
