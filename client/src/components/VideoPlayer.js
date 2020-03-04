@@ -267,7 +267,7 @@ const VideoPlayer = props => {
   // {syncState === SYNC.UNACCEPTED && <Notification />}
   // <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
   return (
-    <React.Fragment>
+    <>
       <VideoGrid
         videos={parser.videos}
         onSubmitSearch={onSubmitSearch}
@@ -302,7 +302,7 @@ const VideoPlayer = props => {
           )}
         </VideoContainer>
       </StyledVideoPlayer>
-    </React.Fragment>
+    </>
   )
 }
 

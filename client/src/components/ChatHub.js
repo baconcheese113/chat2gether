@@ -137,7 +137,7 @@ export default function ChatHub() {
   const renderBackground = () => {
     if (remoteStream) {
       return (
-        <React.Fragment>
+        <>
           <VideoPlayer socketHelper={socketHelper} userId={user.id} roomId={roomId} />
           <VideoWindow videoType="remoteVideo" stream={remoteStream} />
           <VideoWindow videoType="localVideo" stream={localStream} />
@@ -149,7 +149,7 @@ export default function ChatHub() {
             resetState={resetSocket}
             buttons={{ stop: true, mic: true, speaker: true, profile: true, countdown: true, chat: true, video: true }}
           />
-        </React.Fragment>
+        </>
       )
     }
     if (!localStream) {
@@ -162,7 +162,7 @@ export default function ChatHub() {
       )
     }
     return (
-      <React.Fragment>
+      <>
         <div className="video-connecting">
           {getChatNav()}
           <ConnectingText>{connectionMsg}</ConnectingText>
@@ -176,7 +176,7 @@ export default function ChatHub() {
             buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
           />
         </div>
-      </React.Fragment>
+      </>
     )
   }
 

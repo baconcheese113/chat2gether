@@ -85,13 +85,13 @@ export default function Stats() {
     })
 
     return (
-      <React.Fragment>
+      <>
         <polyline
           points={points.map(val => `${val.x} ${val.y}`).join(', ')}
           className={`graph-line ${gender.toLowerCase()}`}
         />
         {circles}
-      </React.Fragment>
+      </>
     )
   }
 
@@ -109,7 +109,7 @@ export default function Stats() {
         return null
       })
     return (
-      <React.Fragment>
+      <>
         {xVals}
         <text x={vb.x / 2} y={vb.y * 0.95} className="axis-label">
           Hours ago
@@ -130,7 +130,7 @@ export default function Stats() {
         >
           Users
         </text>
-      </React.Fragment>
+      </>
     )
   }
 
@@ -144,13 +144,13 @@ export default function Stats() {
     // setUsers({timestamp: new Date(), list: data.users})
     list.current = data.users
     return (
-      <React.Fragment>
+      <>
         {getLine(getGroupings(), 'MALE')}
         {getLine(getGroupings(), 'FEMALE')}
         {getLine(getGroupings(), 'M2F')}
         {getLine(getGroupings(), 'F2M')}
         {getAxis()}
-      </React.Fragment>
+      </>
     )
   }
   const ticksX = Array(numIntervals - 1)
