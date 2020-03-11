@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
 const rotate = keyframes`
@@ -133,16 +133,17 @@ const BracketText = styled.p.attrs(({ scale, opacity }) => ({
   transition: transform 0.4s, opacity 1.2s;
 `
 
-const Meter = () => {
+export default function Meter() {
   // const { numbers, change } = props
-  const mainMeter = useRef()
-  const [box, setBox] = useState(null) // set to mainMeter's bounding box
-  const [isSliding, setIsSliding] = useState(false)
+  const [box, setBox] = React.useState(null) // set to mainMeter's bounding box
+  const [isSliding, setIsSliding] = React.useState(false)
 
   // Move to props
-  const [number, setNumber] = useState(10)
-  const [otherNum, setOtherNum] = useState(20)
-  const [isNewVal, setIsNewVal] = useState(false)
+  const [number, setNumber] = React.useState(10)
+  const [otherNum, setOtherNum] = React.useState(20)
+  const [isNewVal, setIsNewVal] = React.useState(false)
+
+  const mainMeter = React.useRef()
 
   const pixelToNumber = y => {
     const halfLength = (box.bottom - box.top) / 2
@@ -272,5 +273,3 @@ const Meter = () => {
     </MeterContainer>
   )
 }
-
-export default Meter

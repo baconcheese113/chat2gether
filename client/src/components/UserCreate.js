@@ -5,6 +5,8 @@ import { CREATE_USER } from '../queries/mutations'
 import UserCreateForm from './UserCreateForm'
 
 const Main = styled.main`
+  /* height: 100vh; */
+  margin: 0 auto;
   max-width: 60rem;
 `
 
@@ -19,8 +21,17 @@ const BackdropImage = styled.img`
 `
 
 const IntroSection = styled.section`
+  background-color: #3f3f3f;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 5px;
+
   display: flex;
   flex-direction: column;
+`
+const IntroText = styled.h2`
+  margin: 20px 0;
+  padding-top: 20px;
 `
 const TitleFeature = styled.h3`
   font-size: 2rem;
@@ -46,13 +57,6 @@ const UserCreateNumbers = styled.div`
   border-radius: 20px 0;
 `
 
-// const MoreFeatures = styled.button`
-//   display: inline-block;
-//   font: inherit;
-//   font-size: 2rem;
-//   color: inherit;
-// `
-
 export default function UserCreate(props) {
   const { setUser } = props
   const [errorMsg, setErrorMsg] = React.useState('')
@@ -60,8 +64,7 @@ export default function UserCreate(props) {
 
   const client = useApolloClient()
 
-  const handleSubmit = async (e, { gender, lookingFor, age, minAge, maxAge, audioPref, accAudioPrefs }) => {
-    e.preventDefault()
+  const handleUserCreate = async ({ gender, lookingFor, age, minAge, maxAge, audioPref, accAudioPrefs }) => {
     console.log(gender, lookingFor, age, minAge, maxAge, audioPref, accAudioPrefs)
     if (age && minAge && maxAge) {
       setIsSubmitting(true)
@@ -105,11 +108,11 @@ export default function UserCreate(props) {
         alt="background stock photo"
       />
       <IntroSection>
-        <h2>
+        <IntroText>
           Share video, audio or text*
           <br />
           Chat together
-        </h2>
+        </IntroText>
         <TitleFeature {...props}>
           <i className="far fa-check-square" /> 100% free
         </TitleFeature>
@@ -125,7 +128,7 @@ export default function UserCreate(props) {
         </UserCreateStats>
       </IntroSection>
 
-      <UserCreateForm isSubmitting={isSubmitting} error={errorMsg} handleSubmit={handleSubmit} />
+      <UserCreateForm isSubmitting={isSubmitting} error={errorMsg} onSubmit={handleUserCreate} />
 
       <p>*You are paired strictly on your preferences and type of sharing (video, audio, text)</p>
     </Main>

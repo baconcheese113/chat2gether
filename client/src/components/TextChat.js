@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useNotify } from '../hooks/NotifyContext'
+import { Button } from './common'
 
 // const consoleCollapse = keyframes`
 //   0%{transform: translateY(0)}
@@ -32,6 +33,9 @@ const historyShow = keyframes`
 `
 
 const StyledTextChat = styled.section`
+  border-radius: 20px;
+  padding: 5px;
+
   display: ${props => (props.active ? 'block' : 'none')};
   position: absolute;
   overflow: hidden;
@@ -98,6 +102,10 @@ const TextConsole = styled.form`
 `
 
 const ConsoleInput = styled.input`
+  outline: none;
+  margin: 2px;
+  cursor: pointer;
+
   width: calc(100% - 35px);
   background-color: #c38fdd;
   border: 3px solid #c38fdd;
@@ -106,7 +114,7 @@ const ConsoleInput = styled.input`
   font-size: 1.4rem;
   font-family: inherit;
 `
-const ConsoleButton = styled.button`
+const ConsoleButton = styled(Button)`
   border-radius: 0 10px 10px 0;
   font-size: 1.7rem;
   text-align: left;
@@ -166,7 +174,7 @@ export default function TextChat(props) {
   }, [textChat])
 
   const handleSubmit = e => {
-    e.preventDefault()
+    e && e.preventDefault()
     if (!socketHelper || !comment) {
       console.log(`No sockethelper! ${socketHelper} ${comment}`)
       return
@@ -188,9 +196,7 @@ export default function TextChat(props) {
       </TextHistory>
       <TextConsole onSubmit={handleSubmit}>
         <ConsoleInput data-cy="commentInput" type="text" value={comment} onChange={e => setComment(e.target.value)} />
-        <ConsoleButton data-cy="commentSubmitButton" type="submit">
-          Send
-        </ConsoleButton>
+        <ConsoleButton data-cy="commentSubmitButton" onClick={handleSubmit} label="Send" />
       </TextConsole>
     </StyledTextChat>
   )

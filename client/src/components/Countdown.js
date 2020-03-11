@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useNotify } from '../hooks/NotifyContext'
+import { Button } from './common'
 
 /*
   Button absolutely positioned on screen "Countdown"
@@ -68,13 +69,15 @@ const ButtonsContainer = styled.div`
     animation: ${absorb} ${props => `${props.spacing}s`} infinite;
   }
 `
-const ActionButton = styled.button`
+const ActionButton = styled(Button)`
   color: inherit;
   flex: 1;
   font-size: 1.4rem;
   border-radius: 0;
   padding: 4px;
   transition: all 0.4s;
+  animation: ${absorb} ${props => `${props.animated && props.spacing}s infinite`};
+
   &:hover {
     color: ${props => props.theme.colorPrimary};
     text-shadow: 0 0 4px transparent;
@@ -87,18 +90,19 @@ const ScanLine = styled.div`
   right: 0;
   height: 5px;
   background-color: #9932cc;
-  &.animated {
+  animation: ${scan} ${props => `${props.animated && props.spacing}s`} infinite;
+  /* &.animated {
     animation: ${scan} ${props => `${props.spacing}s`} infinite;
-  }
+  } */
 `
 
-const Countdown = props => {
+export default function Countdown(props) {
   const { userId, socketHelper, roomId } = props
-  const [isRequester, setIsRequester] = useState(false)
-  const [status, setStatus] = useState('none')
-  const [countdownText, setCountdownText] = useState('Countdown')
+  const [isRequester, setIsRequester] = React.useState(false)
+  const [status, setStatus] = React.useState('none')
+  const [countdownText, setCountdownText] = React.useState('Countdown')
 
-  const timer = useRef()
+  const timer = React.useRef()
 
   const { setCountdownNotify } = useNotify()
   const { enabledWidgets } = useEnabledWidgets()
@@ -143,11 +147,11 @@ const Countdown = props => {
   // clearTimeout Timer.currentis not a function
   // Show "Cancelled Countdown" for both users
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (active) setCountdownNotify(false)
   })
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!socketHelper) return
 
     socketHelper.socket.on('requestedCountdown', senderUserId => {
@@ -231,22 +235,22 @@ const Countdown = props => {
           {countdownText}
         </CountdownText>
       </TextContainer>
-      <ScanLine className={status === 'started' && 'animated'} spacing={spacing} />
+      <ScanLine animated={status === 'started'} spacing={spacing} />
       <ButtonsContainer>
-        {status === 'none' && <ActionButton onClick={handleRequest}>Request</ActionButton>}
+        {status === 'none' && <ActionButton onClick={handleRequest} label="Request" />}
         {status === 'requested' && !isRequester && (
-          <ActionButton data-cy="countdownStartButton" onClick={handleStart}>
-            Start
-          </ActionButton>
+          <ActionButton data-cy="countdownStartButton" onClick={handleStart} label="Start" />
         )}
         {(status === 'started' || status === 'requested') && (
-          <ActionButton data-cy="countdownCancelButton" className="animated" spacing={spacing} onClick={handleCancel}>
-            Cancel
-          </ActionButton>
+          <ActionButton
+            data-cy="countdownCancelButton"
+            animated={status === 'started'}
+            spacing={spacing}
+            onClick={handleCancel}
+            label="Cancel"
+          />
         )}
       </ButtonsContainer>
     </StyledCountdown>
   )
 }
-
-export default Countdown

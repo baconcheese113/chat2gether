@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import SVGTester from './SVGTester'
+import { Button } from './common'
 
 const StyledVideoGrid = styled.div`
   position: absolute;
@@ -27,7 +28,7 @@ const Modal = styled.div`
   margin: 0 auto;
   border-radius: 0 0 2rem 2rem;
 `
-const CloseButton = styled.button`
+const CloseButton = styled(Button)`
   position: absolute;
   top: 5%;
   right: 5%;
@@ -76,6 +77,9 @@ const ResultDuration = styled.span`
 `
 
 const SearchBarForm = styled.form`
+  background-color: #313131;
+  border-radius: 5px;
+
   display: flex;
   padding: 0;
   border: none;
@@ -83,6 +87,10 @@ const SearchBarForm = styled.form`
 `
 
 const SearchBar = styled.input`
+  outline: none;
+  border: 2px solid #3f3f3f;
+  cursor: pointer;
+
   display: block;
   background-color: #aaa;
   border-radius: 1rem;
@@ -93,21 +101,18 @@ const SearchBar = styled.input`
   padding: 0 4px;
   z-index: 5;
 `
-const SubmitButton = styled.button`
+const SubmitButton = styled(Button)`
   display: block;
   padding: 3px 6px;
-  text-align: center;
-  font-size: 1.8rem;
   width: 20%;
   background-color: #222;
-  z-index: 0;
 `
 
 export default function VideoGrid(props) {
   const { videos, onSubmitSearch, isShown, setIsShown, selectVideo } = props
-  const [query, setQuery] = useState('')
-  const [submittedQuery, setSubmittedQuery] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [query, setQuery] = React.useState('')
+  const [submittedQuery, setSubmittedQuery] = React.useState('')
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const handleClose = () => {
     setIsShown(false)
@@ -119,7 +124,7 @@ export default function VideoGrid(props) {
   }
 
   const handleSearchSubmit = async e => {
-    e.preventDefault()
+    e && e.preventDefault()
     if (query.length < 1 || query === submittedQuery) return
     setSubmittedQuery(query)
     setIsLoading(true)
@@ -173,7 +178,7 @@ export default function VideoGrid(props) {
   return (
     <StyledVideoGrid isShown={isShown}>
       <Backdrop onClick={handleClose} />
-      <CloseButton onClick={handleClose}>X</CloseButton>
+      <CloseButton onClick={handleClose} label="X" />
       <Modal>
         <SearchBarForm onSubmit={handleSearchSubmit}>
           <SearchBar
@@ -182,7 +187,7 @@ export default function VideoGrid(props) {
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
-          <SubmitButton data-cy="playerSearchSubmit">Search</SubmitButton>
+          <SubmitButton data-cy="playerSearchSubmit" onClick={handleSearchSubmit} label="Search" />
         </SearchBarForm>
         {getContent()}
       </Modal>

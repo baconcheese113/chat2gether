@@ -1,7 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Button } from './common'
 
 const StyledMatchHistory = styled.section`
+  background-color: #3f3f3f;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 5px;
+
   width: 100%;
   max-height: 30rem;
   max-width: 50rem;
@@ -48,7 +54,7 @@ const EmptyText = styled.p`
   color: #fff;
 `
 
-const MatchHistory = props => {
+export default function MatchHistory(props) {
   const { users } = props
 
   const getIcon = gender => {
@@ -76,8 +82,8 @@ const MatchHistory = props => {
                 </Pill>
               </PillContainer>
               <ActionButtons>
-                <button type="button">Message</button>
-                <button type="button">Report</button>
+                <Button label="Message" />
+                <Button label="Report" />
               </ActionButtons>
             </MatchItem>
           ))
@@ -117,5 +123,3 @@ MatchHistory.defaultProps = {
     },
   ],
 }
-
-export default MatchHistory

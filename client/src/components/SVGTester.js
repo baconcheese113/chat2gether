@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
 const rotateChat = keyframes`
@@ -28,6 +28,8 @@ const StyledSVGTester = styled.div`
   align-items: center;
 
   svg {
+    max-width: 500px;
+
     transform: scale(1.2);
   }
   #layer1 {
@@ -76,18 +78,20 @@ const ClippingCircle = styled.div`
 `
 // #2a7fff
 
-const SVGTester = props => {
-  const [isRotateChat, setIsRotateChat] = useState(false)
+export default function SVGTester(props) {
+  const [isRotateChat, setIsRotateChat] = React.useState(false)
 
   const flipRotateChat = () => {
     setIsRotateChat(!isRotateChat)
   }
-  useEffect(() => {
+
+  React.useEffect(() => {
     const timer = setTimeout(() => {
       flipRotateChat()
     }, 2000)
     return () => clearTimeout(timer)
   })
+
   return (
     <StyledSVGTester {...props}>
       <ClippingCircle>
@@ -144,5 +148,3 @@ const SVGTester = props => {
     </StyledSVGTester>
   )
 }
-
-export default SVGTester

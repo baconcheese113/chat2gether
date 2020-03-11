@@ -6,11 +6,9 @@ import ApolloClient, { InMemoryCache } from 'apollo-boost'
 import { ApolloProvider } from '@apollo/client'
 import StylesProvider from '@material-ui/styles/StylesProvider'
 import { MuiThemeProvider } from '@material-ui/core/styles'
-import './index.css'
 import { fetch } from 'whatwg-fetch' // Cypress still prefers XMLHttpRequest (xhr requests), so need to polyfill fetch
 import App from './components/App'
-import CustomMuiTheme from './components/CustomMuiTheme'
-import { darkTheme } from './helpers/themes'
+import { darkTheme, muiTheme, GlobalStyle } from './helpers/themes'
 
 Sentry.init({ dsn: 'https://cfc156ae965449309801e5a8973ece80@sentry.io/1493191' })
 
@@ -29,9 +27,10 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <MuiThemeProvider theme={CustomMuiTheme}>
+    <MuiThemeProvider theme={muiTheme}>
       <ThemeProvider theme={darkTheme}>
         <StylesProvider injectFirst>
+          <GlobalStyle />
           <App />
         </StylesProvider>
       </ThemeProvider>

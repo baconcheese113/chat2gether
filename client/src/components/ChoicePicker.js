@@ -55,7 +55,6 @@ export default function ChoicePicker(props) {
       {choices.map((choice, index) => (
         <Option
           key={choice}
-          className={selected.find(obj => obj.name === choice) && 'active'}
           height={height}
           optionStart={index === 0}
           optionEnd={index === choices.length - 1}

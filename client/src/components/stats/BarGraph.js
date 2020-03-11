@@ -39,9 +39,16 @@ const StyledBarGraph = styled.div`
 `
 
 const SVGContainer = styled.svg`
+  max-width: 500px;
+
   height: 100%;
   width: 100%;
   /* background-color: red; */
+
+  .graph-axis {
+    stroke: black;
+    fill: none;
+  }
 `
 const Bar = styled.rect`
   stroke-linecap: round;

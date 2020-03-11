@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import ChoiceSlider from './ChoiceSlider'
 import NumberSlider from './NumberSlider'
 import SVGTester from './SVGTester'
 import ChoicePicker from './ChoicePicker'
 import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
+import { Button } from './common'
 
-const StyledForm = styled.form`
+const StyledForm = styled.div`
+  border: #555 solid 2px;
+  border-radius: 5px;
+
   background-color: ${props => props.theme.colorGreyDark1};
   padding: 1rem;
   margin: 2rem 1rem;
@@ -23,19 +27,17 @@ const InputLabel = styled.label`
   text-transform: uppercase;
   color: ${props => props.theme.colorPrimaryLight};
 `
-const SubmitButton = styled.button`
-  background-image: linear-gradient(
-    to bottom right,
-    ${props => props.theme.colorPrimary},
-    ${props => props.theme.colorGreyDark1}
-  );
-  box-shadow: 0 0 1rem ${props => props.theme.colorPrimaryLight};
-  border-radius: 1rem;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  font-size: 2rem;
+const SubmitButton = styled(Button)`
+  box-shadow: 0 0 5px #ffffff33;
   letter-spacing: 1.5px;
   margin-top: 1rem;
+  filter: brightness(0.9);
+  transition: 0.6s all;
+
+  &:hover {
+    filter: brightness(1);
+    box-shadow: 0 0 5px #ffffffaa;
+  }
 `
 const Modal = styled.div`
   position: fixed;
@@ -57,23 +59,23 @@ const Modal = styled.div`
 `
 
 export default function UserCreateForm(props) {
-  const { error, handleSubmit } = props
-  const [gender, setGender] = useState(0)
-  const [lookingFor, setLookingFor] = useState(
+  const { error, onSubmit } = props
+  const [gender, setGender] = React.useState(0)
+  const [lookingFor, setLookingFor] = React.useState(
     GENDERS.map(x => {
       return { name: x }
     }),
   )
-  const [age, setAge] = useState(30)
-  const [minAge, setMinAge] = useState(18)
-  const [maxAge, setMaxAge] = useState(90)
-  const [audioPref, setAudioPref] = useState(0)
-  const [accAudioPrefs, setAccAudioPrefs] = useState(
+  const [age, setAge] = React.useState(30)
+  const [minAge, setMinAge] = React.useState(18)
+  const [maxAge, setMaxAge] = React.useState(90)
+  const [audioPref, setAudioPref] = React.useState(0)
+  const [accAudioPrefs, setAccAudioPrefs] = React.useState(
     AUDIO_PREFS.map(x => {
       return { name: x }
     }),
   )
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const changeNumbers = newArr => {
     if (newArr.length < 1) {
@@ -87,9 +89,9 @@ export default function UserCreateForm(props) {
     }
   }
 
-  const onSubmit = e => {
+  const handleSubmit = () => {
     setIsLoading(true)
-    handleSubmit(e, {
+    onSubmit({
       gender: GENDERS[gender],
       lookingFor,
       age,
@@ -101,7 +103,7 @@ export default function UserCreateForm(props) {
   }
 
   return (
-    <StyledForm onSubmit={onSubmit}>
+    <StyledForm>
       {isLoading && (
         <Modal>
           <SVGTester height="50vh" width="50vh" />
@@ -161,7 +163,7 @@ export default function UserCreateForm(props) {
         />
       </Row>
       {error}
-      <SubmitButton data-cy="startButton">Start</SubmitButton>
+      <SubmitButton onClick={handleSubmit} h2 primary data-cy="startButton" label="Start" />
     </StyledForm>
   )
 }

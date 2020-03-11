@@ -20,7 +20,7 @@ export function useEnabledWidgets() {
   return React.useContext(EnabledWidgetsContext)
 }
 
-export const EnabledWidgetsProvider = props => {
+export function EnabledWidgetsProvider(props) {
   const { children } = props
   const [enabledWidgets, setEnabledWidgets] = React.useState({
     text: false,
@@ -36,11 +36,9 @@ export const EnabledWidgetsProvider = props => {
 
   const [chatSettings, setChatSettings] = React.useState({ micMute: false, speakerMute: false })
 
-  // const changeWidgetsActive = newWidgets => {
-  //   setEnabledWidgets(...enabledWidgets, ...newWidgets)
-  // }
   const featureToggle = elem => {
-    setEnabledWidgets({ [elem]: !enabledWidgets[elem] })
+    const { text, countdown, profile, video } = enabledWidgets
+    setEnabledWidgets({ text, countdown, profile, video, [elem]: !enabledWidgets[elem] })
   }
 
   return (

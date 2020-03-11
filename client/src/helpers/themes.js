@@ -1,4 +1,7 @@
-const darkTheme = {
+import { createMuiTheme } from '@material-ui/core/styles'
+import { createGlobalStyle } from 'styled-components'
+
+export const darkTheme = {
   colorPrimary: '#9932cc',
   colorPrimaryLight: '#c38fdd',
 
@@ -16,6 +19,42 @@ const darkTheme = {
   fontSecondary: 'Megrim, cursive',
 }
 
-export { darkTheme }
+export const muiTheme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#cd65ff',
+      main: '#9932cc',
+      dark: '#66009a',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+})
+
+export const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 62.5%;
+    font-family: 'K2D', sans-serif;
+  }
+
+  body {
+    background-image: linear-gradient(#181818, #3f3f3f 30%);
+    min-height: 100vh;
+    /* min-height: -webkit-fill-available; */
+    color: white;
+    text-align: center;
+  }
+`
 
 // gradientPrimaryBR: 'linear-gradient(to bottom right, ${props => props.theme.colorPrimary}, ${props => props.theme.colorGreyDark1})',

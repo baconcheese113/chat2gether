@@ -8,11 +8,15 @@ const StyledHeader = styled.header`
   font-size: 1.4rem;
   text-shadow: 0 0 2rem #111;
 `
+const Title = styled.h1`
+  color: #9932cc;
+  font-family: 'Megrim', cursive;
+`
 
 export default function Header() {
   return (
     <StyledHeader>
-      <h1>Chat2Gether</h1>
+      <Title>Chat2Gether</Title>
     </StyledHeader>
   )
 }

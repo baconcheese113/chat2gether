@@ -9,8 +9,13 @@ import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
 import { useSocket } from '../hooks/SocketContext'
 import { useMyUser } from '../hooks/MyUserContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
+import { Button } from './common'
 
-const StyledForm = styled.form`
+const StyledForm = styled.div`
+  border: #555 solid 2px;
+  padding: 10px;
+  border-radius: 5px;
+
   width: 90%;
   max-height: 45%;
   max-width: 600px;
@@ -35,21 +40,8 @@ const InputLabel = styled.label`
   text-transform: uppercase;
   color: ${props => props.theme.colorPrimaryLight};
 `
-const SubmitButton = styled.button`
-  display: inline-block;
-  background-image: linear-gradient(
-    to bottom right,
-    ${props => props.theme.colorPrimary},
-    ${props => props.theme.colorGreyDark1}
-  );
-  box-shadow: 0 0 1rem ${props => props.theme.colorPrimaryLight};
-  border-radius: 1rem;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  font-size: 2rem;
-  letter-spacing: 1.5px;
-  margin: 1rem auto 0;
-  filter: grayscale(${props => (props.hasChanges ? 0 : 1)});
+const SubmitButton = styled(Button)`
+  margin-top: 10px;
 `
 
 const stripArr = arr => {
@@ -79,7 +71,7 @@ export default function UserUpdateForm() {
         return { name: x }
       }),
   )
-  const [error, setError] = React.useState(null)
+  const [loading, setLoading] = React.useState(false)
   const [hasChanges, setHasChanges] = React.useState(false)
 
   const changeNumbers = newArr => {
@@ -99,8 +91,7 @@ export default function UserUpdateForm() {
     return inTemp1 && inTemp2
   }
 
-  const handleSubmit = async e => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     console.log(user.lookingFor, lookingFor)
     const changes = {}
 
@@ -144,15 +135,14 @@ export default function UserUpdateForm() {
       }
     }
 
+    setLoading(true)
     // Send request
-    const { data, newError } = await client.mutate({ mutation: UPDATE_USER, variables: { data: changes } })
-    if (newError) {
-      setError(newError)
-    }
+    const { data } = await client.mutate({ mutation: UPDATE_USER, variables: { data: changes } })
     console.log(data)
 
     // setUser based off changes
     await getMe()
+    setLoading(false)
     if (roomId && localStream) nextMatch(localStream)
   }
 
@@ -169,11 +159,7 @@ export default function UserUpdateForm() {
   }, [lookingFor, user, maxAge, minAge, audioPref, accAudioPrefs])
 
   return (
-    <StyledForm
-      onSubmit={e => {
-        handleSubmit(e)
-      }}
-    >
+    <StyledForm>
       <ScrollContent>
         <Row>
           <InputLabel>I want to chat with</InputLabel>
@@ -215,10 +201,13 @@ export default function UserUpdateForm() {
           />
         </Row>
       </ScrollContent>
-      {error}
-      <SubmitButton data-cy="applyChangesButton" hasChanges={hasChanges} disabled={!hasChanges}>
-        Apply
-      </SubmitButton>
+      <SubmitButton
+        data-cy="applyChangesButton"
+        primary
+        onClick={handleSubmit}
+        disabled={!hasChanges || loading}
+        label="Apply"
+      />
     </StyledForm>
   )
 }

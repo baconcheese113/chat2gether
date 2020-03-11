@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { useApolloClient } from '@apollo/client'
 import { CREATE_FEEDBACK } from '../queries/mutations'
 import SVGTester from './SVGTester'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
+import { Button } from './common'
 
 const StyledSettings = styled.div`
   position: absolute;
@@ -51,13 +52,28 @@ const SettingsList = styled.div`
     font-size: 1.4rem;
     padding: 0;
   }
-  option,
-  select {
-    font: inherit;
-    padding: 0;
-    max-width: 100%;
-    cursor: pointer;
-  }
+`
+const DeviceSelect = styled.select`
+  border-radius: 10px 10px 2px 2px;
+  outline: none;
+  border: 2px solid #3f3f3f;
+  margin: 2px;
+
+  font: inherit;
+  padding: 0;
+  max-width: 100%;
+  cursor: pointer;
+`
+const DeviceOption = styled.option`
+  border-radius: 10px 10px 2px 2px;
+  outline: none;
+  border: 2px solid #3f3f3f;
+  margin: 2px;
+
+  font: inherit;
+  padding: 0;
+  max-width: 100%;
+  cursor: pointer;
 `
 
 const Actions = styled.div`
@@ -67,35 +83,31 @@ const Actions = styled.div`
   justify-content: space-evenly;
   justify-self: flex-end;
   font-size: 1.2rem;
-
-  button {
-    background-color: #aa32cc;
-    height: 100%;
-    width: 100%;
-    border-radius: 0;
-    padding: 1.5rem;
-    box-shadow: 0 0 4px #555;
-    font: inherit;
-    font-size: 2rem;
-    cursor: pointer;
-  }
 `
+const LeftAction = styled(Button)``
 
-const FeedbackForm = styled.form`
+const FeedbackForm = styled.div`
+  background-color: #313131;
+  border: #555 solid 2px;
+  padding: 10px;
+  border-radius: 5px;
+
   p {
     font-size: 1.4rem;
   }
-  input {
-    font-size: 1.2rem;
-    border-radius: 1rem;
-    padding: 0.5rem;
-    min-height: 4rem;
-    width: 100%;
-  }
-  button {
-    font-size: 1.4rem;
-    background-color: #555;
-  }
+`
+const FeedbackInput = styled.input`
+  border-radius: 10px 10px 2px 2px;
+  outline: none;
+  border: 2px solid #3f3f3f;
+  margin: 2px;
+  cursor: pointer;
+
+  font-size: 1.2rem;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  min-height: 4rem;
+  width: 100%;
 `
 
 const Modal = styled.div`
@@ -118,11 +130,11 @@ const Modal = styled.div`
 `
 
 export default function Settings() {
-  const [devices, setDevices] = useState([])
-  const [selectedVideo, setSelectedVideo] = useState(null)
-  const [feedbackText, setFeedbackText] = useState('')
-  const [feedbackMsg, setFeedbackMsg] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [devices, setDevices] = React.useState([])
+  const [selectedVideo, setSelectedVideo] = React.useState(null)
+  const [feedbackText, setFeedbackText] = React.useState('')
+  const [feedbackMsg, setFeedbackMsg] = React.useState('')
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const { localStream, requestCamera } = useLocalStream()
   const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
@@ -136,9 +148,9 @@ export default function Settings() {
         if (cur.kind === 'videoinput') {
           // console.log(cur.getCapabilities())
           return (
-            <option key={idx} value={cur.deviceId}>
+            <DeviceOption key={idx} value={cur.deviceId}>
               {cur.label}
-            </option>
+            </DeviceOption>
           )
         }
         return undefined
@@ -150,7 +162,7 @@ export default function Settings() {
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!localStream) return
     const videoId = localStream.getVideoTracks()[0].getSettings().deviceId
     setSelectedVideo(videoId)
@@ -164,8 +176,7 @@ export default function Settings() {
     setEnabledWidgets({ ...enabledWidgets, menu: false })
   }
 
-  const handleFeedback = async e => {
-    e.preventDefault()
+  const handleFeedback = async () => {
     if (feedbackText.length < 1) return 0
     setIsLoading(true)
     const { loading, error } = await client.mutate({
@@ -192,31 +203,31 @@ export default function Settings() {
       ) : (
         ''
       )}
-      <Blur role="button" tabIndex={0} onClick={() => handleClose()} onKeyUp={() => handleClose()} />
+      <Blur role="button" tabIndex={0} onClick={handleClose} onKeyUp={handleClose} />
       <Container>
         <Title>Settings</Title>
         <SettingsList>
           <label htmlFor="video-source">
             Video Source
-            <select id="video-source" value={selectedVideo || ''} onChange={e => setSelectedVideo(e.target.value)}>
+            <DeviceSelect
+              id="video-source"
+              value={selectedVideo || ''}
+              onChange={e => setSelectedVideo(e.target.value)}
+            >
               {devices}
-            </select>
+            </DeviceSelect>
           </label>
 
-          <FeedbackForm onSubmit={handleFeedback}>
+          <FeedbackForm>
             <p>SendFeedback</p>
-            <input value={feedbackText} onChange={e => setFeedbackText(e.target.value)} />
+            <FeedbackInput value={feedbackText} onChange={e => setFeedbackText(e.target.value)} />
             {feedbackMsg}
-            <button type="button">Submit</button>
+            <Button light small disabled={!feedbackText} onClick={handleFeedback} label="Submit" />
           </FeedbackForm>
         </SettingsList>
         <Actions>
-          <button type="button" onClick={() => handleClose(false)} style={{ borderRight: '1px solid white' }}>
-            Cancel
-          </button>
-          <button type="button" onClick={() => handleClose()}>
-            Apply
-          </button>
+          <LeftAction square flex onClick={() => handleClose(false)} label="Cancel" />
+          <Button primary square flex onClick={handleClose} label="Apply" />
         </Actions>
       </Container>
     </StyledSettings>

@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import HtmlParse from '../helpers/htmlParse3'
 import VideoGrid from './VideoGrid'
 import { useNotify } from '../hooks/NotifyContext'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import { Button } from './common'
 
 const syncRotate = keyframes`
   0% {transform: rotate(0deg);}
@@ -39,7 +40,7 @@ const VideoContainer = styled.div`
     top: 50%;
     left: 0;
     width: 100%;
-    height: ${props => props.height};
+    height: ${props => props.height || '100%'};
     transform: translateY(-50%);
     z-index: 1;
   }
@@ -61,13 +62,13 @@ const VideoContainer = styled.div`
     transform: translate(-50%, -50%);
   }
 `
-const SearchButton = styled.button`
+const SearchButton = styled(Button)`
   position: absolute;
   left: 1rem;
   top: 1rem;
   box-shadow: 0 0 4px;
 `
-const SyncButton = styled.button`
+const SyncButton = styled(Button)`
   position: absolute;
   left: 6rem;
   top: 1rem;
@@ -80,33 +81,21 @@ const SyncButton = styled.button`
     animation: ${syncRotate} 3s linear;
   }
 `
-// const Notification = styled.span`
-//   color: #fff;
-//   position: absolute;
-//   top: 0;
-//   right: 0;
-//   background-color: red;
-//   font-size: 1.3rem;
-//   border-radius: 50%;
-//   width: 1.2rem;
-//   height: 1.2rem;
-//   z-index: 10;
-// `
 
 const SYNC = { OFF: 'off', REQUESTED: 'requested', UNACCEPTED: 'unaccepted', ACCEPTED: 'accepted' }
 const UPDATE = { PAUSE: 'pause', PLAY: 'play', SEEKED: 'seeked' }
 
 /** ******************* Component Starts */
-const VideoPlayer = props => {
+export default function VideoPlayer(props) {
   const { socketHelper, roomId, userId } = props
-  const [currentVideo, setCurrentVideo] = useState(null)
-  const [isShown, setIsShown] = useState(false)
-  const [parser, setParser] = useState(new HtmlParse(null))
-  const [syncState, setSyncState] = useState(SYNC.OFF)
-  const [videoUrl, setVideoUrl] = useState('')
-  const [disabled, setDisabled] = useState(false)
+  const [currentVideo, setCurrentVideo] = React.useState(null)
+  const [isShown, setIsShown] = React.useState(false)
+  const [parser, setParser] = React.useState(new HtmlParse(null))
+  const [syncState, setSyncState] = React.useState(SYNC.OFF)
+  const [videoUrl, setVideoUrl] = React.useState('')
+  const [disabled, setDisabled] = React.useState(false)
 
-  const player = useRef()
+  const player = React.useRef()
 
   const { enabledWidgets } = useEnabledWidgets()
   const active = enabledWidgets.video
@@ -210,7 +199,7 @@ const VideoPlayer = props => {
   }
 
   // Setting listeners for Sync and Update socket requests
-  useEffect(() => {
+  React.useEffect(() => {
     if (!socketHelper) return
     socketHelper.socket.on('videoPlayerSync', receiveSyncMsg)
     socketHelper.socket.on('videoPlayerUpdate', receiveUpdateMsg)
@@ -221,7 +210,7 @@ const VideoPlayer = props => {
   }, [socketHelper, currentVideo, syncState, active])
 
   // Clearing the notify when player is made active
-  useEffect(() => {
+  React.useEffect(() => {
     if (videoNotify && active) {
       setVideoNotify(false)
     }
@@ -279,9 +268,7 @@ const VideoPlayer = props => {
         <SearchButton data-cy="playerSearchButton" onClick={() => setIsShown(true)}>
           <i className="fas fa-search" />
         </SearchButton>
-        <SyncButton data-cy="playerSyncButton" onClick={toggleSync} color={getColor}>
-          {getSyncText()}
-        </SyncButton>
+        <SyncButton data-cy="playerSyncButton" onClick={toggleSync} color={getColor} label={getSyncText()} />
         <VideoContainer disabled={disabled} height={height}>
           <div />
           {currentVideo ? (
@@ -305,5 +292,3 @@ const VideoPlayer = props => {
     </>
   )
 }
-
-export default VideoPlayer

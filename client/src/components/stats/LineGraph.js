@@ -37,8 +37,15 @@ const StyledLineGraph = styled.div`
   background-color: #1b2b38;
 `
 const SVGContainer = styled.svg`
+  max-width: 500px;
+
   height: 100%;
   width: 100%;
+
+  .graph-axis {
+    stroke: black;
+    fill: none;
+  }
 `
 const drawLine = dashArray => keyframes`
   0% {stroke-dashoffset: 421px;}

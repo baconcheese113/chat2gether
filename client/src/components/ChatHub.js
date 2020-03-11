@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import VideoWindow from './VideoWindow'
 import TextChat from './TextChat'
@@ -9,14 +9,14 @@ import UserUpdateForm from './UserUpdateForm'
 import Countdown from './Countdown'
 import ProfileCard from './ProfileCard'
 import MatchHistory from './MatchHistory'
-// import Stats from './Stats'
 import LineGraph from './stats/LineGraph'
 // import AirPlaneDing from '../assets/air-plane-ding.mp3'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useSocket } from '../hooks/SocketContext'
 import { useMyUser } from '../hooks/MyUserContext'
-// import StatsWindow from './stats/StatsWindow'
+import ChatNav from './ChatNav'
+import { Button } from './common'
 
 const StyledChatHub = styled.div`
   height: 100vh; /* shitty, but temp fix for firefox */
@@ -26,28 +26,27 @@ const StyledChatHub = styled.div`
   justify-content: center;
   overflow: hidden;
 `
-const NextMatchButton = styled.button`
-  color: ${props => (props.disabled ? '#aaa' : '#fff')};
-`
-const NextMatchSVG = styled.svg`
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  transform: scale(1.01, 1.1);
-`
-const NextMatchRect = styled.rect`
-  stroke-width: 4px;
-  stroke-opacity: 1;
-  stroke-dashoffset: ${props => (props.disabled ? 0 : 349)}px;
-  stroke-dasharray: 349px;
-  stroke: ${props => props.theme.colorPrimary};
-  transition: all ${props => (props.disabled ? 1.8 : 0.2)}s;
-`
 const ConnectingText = styled.p`
   padding: 0 1rem;
 `
-
+const DivParent = styled.div`
+  height: 10%;
+`
+const PageContainer = styled(DivParent)`
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* for Edge */
+  /* justify-content: space-around; */
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 2rem;
+`
+const CountdownSpan = styled.span`
+  width: 100%;
+`
 // When user presses Share Video, request camera
 // When user presses Next Match, Initialize socket and Find Room
 // When connection is established, alert user to countdown
@@ -55,53 +54,12 @@ const ConnectingText = styled.p`
 // On connection end or Find Next -> Find Room()
 
 export default function ChatHub() {
-  const [flowDirection, setFlowDirection] = useState(window.innerWidth > window.innerHeight ? 'row' : 'column')
+  const [flowDirection, setFlowDirection] = React.useState(window.innerWidth > window.innerHeight ? 'row' : 'column')
 
   const { user } = useMyUser()
   const { localStream, requestCamera } = useLocalStream()
-  const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
-  const {
-    socketHelper,
-    connectionMsg,
-    remoteStream,
-    nextMatch,
-    canNextMatch,
-    roomId,
-    resetSocket,
-    otherUser,
-    matchCountdown,
-  } = useSocket()
-
-  const handleNextMatch = e => {
-    e.stopPropagation()
-    if (localStream && canNextMatch) nextMatch(localStream)
-  }
-
-  const getChatNav = () => {
-    return (
-      <div className="chat-nav">
-        <NextMatchButton
-          data-cy="nextMatchButton"
-          className="next-match"
-          type="button"
-          onClick={handleNextMatch}
-          disabled={!canNextMatch}
-        >
-          Next Match
-          <NextMatchSVG width="100%" height="100%" fill="transparent">
-            <NextMatchRect disabled={!canNextMatch} height="100%" width="100%" rx="15px" />
-          </NextMatchSVG>
-        </NextMatchButton>
-        <button
-          type="button"
-          className="settings-button"
-          onClick={() => setEnabledWidgets({ ...enabledWidgets, menu: true })}
-        >
-          <i className="fas fa-ellipsis-v" />
-        </button>
-      </div>
-    )
-  }
+  const { enabledWidgets } = useEnabledWidgets()
+  const { socketHelper, connectionMsg, remoteStream, roomId, resetSocket, otherUser, matchCountdown } = useSocket()
 
   const updateFlowDirection = React.useCallback(() => {
     const direction = window.innerWidth > window.innerHeight ? 'row' : 'column'
@@ -109,7 +67,7 @@ export default function ChatHub() {
   }, [window.innerHeight, window.innerHeight])
 
   const logWindowError = e => console.log(e)
-  useEffect(() => {
+  React.useEffect(() => {
     window.addEventListener('resize', updateFlowDirection)
     window.addEventListener('error', logWindowError)
     return () => {
@@ -127,7 +85,7 @@ export default function ChatHub() {
     [otherUser],
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
     window.addEventListener('beforeunload', onUnload)
     return () => {
       window.removeEventListener('beforeunload', onUnload)
@@ -141,7 +99,7 @@ export default function ChatHub() {
           <VideoPlayer socketHelper={socketHelper} userId={user.id} roomId={roomId} />
           <VideoWindow videoType="remoteVideo" stream={remoteStream} />
           <VideoWindow videoType="localVideo" stream={localStream} />
-          {getChatNav()}
+          <ChatNav />
           <TextChat user={user} socketHelper={socketHelper} room={roomId} />
           <ProfileCard user={otherUser} />
           <Countdown socketHelper={socketHelper} myUserId={user.id} roomId={roomId} />
@@ -154,20 +112,18 @@ export default function ChatHub() {
     }
     if (!localStream) {
       return (
-        <div className="video-connecting">
-          <button data-cy="shareVideoButton" type="button" onClick={() => requestCamera()}>
-            Share Video to Begin
-          </button>
-        </div>
+        <PageContainer>
+          <Button data-cy="shareVideoButton" onClick={() => requestCamera()} label="Share Video to Begin" />
+        </PageContainer>
       )
     }
     return (
       <>
-        <div className="video-connecting">
-          {getChatNav()}
+        <PageContainer>
+          <ChatNav />
           <ConnectingText>{connectionMsg}</ConnectingText>
           <VideoWindow videoType="localVideo" stream={localStream} />
-          {matchCountdown > 0 && <div className="countdown">{matchCountdown}</div>}
+          {matchCountdown > 0 && <CountdownSpan>{matchCountdown}</CountdownSpan>}
           {enabledWidgets.updatePref && <UserUpdateForm />}
           {enabledWidgets.stats && <LineGraph />}
           {enabledWidgets.matches && <MatchHistory users={user.visited} />}
@@ -175,7 +131,7 @@ export default function ChatHub() {
             resetState={resetSocket}
             buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
           />
-        </div>
+        </PageContainer>
       </>
     )
   }
