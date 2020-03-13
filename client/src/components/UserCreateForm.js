@@ -23,9 +23,14 @@ const Row = styled.div`
 const InputLabel = styled.label`
   display: inline-block;
   font-size: ${p => p.fontSize || '1.5rem'};
-  margin-right: 1rem;
+  margin-bottom: 4px;
+  margin-top: 2rem;
   text-transform: uppercase;
   color: ${p => p.theme.colorPrimaryLight};
+`
+const Summary = styled.p`
+  font-size: 10px;
+  font-style: italic;
 `
 const SubmitButton = styled(Button)`
   box-shadow: 0 0 5px #ffffff33;
@@ -110,6 +115,7 @@ export default function UserCreateForm(props) {
       )}
       <Row>
         <InputLabel>I&apos;m</InputLabel>
+        <Summary>{GENDERS[gender]}</Summary>
         <ChoiceSlider
           data-cy="myGenderSlider"
           cur={gender}
@@ -121,6 +127,7 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>I want to chat with</InputLabel>
+        <Summary>{lookingFor && lookingFor.map(g => g.name).join(', ')}</Summary>
         <ChoicePicker
           data-cy="theirGenderPicker"
           selected={lookingFor}
@@ -140,6 +147,7 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>My Audio Preference</InputLabel>
+        <Summary>{AUDIO_PREFS[audioPref]}</Summary>
         <ChoiceSlider
           data-cy="myAudioSlider"
           cur={audioPref}
@@ -151,6 +159,7 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>Preferences I&apos;ll do</InputLabel>
+        <Summary>{accAudioPrefs && accAudioPrefs.map(ap => ap.name).join(', ')}</Summary>
         <ChoicePicker
           data-cy="theirAudioPicker"
           selected={accAudioPrefs}
