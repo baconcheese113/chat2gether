@@ -9,6 +9,7 @@ const circlingDashes = keyframes`
 const LocalVideoContainer = styled.div`
   position: absolute;
   overflow: hidden;
+  display: ${p => !p.isShown && 'none'};
 
   top: ${p => p.top}px;
   left: ${p => p.left}px;
@@ -118,7 +119,14 @@ export default function VideoWindow(props) {
 
   if (videoType === 'localVideo') {
     return (
-      <LocalVideoContainer data-cy="localVideo" top={top} left={left} onTouchMove={onTouchMove} ref={containerRef}>
+      <LocalVideoContainer
+        data-cy="localVideo"
+        top={top}
+        left={left}
+        onTouchMove={onTouchMove}
+        ref={containerRef}
+        isShown={enabledWidgets.localVideo}
+      >
         {getVideo(LocalVideo)}
       </LocalVideoContainer>
     )

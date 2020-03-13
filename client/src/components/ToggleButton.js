@@ -5,8 +5,8 @@ import { Button } from './common'
 const StyledToggleButton = styled.div`
   display: flex;
   position: relative;
-  height: 3.5rem;
-  width: 3.5rem;
+  height: 45px;
+  width: 45px;
   color: ${p => p.theme.colorPrimaryLight};
   margin-left: 0.5rem;
 `

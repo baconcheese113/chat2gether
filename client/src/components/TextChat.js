@@ -108,7 +108,7 @@ const ConsoleInput = styled.input`
   border: 3px solid #c38fdd;
   border-radius: 10px 0 0 10px;
   padding: 2px;
-  font-size: 1.4rem;
+  font-size: 16px;
   font-family: inherit;
 `
 const ConsoleButton = styled(Button)`
@@ -129,7 +129,7 @@ export default function TextChat(props) {
   const messagesEnd = React.useRef()
 
   const { setTextNotify } = useNotify()
-  const { enabledWidgets } = useEnabledWidgets()
+  const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
 
   const onComment = e => {
     console.log(...textChat)
@@ -185,6 +185,11 @@ export default function TextChat(props) {
     setComment('')
   }
 
+  const handleConsoleFocus = isFocus => {
+    if (window.innerWidth > 600) return
+    setEnabledWidgets({ ...enabledWidgets, localVideo: !isFocus })
+  }
+
   return (
     <StyledTextChat active={enabledWidgets.text}>
       <TextHistory>
@@ -192,7 +197,14 @@ export default function TextChat(props) {
         <div ref={messagesEnd} />
       </TextHistory>
       <TextConsole onSubmit={handleSubmit}>
-        <ConsoleInput data-cy="commentInput" type="text" value={comment} onChange={e => setComment(e.target.value)} />
+        <ConsoleInput
+          data-cy="commentInput"
+          type="text"
+          value={comment}
+          onFocus={() => handleConsoleFocus(true)}
+          onBlur={() => handleConsoleFocus(false)}
+          onChange={e => setComment(e.target.value)}
+        />
         <ConsoleButton data-cy="commentSubmitButton" onClick={handleSubmit} label="Send" />
       </TextConsole>
     </StyledTextChat>
