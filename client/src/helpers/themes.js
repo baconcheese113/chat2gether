@@ -50,8 +50,6 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     background-image: linear-gradient(#181818, #3f3f3f 30%);
-    min-height: 100vh;
-    /* min-height: -webkit-fill-available; */
     color: white;
     text-align: center;
   }

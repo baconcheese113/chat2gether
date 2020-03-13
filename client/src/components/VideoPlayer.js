@@ -12,55 +12,44 @@ const syncRotate = keyframes`
 `
 
 const StyledVideoPlayer = styled.div`
-  display: ${props => (props.active ? 'block' : 'none')};
-
+  display: ${props => (props.active ? 'flex' : 'none')};
   position: relative;
-  flex: 1;
   height: 100%;
-  /* height: -webkit-fill-available; */
+  width: 100%;
   background-color: #111;
   transition: all 0.4s;
-
-  & > p {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-  }
 `
 const VideoContainer = styled.div`
   filter: ${props => props.disabled && 'brightness(40%)'};
   pointer-events: ${props => props.disabled && 'none'};
-
+  display: flex;
+  flex: 1;
+  justify-content: stretch;
+  align-items: stretch;
+`
+const EmptyStateText = styled.p`
+  font-size: 2rem;
+  flex: 1;
+  align-self: center;
+`
+const Video = styled.video`
+  flex: 1;
+  position: absolute;
+  top: ${p => p.flowDirection === 'row' && '50%'};
+  bottom: ${p => p.flowDirection !== 'row' && 0};
+  left: 0;
   width: 100%;
-  height: auto;
-
-  & > video {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: ${props => props.height || '100%'};
-    transform: translateY(-50%);
-    z-index: 1;
-  }
-
-  & > div {
-    display: ${props => (props.disabled ? 'block' : 'none')};
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-  }
-
-  & > p {
-    font-size: 2rem;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+  max-width: 100%;
+  max-height: 100%;
+  transform: ${p => p.flowDirection === 'row' && 'translateY(-50%)'};
+`
+const VideoBlocker = styled.div`
+  display: ${props => (props.disabled ? 'block' : 'none')};
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 `
 const SearchButton = styled(Button)`
   position: absolute;
@@ -87,7 +76,7 @@ const UPDATE = { PAUSE: 'pause', PLAY: 'play', SEEKED: 'seeked' }
 
 /** ******************* Component Starts */
 export default function VideoPlayer(props) {
-  const { socketHelper, roomId, userId } = props
+  const { socketHelper, roomId, userId, flowDirection } = props
   const [currentVideo, setCurrentVideo] = React.useState(null)
   const [isShown, setIsShown] = React.useState(false)
   const [parser, setParser] = React.useState(new HtmlParse(null))
@@ -251,8 +240,6 @@ export default function VideoPlayer(props) {
     return 'Synced'
   }, [syncState])
 
-  const height = window.innerWidth > window.innerHeight ? 'auto' : '100%'
-
   // {syncState === SYNC.UNACCEPTED && <Notification />}
   // <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
   return (
@@ -264,16 +251,13 @@ export default function VideoPlayer(props) {
         setIsShown={setIsShown}
         selectVideo={selectVideo}
       />
-      <StyledVideoPlayer height={window.innerHeight} coords={coords} active={active}>
-        <SearchButton data-cy="playerSearchButton" onClick={() => setIsShown(true)}>
-          <i className="fas fa-search" />
-        </SearchButton>
-        <SyncButton data-cy="playerSyncButton" onClick={toggleSync} color={getColor} label={getSyncText()} />
-        <VideoContainer disabled={disabled} height={height}>
-          <div />
+      <StyledVideoPlayer coords={coords} active={active}>
+        <VideoContainer disabled={disabled}>
+          <VideoBlocker disabled={disabled} />
           {currentVideo ? (
-            <video
+            <Video
               data-cy="playerVideo"
+              flowDirection={flowDirection}
               ref={player}
               onPause={handlePlayerUpdate}
               onPlay={handlePlayerUpdate}
@@ -285,8 +269,12 @@ export default function VideoPlayer(props) {
               allowFullScreen={false}
             />
           ) : (
-            <p>Click the search and sync buttons in the top left!</p>
+            <EmptyStateText>Click the search and sync buttons in the top left!</EmptyStateText>
           )}
+          <SearchButton data-cy="playerSearchButton" onClick={() => setIsShown(true)}>
+            <i className="fas fa-search" />
+          </SearchButton>
+          <SyncButton data-cy="playerSyncButton" onClick={toggleSync} color={getColor} label={getSyncText()} />
         </VideoContainer>
       </StyledVideoPlayer>
     </>

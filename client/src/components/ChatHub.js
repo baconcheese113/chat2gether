@@ -19,9 +19,8 @@ import ChatNav from './ChatNav'
 import { Button } from './common'
 
 const StyledChatHub = styled.div`
-  height: 100vh; /* shitty, but temp fix for firefox */
-  /* height: -webkit-fill-available; */
   display: flex;
+  flex: 1;
   flex-direction: ${props => props.flowDirection};
   justify-content: center;
   overflow: hidden;
@@ -29,17 +28,10 @@ const StyledChatHub = styled.div`
 const ConnectingText = styled.p`
   padding: 0 1rem;
 `
-const DivParent = styled.div`
-  height: 10%;
-`
-const PageContainer = styled(DivParent)`
-  position: absolute;
-  height: 100%;
-  width: 100%;
+const PageContainer = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
-  /* for Edge */
-  /* justify-content: space-around; */
   justify-content: space-evenly;
   align-items: center;
   font-size: 2rem;
@@ -96,17 +88,17 @@ export default function ChatHub() {
     if (remoteStream) {
       return (
         <>
-          <VideoPlayer socketHelper={socketHelper} userId={user.id} roomId={roomId} />
-          <VideoWindow videoType="remoteVideo" stream={remoteStream} />
-          <VideoWindow videoType="localVideo" stream={localStream} />
-          <ChatNav />
-          <TextChat user={user} socketHelper={socketHelper} room={roomId} />
+          <VideoPlayer socketHelper={socketHelper} userId={user.id} roomId={roomId} flowDirection={flowDirection} />
+          <VideoWindow videoType="remoteVideo" stream={remoteStream} flowDirection={flowDirection} />
           <ProfileCard user={otherUser} />
+          <TextChat user={user} socketHelper={socketHelper} room={roomId} />
           <Countdown socketHelper={socketHelper} myUserId={user.id} roomId={roomId} />
+          <ChatNav />
           <InCallNavBar
             resetState={resetSocket}
             buttons={{ stop: true, mic: true, speaker: true, profile: true, countdown: true, chat: true, video: true }}
           />
+          <VideoWindow videoType="localVideo" stream={localStream} />
         </>
       )
     }
@@ -118,26 +110,24 @@ export default function ChatHub() {
       )
     }
     return (
-      <>
-        <PageContainer>
-          <ChatNav />
-          <ConnectingText>{connectionMsg}</ConnectingText>
-          <VideoWindow videoType="localVideo" stream={localStream} />
-          {matchCountdown > 0 && <CountdownSpan>{matchCountdown}</CountdownSpan>}
-          {enabledWidgets.updatePref && <UserUpdateForm />}
-          {enabledWidgets.stats && <LineGraph />}
-          {enabledWidgets.matches && <MatchHistory users={user.visited} />}
-          <InCallNavBar
-            resetState={resetSocket}
-            buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
-          />
-        </PageContainer>
-      </>
+      <PageContainer>
+        <ConnectingText>{connectionMsg}</ConnectingText>
+        {matchCountdown > 0 && <CountdownSpan>{matchCountdown}</CountdownSpan>}
+        {enabledWidgets.updatePref && <UserUpdateForm />}
+        {enabledWidgets.stats && <LineGraph />}
+        {enabledWidgets.matches && <MatchHistory users={user.visited} />}
+        <ChatNav />
+        <VideoWindow videoType="localVideo" stream={localStream} />
+        <InCallNavBar
+          resetState={resetSocket}
+          buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
+        />
+      </PageContainer>
     )
   }
 
   return (
-    <StyledChatHub height={window.innerHeight} flowDirection={flowDirection}>
+    <StyledChatHub flowDirection={flowDirection}>
       {renderBackground()}
       {enabledWidgets.menu && <Settings />}
     </StyledChatHub>

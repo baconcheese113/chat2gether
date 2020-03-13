@@ -5,7 +5,6 @@ import { CREATE_USER } from '../queries/mutations'
 import UserCreateForm from './UserCreateForm'
 
 const Main = styled.main`
-  /* height: 100vh; */
   margin: 0 auto;
   max-width: 60rem;
 `

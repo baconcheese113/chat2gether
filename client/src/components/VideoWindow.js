@@ -34,15 +34,9 @@ const LocalVideoContainer = styled.div`
   }
 `
 const RemoteVideoContainer = styled.div`
-  position: absolute;
-  overflow: hidden;
-
-  flex: 1;
   position: relative;
   height: 100%;
-  /* height: -webkit-fill-available; */
   width: 100%;
-  overflow: hidden;
 `
 const LocalVideo = styled.video`
   height: 100%;
@@ -51,8 +45,9 @@ const RemoteVideo = styled.video`
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
+  height: ${p => !p.alignTop && '100%'};
   width: 100%;
+  max-height: 100%;
 `
 
 function clamp(number, min, max) {
@@ -60,7 +55,7 @@ function clamp(number, min, max) {
 }
 
 export default function VideoWindow(props) {
-  const { stream, videoType } = props
+  const { stream, videoType, flowDirection } = props
 
   const [top, setTop] = React.useState(50)
   const [left, setLeft] = React.useState(50)
@@ -68,7 +63,7 @@ export default function VideoWindow(props) {
   const videoRef = React.useRef(null)
   const containerRef = React.useRef(null)
 
-  const { chatSettings } = useEnabledWidgets()
+  const { chatSettings, enabledWidgets } = useEnabledWidgets()
 
   const handleDrag = e => {
     if (e.dataTransfer) {
@@ -108,6 +103,7 @@ export default function VideoWindow(props) {
       return (
         <VideoComponent
           ref={videoRef}
+          alignTop={flowDirection === 'column' && enabledWidgets.video}
           id={videoType}
           muted={videoType === 'localVideo' || chatSettings.speakerMute}
           autoPlay
@@ -127,7 +123,7 @@ export default function VideoWindow(props) {
     )
   }
   return (
-    <RemoteVideoContainer ref={containerRef} data-cy="remoteVideo">
+    <RemoteVideoContainer data-cy="remoteVideo" ref={containerRef}>
       {getVideo(RemoteVideo)}
     </RemoteVideoContainer>
   )

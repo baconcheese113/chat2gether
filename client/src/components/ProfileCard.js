@@ -10,6 +10,7 @@ const StyledProfileCard = styled.article`
   left: 0;
   right: 0;
   overflow: hidden;
+  pointer-events: none;
 `
 
 const Card = styled.div`

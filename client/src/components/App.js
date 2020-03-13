@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { useApolloClient } from '@apollo/client'
 import Header from './Header'
 import UserCreate from './UserCreate'
@@ -18,9 +19,15 @@ import MyUserProvider from '../hooks/MyUserContext'
  * VideoWindow handles rendering streams (local and remote)
  */
 
+const StyledApp = styled.div`
+  height: ${p => p.height}px;
+  display: flex;
+`
+
 export default function App() {
   const [user, setUser] = React.useState(null)
   const [canRender, setCanRender] = React.useState(false)
+  const [viewportHeight, setViewportHeight] = React.useState(window.innerHeight)
 
   const client = useApolloClient()
 
@@ -41,20 +48,33 @@ export default function App() {
     fetchData()
   }, [])
 
+  const updateViewportHeight = React.useCallback(() => {
+    setViewportHeight(window.innerHeight)
+  }, [window.innerHeight])
+
+  React.useEffect(() => {
+    window.addEventListener('resize', updateViewportHeight)
+    return () => {
+      window.removeEventListener('resize', updateViewportHeight)
+    }
+  }, [window])
+
   if (canRender) {
     if (user) {
       return (
-        <MyUserProvider>
-          <EnabledWidgetsProvider>
-            <SocketProvider>
-              <LocalStreamProvider>
-                <NotifyProvider>
-                  <ChatHub user={user} />
-                </NotifyProvider>
-              </LocalStreamProvider>
-            </SocketProvider>
-          </EnabledWidgetsProvider>
-        </MyUserProvider>
+        <StyledApp height={viewportHeight}>
+          <MyUserProvider>
+            <EnabledWidgetsProvider>
+              <SocketProvider>
+                <LocalStreamProvider>
+                  <NotifyProvider>
+                    <ChatHub user={user} />
+                  </NotifyProvider>
+                </LocalStreamProvider>
+              </SocketProvider>
+            </EnabledWidgetsProvider>
+          </MyUserProvider>
+        </StyledApp>
       )
     }
     return (
