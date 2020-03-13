@@ -10,8 +10,8 @@ const LocalVideoContainer = styled.div`
   position: absolute;
   overflow: hidden;
 
-  top: ${props => props.top}px;
-  left: ${props => props.left}px;
+  top: ${p => p.top}px;
+  left: ${p => p.left}px;
   touch-action: none;
   box-shadow: 0 0 2px #949494;
   opacity: 0.9;

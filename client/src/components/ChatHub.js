@@ -21,7 +21,7 @@ import { Button } from './common'
 const StyledChatHub = styled.div`
   display: flex;
   flex: 1;
-  flex-direction: ${props => props.flowDirection};
+  flex-direction: ${p => p.flowDirection};
   justify-content: center;
   overflow: hidden;
 `

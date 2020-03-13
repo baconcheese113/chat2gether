@@ -36,7 +36,7 @@ const StyledTextChat = styled.section`
   border-radius: 20px;
   padding: 5px;
 
-  display: ${props => (props.active ? 'block' : 'none')};
+  display: ${p => (p.active ? 'block' : 'none')};
   position: absolute;
   overflow: hidden;
   background-color: transparent;

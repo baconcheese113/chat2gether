@@ -63,14 +63,13 @@ const fillCircle = yPercent => keyframes`
 `
 const LeadLine = styled.path`
   stroke-dasharray: 421px;
-  animation: ${props => drawLine(props.dashArray)} 6s forwards;
+  animation: ${p => drawLine(p.dashArray)} 6s forwards;
 `
 const ShadowLine = styled.path`
   animation: ${fillShadowLine} 6s linear forwards;
 `
 const LineCircle = styled.circle`
-  animation: ${props => fillCircle(props.timeSlot * 20 + 100)} ${props => props.wave / 2 / (props.timeSlot + 1) + 1}s
-    linear forwards;
+  animation: ${p => fillCircle(p.timeSlot * 20 + 100)} ${p => p.wave / 2 / (p.timeSlot + 1) + 1}s linear forwards;
 `
 
 export default function LineGraph() {

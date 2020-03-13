@@ -55,4 +55,4 @@ export const GlobalStyle = createGlobalStyle`
   }
 `
 
-// gradientPrimaryBR: 'linear-gradient(to bottom right, ${props => props.theme.colorPrimary}, ${props => props.theme.colorGreyDark1})',
+// gradientPrimaryBR: 'linear-gradient(to bottom right, ${p => p.theme.colorPrimary}, ${p => p.theme.colorGreyDark1})',

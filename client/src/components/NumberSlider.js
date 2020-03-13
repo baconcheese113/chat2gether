@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Slider from '@material-ui/core/Slider'
 
 const StyledNumberSlider = styled.div`
-  width: ${({ width }) => width || '90'}%;
+  width: ${p => p.width || '90'}%;
   margin: 3rem auto 1rem;
   position: relative;
   display: flex;
@@ -11,10 +11,10 @@ const StyledNumberSlider = styled.div`
 `
 
 const StyledSlider = styled(Slider)`
-  color: ${props => props.theme.colorPrimary1};
+  color: ${p => p.theme.colorPrimary1};
 
   & .MuiSlider-rail {
-    color: ${props => props.theme.colorWhite1};
+    color: ${p => p.theme.colorWhite1};
   }
 
   & .slider-label {

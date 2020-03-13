@@ -8,7 +8,7 @@ const StyledVideoGrid = styled.div`
   width: 100%;
   height: 100%;
   z-index: 100;
-  display: ${props => (props.isShown ? 'block' : 'none')};
+  display: ${p => (p.isShown ? 'block' : 'none')};
 `
 const Backdrop = styled.div`
   position: absolute;

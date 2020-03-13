@@ -19,7 +19,7 @@ const StyledForm = styled.div`
   width: 90%;
   max-height: 45%;
   max-width: 600px;
-  background-color: ${props => props.theme.colorGreyDark1};
+  background-color: ${p => p.theme.colorGreyDark1};
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -35,10 +35,10 @@ const ScrollContent = styled.div`
 `
 const InputLabel = styled.label`
   display: inline-block;
-  font-size: ${({ fontSize }) => fontSize || '1.5rem'};
+  font-size: ${p => p.fontSize || '1.5rem'};
   margin-right: 1rem;
   text-transform: uppercase;
-  color: ${props => props.theme.colorPrimaryLight};
+  color: ${p => p.theme.colorPrimaryLight};
 `
 const SubmitButton = styled(Button)`
   margin-top: 10px;

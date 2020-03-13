@@ -7,19 +7,19 @@ const StyledToggleButton = styled.div`
   position: relative;
   height: 3.5rem;
   width: 3.5rem;
-  color: ${props => props.theme.colorPrimaryLight};
+  color: ${p => p.theme.colorPrimaryLight};
   margin-left: 0.5rem;
 `
 const ButtonElem = styled(Button)`
   padding: 0;
   border-radius: 50%;
-  /* background-color: ${({ active, theme }) => (active ? theme.colorPrimary : theme.colorGreyDark2)}; */
+  /* background-color: ${p => (p.active ? p.theme.colorPrimary : p.theme.colorGreyDark2)}; */
   background-image: linear-gradient(
     to bottom right,
-    ${({ theme }) => theme.colorPrimary},
-    ${({ theme }) => theme.colorGreyLight3}
+    ${p => p.theme.colorPrimary},
+    ${p => p.theme.colorGreyLight3}
   );
-  filter: grayscale(${props => (props.active ? '0%' : '90%')});
+  filter: grayscale(${p => (p.active ? '0%' : '90%')});
 `
 
 const Notification = styled.p`

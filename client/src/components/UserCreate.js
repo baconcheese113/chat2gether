@@ -37,7 +37,7 @@ const TitleFeature = styled.h3`
   margin: 2rem auto;
   text-align: left;
   width: 70%;
-  color: ${props => props.theme.colorPrimary};
+  color: ${p => p.theme.colorPrimary};
 `
 
 const UserCreateStats = styled.div`

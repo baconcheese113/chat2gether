@@ -12,7 +12,7 @@ const syncRotate = keyframes`
 `
 
 const StyledVideoPlayer = styled.div`
-  display: ${props => (props.active ? 'flex' : 'none')};
+  display: ${p => (p.active ? 'flex' : 'none')};
   position: relative;
   height: 100%;
   width: 100%;
@@ -20,8 +20,8 @@ const StyledVideoPlayer = styled.div`
   transition: all 0.4s;
 `
 const VideoContainer = styled.div`
-  filter: ${props => props.disabled && 'brightness(40%)'};
-  pointer-events: ${props => props.disabled && 'none'};
+  filter: ${p => p.disabled && 'brightness(40%)'};
+  pointer-events: ${p => p.disabled && 'none'};
   display: flex;
   flex: 1;
   justify-content: stretch;
@@ -44,7 +44,7 @@ const Video = styled.video`
   transform: ${p => p.flowDirection === 'row' && 'translateY(-50%)'};
 `
 const VideoBlocker = styled.div`
-  display: ${props => (props.disabled ? 'block' : 'none')};
+  display: ${p => (p.disabled ? 'block' : 'none')};
   position: absolute;
   top: 0;
   left: 0;
@@ -62,7 +62,7 @@ const SyncButton = styled(Button)`
   left: 6rem;
   top: 1rem;
   box-shadow: 0 0 4px;
-  color: ${props => props.color};
+  color: ${p => p.color};
   .rotate {
     color: inherit;
     transform-origin: center;

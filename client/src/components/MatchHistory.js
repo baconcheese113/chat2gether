@@ -40,8 +40,8 @@ const PillContainer = styled.div`
   align-items: center;
 `
 const Pill = styled.div`
-  color: ${props => props.theme.colorPrimary};
-  background-color: ${props => props.theme.colorGreyDark1};
+  color: ${p => p.theme.colorPrimary};
+  background-color: ${p => p.theme.colorGreyDark1};
   border-radius: 500rem;
   display: flex;
   justify-content: center;

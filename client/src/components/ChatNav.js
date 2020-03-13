@@ -13,7 +13,7 @@ const StyledChatNav = styled.div`
 `
 const NextMatchButton = styled(Button)`
   border-radius: 10px 0 0 10px;
-  color: ${props => (props.disabled ? '#aaa' : '#fff')};
+  color: ${p => (p.disabled ? '#aaa' : '#fff')};
 `
 const NextMatchSVG = styled.svg`
   max-width: 500px;
@@ -27,10 +27,10 @@ const NextMatchSVG = styled.svg`
 const NextMatchRect = styled.rect`
   stroke-width: 4px;
   stroke-opacity: 1;
-  stroke-dashoffset: ${props => (props.disabled ? 0 : 349)}px;
+  stroke-dashoffset: ${p => (p.disabled ? 0 : 349)}px;
   stroke-dasharray: 349px;
-  stroke: ${props => props.theme.colorPrimary};
-  transition: all ${props => (props.disabled ? 1.8 : 0.2)}s;
+  stroke: ${p => p.theme.colorPrimary};
+  transition: all ${p => (p.disabled ? 1.8 : 0.2)}s;
 `
 const SettingsButton = styled(Button)`
   border-radius: 0 10px 10px 0;

@@ -3,14 +3,14 @@ import styled from 'styled-components'
 
 const StyledChoiceSlider = styled.div`
   border-radius: 500rem; /* Large number to ensure rounded ends */
-  width: ${({ width }) => width || '90%'};
+  width: ${p => p.width || '90%'};
   margin: 1rem auto;
-  background-color: ${props => props.theme.colorGreyDark1};
+  background-color: ${p => p.theme.colorGreyDark1};
   display: flex;
   justify-content: space-around;
   position: relative;
-  border: 2px solid ${props => props.theme.colorWhite1};
-  font-size: ${props => props.fontSize || 'inherit'};
+  border: 2px solid ${p => p.theme.colorWhite1};
+  font-size: ${p => p.fontSize || 'inherit'};
   cursor: pointer;
 `
 
@@ -18,12 +18,12 @@ const Option = styled.span`
   border: none;
   border-radius: 3rem;
   width: 100%;
-  padding: ${({ height }) => height || '1rem'} 0;
+  padding: ${p => p.height || '1rem'} 0;
   margin: 0;
   opacity: 0.8;
   z-index: 10;
-  color: ${props => (props.active ? 'white' : props.theme.colorPrimaryLight)};
-  opacity: ${props => (props.active ? 1 : 0.3)};
+  color: ${p => (p.active ? 'white' : p.theme.colorPrimaryLight)};
+  opacity: ${p => (p.active ? 1 : 0.3)};
 
   &:active,
   &:focus {
@@ -34,15 +34,15 @@ const Option = styled.span`
 const Slider = styled.div`
   /* background-image: linear-gradient(
     to bottom right,
-    ${props => props.theme.colorPrimary},
-    ${props => props.theme.colorGreyDark1}
+    ${p => p.theme.colorPrimary},
+    ${p => p.theme.colorGreyDark1}
   ); */
-  background-color: ${props => props.theme.colorPrimary};
+  background-color: ${p => p.theme.colorPrimary};
   position: absolute;
-  width: ${props => 100 / props.choices.length}%;
+  width: ${p => 100 / p.choices.length}%;
   top: 0;
   bottom: 0;
-  left: ${props => (props.selected / props.choices.length) * 100}%;
+  left: ${p => (p.selected / p.choices.length) * 100}%;
   border-radius: 500rem;
   z-index: 1;
   transition: all 0.8s;

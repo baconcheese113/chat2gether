@@ -19,7 +19,7 @@ const MeterContainer = styled.div`
   align-items: center;
 `
 const Bar = styled.div`
-  background-color: ${props => props.theme.colorGreyLight2};
+  background-color: ${p => p.theme.colorGreyLight2};
   border-radius: 500rem;
   min-height: 80%;
   width: 1rem;
@@ -36,11 +36,7 @@ const Center = styled.div.attrs(({ speed }) => ({
   },
 }))`
   background-color: burlywood;
-  background-image: linear-gradient(
-    to bottom right,
-    ${props => props.theme.colorPrimaryLight},
-    ${props => props.theme.colorPrimary}
-  );
+  background-image: linear-gradient(to bottom right, ${p => p.theme.colorPrimaryLight}, ${p => p.theme.colorPrimary});
   border-radius: 50% 0 50% 0;
   width: 3rem;
   height: 3rem;
@@ -52,9 +48,9 @@ const Center = styled.div.attrs(({ speed }) => ({
 
 const MeterLabels = styled.p`
   font-size: 1.5rem;
-  background-color: ${props => props.theme.colorGreyDark1};
+  background-color: ${p => p.theme.colorGreyDark1};
   border-radius: 500rem;
-  border: 1px dashed ${props => props.theme.colorPrimary};
+  border: 1px dashed ${p => p.theme.colorPrimary};
   padding: 0.5rem 1rem;
   z-index: -1;
 `
@@ -66,32 +62,21 @@ const BarFill = styled.div.attrs(({ isNewVal }) => ({
 }))`
   position: absolute;
   background-color: orchid;
-  background-image: linear-gradient(
-    to bottom right,
-    ${props => props.theme.colorPrimaryLight},
-    ${props => props.theme.colorPrimary}
-  );
+  background-image: linear-gradient(to bottom right, ${p => p.theme.colorPrimaryLight}, ${p => p.theme.colorPrimary});
   border-radius: 500rem;
-  top: ${({ top }) => top || 0}%;
-  bottom: ${({ bottom, isNewVal }) => {
-    console.log(isNewVal)
-    return bottom || 0
-  }}%;
+  top: ${p => p.top || 0}%;
+  bottom: ${p => p.bottom || 0}%;
   left: 0;
   right: 0;
 `
 
-const Slider = styled.button.attrs(({ bottom }) => ({
+const Slider = styled.button.attrs(p => ({
   style: {
-    bottom: `calc(${bottom}% - .3rem)`,
+    bottom: `calc(${p.bottom}% - .3rem)`,
   },
 }))`
-  background-color: ${props => props.theme.colorPrimary};
-  background-image: linear-gradient(
-    to bottom right,
-    ${props => props.theme.colorPrimaryLight},
-    ${props => props.theme.colorPrimary}
-  );
+  background-color: ${p => p.theme.colorPrimary};
+  background-image: linear-gradient(to bottom right, ${p => p.theme.colorPrimaryLight}, ${p => p.theme.colorPrimary});
   position: absolute;
   width: 3rem;
   height: 2rem;
@@ -101,13 +86,13 @@ const Slider = styled.button.attrs(({ bottom }) => ({
   z-index: 10;
   display: flex;
   justify-content: center;
-  transform: scale(${({ active }) => (active ? 1.8 : 1)});
+  transform: ${p => (p.active ? 'scale(1.8)' : 'scale(1)')};
   transition: transform 0.4s;
   box-shadow: 0 0 1rem #111;
 
   & i {
     font-size: 1.6rem;
-    color: ${props => props.theme.colorGreyDark2};
+    color: ${p => p.theme.colorGreyDark2};
 
     &:hover {
       text-shadow: none;
@@ -115,15 +100,15 @@ const Slider = styled.button.attrs(({ bottom }) => ({
   }
 `
 
-const BracketText = styled.p.attrs(({ scale, opacity }) => ({
+const BracketText = styled.p.attrs(p => ({
   style: {
-    transform: `scale(${scale})`,
-    opacity,
+    transform: `scale(${p.scale})`,
+    opacity: p.opacity,
   },
 }))`
   position: absolute;
-  bottom: ${({ bottom }) => bottom}%;
-  top: ${({ top }) => top}%;
+  bottom: ${p => p.bottom}%;
+  top: ${p => p.top}%;
   right: 400%;
   font-size: 2rem;
   text-shadow: 0 0 0.5rem #000;

@@ -5,8 +5,8 @@ const pointerLength = 10
 
 const StyledStatsWindow = styled.div`
   position: absolute;
-  bottom: ${props => props.bottom + 2 + pointerLength}%;
-  left: ${props => props.center}%;
+  bottom: ${p => p.bottom + 2 + pointerLength}%;
+  left: ${p => p.center}%;
   transform: translate(-50%, -60%);
   border-radius: 1rem;
   background-color: white;
@@ -24,7 +24,7 @@ const Pointer = styled.div`
   transform: translate(-50%, 50%) rotate(45deg);
 `
 const Text = styled.p`
-  color: ${props => props.color || '#000'};
+  color: ${p => p.color || '#000'};
 `
 
 export default function StatsWindow(props) {

@@ -31,7 +31,7 @@ const bounce = keyframes`
 `
 
 const StyledCountdown = styled.div`
-  display: ${props => (props.active ? 'flex' : 'none')};
+  display: ${p => (p.active ? 'flex' : 'none')};
   color: #aaa;
   background-color: rgba(0, 0, 0, 0.6);
   overflow: hidden;
@@ -53,10 +53,10 @@ const TextContainer = styled.div`
   background-color: #1e1e23;
 `
 const CountdownText = styled.h3`
-  font-size: ${props => props.fontSize};
+  font-size: ${p => p.fontSize};
   text-shadow: 0 0 4px transparent;
   &.animated {
-    animation: ${bounce} ${props => `${props.spacing}s`} infinite;
+    animation: ${bounce} ${p => `${p.spacing}s`} infinite;
   }
 `
 const ButtonsContainer = styled.div`
@@ -64,9 +64,9 @@ const ButtonsContainer = styled.div`
   z-index: 2;
   flex: 1;
   border: 0;
-  border-top: 1px solid ${props => props.theme.colorPrimary};
+  border-top: 1px solid ${p => p.theme.colorPrimary};
   &.animated {
-    animation: ${absorb} ${props => `${props.spacing}s`} infinite;
+    animation: ${absorb} ${p => `${p.spacing}s`} infinite;
   }
 `
 const ActionButton = styled(Button)`
@@ -76,10 +76,10 @@ const ActionButton = styled(Button)`
   border-radius: 0;
   padding: 4px;
   transition: all 0.4s;
-  animation: ${absorb} ${props => `${props.animated && props.spacing}s infinite`};
+  animation: ${absorb} ${p => `${p.animated && p.spacing}s infinite`};
 
   &:hover {
-    color: ${props => props.theme.colorPrimary};
+    color: ${p => p.theme.colorPrimary};
     text-shadow: 0 0 4px transparent;
   }
 `
@@ -90,9 +90,9 @@ const ScanLine = styled.div`
   right: 0;
   height: 5px;
   background-color: #9932cc;
-  animation: ${scan} ${props => `${props.animated && props.spacing}s`} infinite;
+  animation: ${scan} ${p => `${p.animated && p.spacing}s`} infinite;
   /* &.animated {
-    animation: ${scan} ${props => `${props.spacing}s`} infinite;
+    animation: ${scan} ${p => `${p.spacing}s`} infinite;
   } */
 `
 

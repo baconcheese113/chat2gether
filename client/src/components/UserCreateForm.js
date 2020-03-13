@@ -11,7 +11,7 @@ const StyledForm = styled.div`
   border: #555 solid 2px;
   border-radius: 5px;
 
-  background-color: ${props => props.theme.colorGreyDark1};
+  background-color: ${p => p.theme.colorGreyDark1};
   padding: 1rem;
   margin: 2rem 1rem;
 `
@@ -22,10 +22,10 @@ const Row = styled.div`
 `
 const InputLabel = styled.label`
   display: inline-block;
-  font-size: ${({ fontSize }) => fontSize || '1.5rem'};
+  font-size: ${p => p.fontSize || '1.5rem'};
   margin-right: 1rem;
   text-transform: uppercase;
-  color: ${props => props.theme.colorPrimaryLight};
+  color: ${p => p.theme.colorPrimaryLight};
 `
 const SubmitButton = styled(Button)`
   box-shadow: 0 0 5px #ffffff33;

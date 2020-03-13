@@ -19,8 +19,8 @@ const StyledSVGTester = styled.div`
   border-radius: 50%;
   overflow: hidden;
   display: inline-block;
-  height: ${props => props.height || '100%'};
-  width: ${props => props.width || '100%'};
+  height: ${p => p.height || '100%'};
+  width: ${p => p.width || '100%'};
   margin: 0 auto;
   text-align: center;
   display: flex;
