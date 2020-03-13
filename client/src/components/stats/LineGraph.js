@@ -28,8 +28,8 @@ const pixelToPercent = (x, y) => {
 }
 
 const StyledLineGraph = styled.div`
-  height: ${containerXY.y}px;
   width: ${containerXY.x}px;
+  max-width: 95%;
   margin: 0 auto;
   position: relative;
   box-shadow: 0 0 1rem #000;
@@ -38,8 +38,6 @@ const StyledLineGraph = styled.div`
 `
 const SVGContainer = styled.svg`
   max-width: 500px;
-
-  height: 100%;
   width: 100%;
 
   .graph-axis {

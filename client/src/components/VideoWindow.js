@@ -14,7 +14,8 @@ const LocalVideoContainer = styled.div`
   left: ${props => props.left}px;
   box-shadow: 0 0 2px #949494;
   opacity: 0.9;
-  height: 120px;
+  max-width: 40%;
+  width: 180px;
   border-radius: 20px;
   border: 2px solid #555;
   transition: border-style 1s, box-shadow 1.2s, filter 0.6s, animation 3s;
@@ -39,7 +40,7 @@ const RemoteVideoContainer = styled.div`
   width: 100%;
 `
 const LocalVideo = styled.video`
-  height: 100%;
+  width: 100%;
 `
 const RemoteVideo = styled.video`
   position: absolute;
