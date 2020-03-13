@@ -27,6 +27,7 @@ const RightAligned = styled.div`
 export default function InCallNavBar(props) {
   const { resetState, buttons } = props
 
+  const [showLeft, setShowLeft] = React.useState(false)
   const [isMobile, setIsMobile] = React.useState(false)
 
   const { localStream, requestCamera } = useLocalStream()
@@ -64,99 +65,116 @@ export default function InCallNavBar(props) {
     }
   }
 
+  // type should be speakerMute or micMute
+  const handleMutePress = () => {
+    if (localStream) {
+      const audio = localStream.getAudioTracks()
+      if (audio.length > 0) {
+        // enabled is the inverse of mute, but we're inverting that onClick
+        audio[0].enabled = chatSettings.micMute
+        console.log(`nav bar mic.enabled is now ${audio[0].enabled}`)
+      }
+    }
+    setChatSettings({ ...chatSettings, micMute: !chatSettings.micMute })
+  }
+
   if (!enabledWidgets) return ''
+
+  const isPC = window.innerWidth > 600
 
   return (
     <StyledNavBar>
       <LeftAligned>
-        {buttons.stop && <ToggleButton iconClass="fas fa-stop" dataCy="navStopButton" onClick={resetState} />}
-        {buttons.mic && (
-          <ToggleButton
-            dataCy="navMicButton"
-            iconClass={`fas fa-microphone${chatSettings.micMute ? '-slash' : ''}`}
-            onClick={() => {
-              if (localStream) {
-                const audio = localStream.getAudioTracks()
-                if (audio.length > 0) {
-                  // enabled is the inverse of mute, but we're inverting that onClick
-                  audio[0].enabled = chatSettings.micMute
-                  console.log(`nav bar mic.enabled is now ${audio[0].enabled}`)
-                }
-              }
-              setChatSettings({ ...chatSettings, micMute: !chatSettings.micMute })
-            }}
-            active={chatSettings.micMute ? 0 : 1}
-          />
+        {showLeft || isPC ? (
+          <>
+            {buttons.stop && <ToggleButton iconClass="fas fa-stop" dataCy="navStopButton" onClick={resetState} />}
+            {buttons.mic && (
+              <ToggleButton
+                dataCy="navMicButton"
+                iconClass={`fas fa-microphone${chatSettings.micMute ? '-slash' : ''}`}
+                onClick={handleMutePress}
+                active={chatSettings.micMute ? 0 : 1}
+              />
+            )}
+            {buttons.speaker && (
+              <ToggleButton
+                dataCy="navSpeakerButton"
+                iconClass={`fas fa-volume${chatSettings.speakerMute ? '-mute' : '-up'}`}
+                onClick={() => setChatSettings({ ...chatSettings, speakerMute: !chatSettings.speakerMute })}
+                active={chatSettings.speakerMute ? 0 : 1}
+              />
+            )}
+            {isMobile && <ToggleButton dataCy="navCameraFlipButton" iconClass="fas fa-camera" onClick={flipCamera} />}
+          </>
+        ) : (
+          <ToggleButton iconClass="fas fa-chevron-right" onClick={() => setShowLeft(true)} active />
         )}
-        {buttons.speaker && (
-          <ToggleButton
-            dataCy="navSpeakerButton"
-            iconClass={`fas fa-volume${chatSettings.speakerMute ? '-mute' : '-up'}`}
-            onClick={() => setChatSettings({ ...chatSettings, speakerMute: !chatSettings.speakerMute })}
-            active={chatSettings.speakerMute ? 0 : 1}
-          />
-        )}
-        {isMobile && <ToggleButton dataCy="navCameraFlipButton" iconClass="fas fa-camera" onClick={flipCamera} />}
       </LeftAligned>
       <RightAligned>
-        {buttons.profile && (
-          <ToggleButton
-            dataCy="navProfileButton"
-            iconClass="fas fa-user-alt"
-            onClick={() => featureToggle('profile')}
-            active={enabledWidgets.profile ? 1 : 0}
-          />
-        )}
-        {buttons.countdown && (
-          <ToggleButton
-            dataCy="navCountdownButton"
-            iconClass="fas fa-stopwatch"
-            onClick={() => featureToggle('countdown')}
-            active={enabledWidgets.countdown ? 1 : 0}
-            notification={countdownNotify ? 1 : 0}
-          />
-        )}
-        {buttons.chat && (
-          <ToggleButton
-            dataCy="navCommentButton"
-            iconClass="fas fa-comment"
-            onClick={() => featureToggle('text')}
-            active={enabledWidgets.text ? 1 : 0}
-            notification={textNotify}
-          />
-        )}
-        {buttons.video && (
-          <ToggleButton
-            dataCy="navPlayerButton"
-            iconClass="fab fa-youtube"
-            onClick={() => featureToggle('video')}
-            active={enabledWidgets.video ? 1 : 0}
-            notification={videoNotify ? 1 : 0}
-          />
-        )}
-        {buttons.updatePref && (
-          <ToggleButton
-            dataCy="navUpdateUserButton"
-            iconClass="fas fa-user-edit"
-            onClick={() => featureToggle('updatePref')}
-            active={enabledWidgets.updatePref ? 1 : 0}
-          />
-        )}
-        {buttons.stats && (
-          <ToggleButton
-            dataCy="navStatsButton"
-            iconClass="fas fa-chart-area"
-            onClick={() => featureToggle('stats')}
-            active={enabledWidgets.stats ? 1 : 0}
-          />
-        )}
-        {buttons.matches && (
-          <ToggleButton
-            dataCy="navMatchesButton"
-            iconClass="fas fa-users"
-            onClick={() => featureToggle('matches')}
-            active={enabledWidgets.matches ? 1 : 0}
-          />
+        {!showLeft || isPC ? (
+          <>
+            {buttons.profile && (
+              <ToggleButton
+                dataCy="navProfileButton"
+                iconClass="fas fa-user-alt"
+                onClick={() => featureToggle('profile')}
+                active={enabledWidgets.profile ? 1 : 0}
+              />
+            )}
+            {buttons.countdown && (
+              <ToggleButton
+                dataCy="navCountdownButton"
+                iconClass="fas fa-stopwatch"
+                onClick={() => featureToggle('countdown')}
+                active={enabledWidgets.countdown ? 1 : 0}
+                notification={countdownNotify ? 1 : 0}
+              />
+            )}
+            {buttons.chat && (
+              <ToggleButton
+                dataCy="navCommentButton"
+                iconClass="fas fa-comment"
+                onClick={() => featureToggle('text')}
+                active={enabledWidgets.text ? 1 : 0}
+                notification={textNotify}
+              />
+            )}
+            {buttons.video && (
+              <ToggleButton
+                dataCy="navPlayerButton"
+                iconClass="fab fa-youtube"
+                onClick={() => featureToggle('video')}
+                active={enabledWidgets.video ? 1 : 0}
+                notification={videoNotify ? 1 : 0}
+              />
+            )}
+            {buttons.updatePref && (
+              <ToggleButton
+                dataCy="navUpdateUserButton"
+                iconClass="fas fa-user-edit"
+                onClick={() => featureToggle('updatePref')}
+                active={enabledWidgets.updatePref ? 1 : 0}
+              />
+            )}
+            {buttons.stats && (
+              <ToggleButton
+                dataCy="navStatsButton"
+                iconClass="fas fa-chart-area"
+                onClick={() => featureToggle('stats')}
+                active={enabledWidgets.stats ? 1 : 0}
+              />
+            )}
+            {buttons.matches && (
+              <ToggleButton
+                dataCy="navMatchesButton"
+                iconClass="fas fa-users"
+                onClick={() => featureToggle('matches')}
+                active={enabledWidgets.matches ? 1 : 0}
+              />
+            )}
+          </>
+        ) : (
+          <ToggleButton iconClass="fas fa-chevron-left" onClick={() => setShowLeft(false)} active />
         )}
       </RightAligned>
     </StyledNavBar>
