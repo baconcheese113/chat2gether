@@ -14,7 +14,7 @@ const LocalVideoContainer = styled.div`
   left: ${props => props.left}px;
   box-shadow: 0 0 2px #949494;
   opacity: 0.9;
-  max-width: 40%;
+  max-width: 35%;
   width: 180px;
   border-radius: 20px;
   border: 2px solid #555;

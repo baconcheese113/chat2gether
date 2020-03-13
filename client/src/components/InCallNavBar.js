@@ -38,8 +38,8 @@ export default function InCallNavBar(props) {
       try {
         const allDevices = await navigator.mediaDevices.enumerateDevices()
         // Both of these being true means we're on mobile
-        const rear = allDevices.some(d => d.kind === 'videoinput' && d.label.includes('back'))
-        const front = allDevices.some(d => d.kind === 'videoinput' && d.label.includes('front'))
+        const rear = allDevices.some(d => d.kind === 'videoinput' && d.label.match(/back/i))
+        const front = allDevices.some(d => d.kind === 'videoinput' && d.label.match(/front/i))
         setIsMobile(rear && front)
       } catch (err) {
         console.error(err)
@@ -51,8 +51,8 @@ export default function InCallNavBar(props) {
     e.stopPropagation()
     try {
       const allDevices = await navigator.mediaDevices.enumerateDevices()
-      const rear = allDevices.find(d => d.kind === 'videoinput' && d.label.includes('back'))
-      const front = allDevices.find(d => d.kind === 'videoinput' && d.label.includes('front'))
+      const rear = allDevices.find(d => d.kind === 'videoinput' && d.label.match(/back/i))
+      const front = allDevices.find(d => d.kind === 'videoinput' && d.label.match(/front/i))
       const currentId = localStream.getVideoTracks()[0].getSettings().deviceId
       console.log(currentId, rear.deviceId, front.deviceId)
       if (rear && front) {

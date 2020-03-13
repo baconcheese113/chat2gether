@@ -196,12 +196,10 @@ export default function Settings() {
 
   return (
     <StyledSettings>
-      {isLoading ? (
+      {isLoading && (
         <Modal>
           <SVGTester height="50vh" width="50vh" />
         </Modal>
-      ) : (
-        ''
       )}
       <Blur role="button" tabIndex={0} onClick={handleClose} onKeyUp={handleClose} />
       <Container>
