@@ -9,19 +9,16 @@ const StyledChatNav = styled.div`
   position: absolute;
   right: 20px;
   top: 20px;
-  z-index: 1;
 `
 const NextMatchButton = styled(Button)`
   border-radius: 10px 0 0 10px;
   color: ${p => (p.disabled ? '#aaa' : '#fff')};
 `
 const NextMatchSVG = styled.svg`
-  max-width: 500px;
-
+  pointer-events: none;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -1;
   transform: scale(1.01, 1.1);
 `
 const NextMatchRect = styled.rect`

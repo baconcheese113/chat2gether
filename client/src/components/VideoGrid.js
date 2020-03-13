@@ -99,7 +99,7 @@ const SearchBar = styled.input`
   margin-right: -5px;
   font-size: 1.6rem;
   padding: 0 4px;
-  z-index: 5;
+  z-index: 10;
 `
 const SubmitButton = styled(Button)`
   display: block;
@@ -181,13 +181,13 @@ export default function VideoGrid(props) {
       <CloseButton onClick={handleClose} label="X" />
       <Modal>
         <SearchBarForm onSubmit={handleSearchSubmit}>
+          <SubmitButton data-cy="playerSearchSubmit" onClick={handleSearchSubmit} label="Search" />
           <SearchBar
             data-cy="playerSearchInput"
             placeholder={`Search ${process.env.REACT_APP_SEARCH_DOMAIN} by keyword, URLs are not supported`}
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
-          <SubmitButton data-cy="playerSearchSubmit" onClick={handleSearchSubmit} label="Search" />
         </SearchBarForm>
         {getContent()}
       </Modal>

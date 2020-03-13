@@ -244,13 +244,6 @@ export default function VideoPlayer(props) {
   // <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
   return (
     <>
-      <VideoGrid
-        videos={parser.videos}
-        onSubmitSearch={onSubmitSearch}
-        isShown={active && isShown}
-        setIsShown={setIsShown}
-        selectVideo={selectVideo}
-      />
       <StyledVideoPlayer coords={coords} active={active}>
         <VideoContainer disabled={disabled}>
           <VideoBlocker disabled={disabled} />
@@ -277,6 +270,13 @@ export default function VideoPlayer(props) {
           <SyncButton data-cy="playerSyncButton" onClick={toggleSync} color={getColor} label={getSyncText()} />
         </VideoContainer>
       </StyledVideoPlayer>
+      <VideoGrid
+        videos={parser.videos}
+        onSubmitSearch={onSubmitSearch}
+        isShown={active && isShown}
+        setIsShown={setIsShown}
+        selectVideo={selectVideo}
+      />
     </>
   )
 }

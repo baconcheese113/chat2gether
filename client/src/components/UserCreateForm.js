@@ -47,7 +47,6 @@ const Modal = styled.div`
   right: 0%;
   background-color: #111;
   opacity: 0.9;
-  z-index: 500;
 
   & > * {
     position: absolute;

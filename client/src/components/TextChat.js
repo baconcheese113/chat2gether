@@ -45,7 +45,6 @@ const StyledTextChat = styled.section`
   width: 100%;
   margin: 0;
   padding: 0;
-  z-index: 5;
 `
 
 const TextHistory = styled.div`
@@ -60,7 +59,6 @@ const TextHistory = styled.div`
   flex-direction: column;
   padding: 10px;
   position: relative;
-  z-index: -1;
   animation-fill-mode: forwards;
   animation-name: ${historyShow};
   animation-duration: 0.6s;
@@ -95,7 +93,6 @@ const TextConsole = styled.form`
   left: 0;
   justify-content: center;
   align-items: center;
-  z-index: 5;
   animation-fill-mode: forwards;
   animation-name: ${consoleShow};
   animation-duration: 0.6s;

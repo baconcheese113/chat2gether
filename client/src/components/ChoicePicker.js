@@ -24,7 +24,6 @@ const Option = styled.span`
   align-items: center;
   justify-content: center;
   padding: ${p => p.height || '1rem'} 0;
-  z-index: 10;
   border-right: ${p => (p.showBorderRight ? `2px solid ${p.theme.colorWhite1}` : undefined)};
   color: ${p => (p.active ? 'white' : p.theme.colorPrimaryLight)};
   ${p => (p.active ? `background-color: ${p.theme.colorPrimary};` : '')}

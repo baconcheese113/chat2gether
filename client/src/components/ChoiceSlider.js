@@ -21,9 +21,9 @@ const Option = styled.span`
   padding: ${p => p.height || '1rem'} 0;
   margin: 0;
   opacity: 0.8;
-  z-index: 10;
   color: ${p => (p.active ? 'white' : p.theme.colorPrimaryLight)};
   opacity: ${p => (p.active ? 1 : 0.3)};
+  z-index: 10;
 
   &:active,
   &:focus {
@@ -44,9 +44,8 @@ const Slider = styled.div`
   bottom: 0;
   left: ${p => (p.selected / p.choices.length) * 100}%;
   border-radius: 500rem;
-  z-index: 1;
   transition: all 0.8s;
-`
+  `
 
 export default function ChoiceSlider(props) {
   const { cur, change, choices } = props
@@ -56,12 +55,12 @@ export default function ChoiceSlider(props) {
 
   return (
     <StyledChoiceSlider {...props}>
+      <Slider choices={choices} selected={cur} />
       {choices.map((choice, index) => (
         <Option active={cur === index} onClick={() => change(index)} key={choice}>
           {choice.replace(/_/g, ' ')}
         </Option>
       ))}
-      <Slider choices={choices} selected={cur} />
     </StyledChoiceSlider>
   )
 }

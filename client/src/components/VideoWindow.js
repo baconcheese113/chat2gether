@@ -20,7 +20,6 @@ const LocalVideoContainer = styled.div`
   border-radius: 20px;
   border: 2px solid #555;
   transition: border-style 1s, box-shadow 1.2s, filter 0.6s, animation 3s;
-  z-index: 20;
 
   &:hover {
     box-shadow: 0 0 3px #fff;

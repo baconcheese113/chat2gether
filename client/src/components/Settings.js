@@ -32,7 +32,6 @@ const Container = styled.div`
   max-width: 90%;
   max-height: 90%;
   background-color: #313131;
-  z-index: 50;
   border-radius: 0.5rem;
   box-shadow: 0 0 1rem #000;
   display: flex;
@@ -118,7 +117,6 @@ const Modal = styled.div`
   right: 0%;
   background-color: #111;
   opacity: 0.9;
-  z-index: 500;
 
   & > * {
     position: absolute;

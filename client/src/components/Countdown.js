@@ -40,7 +40,6 @@ const StyledCountdown = styled.div`
   left: 1rem;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
-  /* max-width: 20%; */
 `
 const TextContainer = styled.div`
   display: flex;
@@ -61,7 +60,7 @@ const CountdownText = styled.h3`
 `
 const ButtonsContainer = styled.div`
   display: flex;
-  z-index: 2;
+  z-index: 10;
   flex: 1;
   border: 0;
   border-top: 1px solid ${p => p.theme.colorPrimary};
@@ -91,9 +90,6 @@ const ScanLine = styled.div`
   height: 5px;
   background-color: #9932cc;
   animation: ${scan} ${p => `${p.animated && p.spacing}s`} infinite;
-  /* &.animated {
-    animation: ${scan} ${p => `${p.spacing}s`} infinite;
-  } */
 `
 
 export default function Countdown(props) {
