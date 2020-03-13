@@ -12,6 +12,7 @@ const LocalVideoContainer = styled.div`
 
   top: ${props => props.top}px;
   left: ${props => props.left}px;
+  touch-action: none;
   box-shadow: 0 0 2px #949494;
   opacity: 0.9;
   max-width: 35%;
