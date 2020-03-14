@@ -127,7 +127,12 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>I want to chat with</InputLabel>
-        <Summary>{lookingFor && lookingFor.map(g => g.name).join(', ')}</Summary>
+        <Summary>
+          {lookingFor &&
+            GENDERS.filter(gender => lookingFor.some(g => g.name === gender))
+              .join(', ')
+              .replace(/_/g, ' ')}
+        </Summary>
         <ChoicePicker
           data-cy="theirGenderPicker"
           selected={lookingFor}
@@ -159,7 +164,12 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>Preferences I&apos;ll do</InputLabel>
-        <Summary>{accAudioPrefs && accAudioPrefs.map(ap => ap.name).join(', ')}</Summary>
+        <Summary>
+          {accAudioPrefs &&
+            AUDIO_PREFS.filter(pref => accAudioPrefs.some(p => p.name === pref))
+              .join(', ')
+              .replace(/_/g, ' ')}
+        </Summary>
         <ChoicePicker
           data-cy="theirAudioPicker"
           selected={accAudioPrefs}
