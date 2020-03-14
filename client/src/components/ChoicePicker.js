@@ -32,6 +32,7 @@ const Option = styled.span`
 `
 const OptionText = styled.span`
   opacity: ${p => (p.active ? 1 : 0.2)};
+  user-select: none;
 `
 
 export default function ChoicePicker(props) {
@@ -43,6 +44,7 @@ export default function ChoicePicker(props) {
   const handleClick = (e, choice) => {
     e.preventDefault()
     if (selected.find(obj => obj.name === choice)) {
+      if (selected.length <= 1) return
       change(selected.filter(obj => obj.name !== choice))
     } else {
       change([...selected, { name: choice }])

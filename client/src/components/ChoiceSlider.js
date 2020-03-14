@@ -23,6 +23,7 @@ const Option = styled.span`
   opacity: 0.8;
   color: ${p => (p.active ? 'white' : p.theme.colorPrimaryLight)};
   opacity: ${p => (p.active ? 1 : 0.3)};
+  user-select: none;
   z-index: 10;
 
   &:active,
