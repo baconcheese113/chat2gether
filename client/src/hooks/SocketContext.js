@@ -5,6 +5,7 @@ import { UPDATE_USER } from '../queries/mutations'
 import { FIND_ROOM } from '../queries/queries'
 import { useMyUser } from './MyUserContext'
 import PrefMatcher from '../components/PrefMatcher'
+import AirPlaneDing from '../assets/air-plane-ding.mp3'
 import { useEnabledWidgets } from './EnabledWidgetsContext'
 
 const SocketContext = React.createContext()
@@ -72,7 +73,13 @@ export default function SocketProvider(props) {
   const onIdentity = u => {
     try {
       // Have to fix on iOS safari first
-      // new Audio(AirPlaneDing).play()
+      const isIOS =
+        (/iPad|iPhone|iPod/.test(navigator.platform) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
+        !window.MSStream
+      if (!isIOS) {
+        new Audio(AirPlaneDing).play()
+      }
     } catch (err) {
       console.error(`can't play this shit`, err)
     }
