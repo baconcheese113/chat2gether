@@ -4,66 +4,44 @@ import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useNotify } from '../hooks/NotifyContext'
 import { Button } from './common'
 
-// const consoleCollapse = keyframes`
-//   0%{transform: translateY(0)}
-//   50%{transform: translateY(0)}
-//   60% {transform: translateY(-5px);}
-//   70%{transform: translateY(0)}
-//   100% {transform: translateY(80px);}
-// `
 const consoleShow = keyframes`
-  0% {transform: translateY(120px);}
-  30%{transform: translateY(0)}
-  40% {transform: translateY(-5px);}
-  50%{transform: translateY(0)}
-  100%{transform: translateY(0)}
+  0% {bottom: -100px;}
+  45% {bottom: 0;}
+  100% {bottom: 0;}
 `
-// const historyCollapse = keyframes`
-//   0%{transform: translateY(0)}
-//   10% {transform: translateY(-10px);}
-//   40%{transform: translateY(0)}
-//   100% {transform: translateY(250px);}
-// `
 const historyShow = keyframes`
-  0% {transform: translateY(250px) scaleY(0);}
-  50% {transform: translateY(250px) scaleY(0);}
-  60%{transform: translateY(0) scaleY(1);}
-  90% {transform: translateY(-10px);}
-  100%{transform: translateY(0);}
+  0% {transform: scaleY(0);}
+  55% {transform: scaleY(0);}
+  100% {transform: scaleY(1);}
 `
-
 const StyledTextChat = styled.section`
-  border-radius: 20px;
-  padding: 5px;
-
-  display: ${p => (p.active ? 'block' : 'none')};
+  display: ${p => (p.active ? 'flex' : 'none')};
+  justify-content: center;
+  height: 200px;
   position: absolute;
   overflow: hidden;
-  background-color: transparent;
   bottom: 6rem;
   left: 0;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+  right: 0;
 `
-
 const TextHistory = styled.div`
-  font-size: 1.8rem;
+  position: absolute;
+  bottom: 38px;
+  font-size: 1.6rem;
   background-image: linear-gradient(#00000000, #000000ff);
   filter: opacity(0.4);
-  margin: 0 auto 4rem;
   max-height: 15rem;
-  overflow-y: scroll;
-  width: 80%;
+  overflow-y: auto;
+  width: 92%;
   display: flex;
   flex-direction: column;
   padding: 10px;
-  position: relative;
+  transform: scaleY(0);
+  transform-origin: bottom;
   animation-fill-mode: forwards;
   animation-name: ${historyShow};
-  animation-duration: 0.6s;
+  animation-duration: 0.8s;
 `
-
 const TextComment = styled.p`
   padding: 2px;
 
@@ -81,42 +59,34 @@ const TextComment = styled.p`
     text-shadow: 0 0 1px #000;
   }
 `
-
 const TextConsole = styled.form`
-  width: 100%;
-  background-color: #9932cc;
-  padding: 3px 5px;
-  border-radius: 20px 20px 0 0;
   display: flex;
   position: absolute;
   bottom: 0;
-  left: 0;
-  justify-content: center;
-  align-items: center;
+  left: 2%;
+  right: 2%;
+  opacity: 0.7;
+  transform-origin: left bottom;
   animation-fill-mode: forwards;
   animation-name: ${consoleShow};
-  animation-duration: 0.6s;
+  animation-duration: 0.8s;
 `
-
 const ConsoleInput = styled.input`
-  outline: none;
-  margin: 2px;
-  cursor: pointer;
-
-  width: calc(100% - 35px);
-  background-color: #c38fdd;
-  border: 3px solid #c38fdd;
+  background-color: #313131;
+  border: 0;
+  border-bottom: 3px solid ${p => (!!p.value ? p.theme.colorPrimary : p.theme.colorPrimaryLight)};
   border-radius: 10px 0 0 10px;
-  padding: 2px;
+  padding: 4px;
+  flex: 1;
   font-size: 16px;
+  outline: none;
+  color: inherit;
   font-family: inherit;
+  transition: 0.4s all;
 `
 const ConsoleButton = styled(Button)`
   border-radius: 0 10px 10px 0;
-  font-size: 1.7rem;
-  text-align: left;
-  margin-left: -2px;
-  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  padding: 8px 14px;
 `
 
 export default function TextChat(props) {
@@ -132,7 +102,6 @@ export default function TextChat(props) {
   const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
 
   const onComment = e => {
-    console.log(...textChat)
     setTextChat(prev => [...prev, { comment: e.text, userId: e.userId }])
   }
 
@@ -160,16 +129,6 @@ export default function TextChat(props) {
     console.log(lastReadMsg)
   }, [enabledWidgets.text, textChat, lastReadMsg])
 
-  const renderTextChat = React.useCallback(() => {
-    return textChat.map((sentComment, index) => {
-      return (
-        <TextComment key={index} className={`text-${sentComment.userId === user.id ? 'local' : 'remote'}`}>
-          {sentComment.comment}
-        </TextComment>
-      )
-    })
-  }, [textChat])
-
   const handleSubmit = e => {
     e && e.preventDefault()
     if (!socketHelper || !comment) {
@@ -193,7 +152,11 @@ export default function TextChat(props) {
   return (
     <StyledTextChat active={enabledWidgets.text}>
       <TextHistory>
-        {renderTextChat()}
+        {textChat.map((sentComment, index) => (
+          <TextComment key={index} className={`text-${sentComment.userId === user.id ? 'local' : 'remote'}`}>
+            {sentComment.comment}
+          </TextComment>
+        ))}
         <div ref={messagesEnd} />
       </TextHistory>
       <TextConsole onSubmit={handleSubmit}>
@@ -205,7 +168,9 @@ export default function TextChat(props) {
           onBlur={() => handleConsoleFocus(false)}
           onChange={e => setComment(e.target.value)}
         />
-        <ConsoleButton data-cy="commentSubmitButton" onClick={handleSubmit} label="Send" />
+        <ConsoleButton data-cy="commentSubmitButton" disabled={!comment} onClick={handleSubmit}>
+          <i className="fas fa-paper-plane"></i>
+        </ConsoleButton>
       </TextConsole>
     </StyledTextChat>
   )
