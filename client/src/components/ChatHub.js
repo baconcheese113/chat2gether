@@ -25,7 +25,7 @@ const StyledChatHub = styled.div`
   justify-content: center;
   overflow: hidden;
 `
-const ConnectingText = styled.p`
+const ConnectingText = styled.div`
   padding: 0 1rem;
 `
 const PageContainer = styled.div`

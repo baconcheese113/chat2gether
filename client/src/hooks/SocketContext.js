@@ -4,6 +4,8 @@ import SocketHelper from '../helpers/socketHelper'
 import { UPDATE_USER } from '../queries/mutations'
 import { FIND_ROOM } from '../queries/queries'
 import { useMyUser } from './MyUserContext'
+import PrefMatcher from '../components/PrefMatcher'
+import { useEnabledWidgets } from './EnabledWidgetsContext'
 
 const SocketContext = React.createContext()
 export function useSocket() {
@@ -26,6 +28,7 @@ export default function SocketProvider(props) {
 
   const { user, getMe } = useMyUser()
   const client = useApolloClient()
+  const { setEnabledWidgets } = useEnabledWidgets()
   console.log('SocketProvider render')
 
   const resetSocket = () => {
@@ -41,8 +44,8 @@ export default function SocketProvider(props) {
   }
 
   const startCountdown = () => {
-    setMatchCountdown(5)
-    let num = 5
+    setMatchCountdown(8)
+    let num = 8
     const timer = setInterval(() => {
       if (num <= 1) {
         window.clearInterval(timer)
@@ -76,10 +79,19 @@ export default function SocketProvider(props) {
     console.log(`Chatting with ${u.id}`)
     setOtherUser(u)
     setConnectionMsg(
-      `Matched with a ${u.age} year old ${u.gender.toLowerCase()}.
-      Prefers ${u.audioPref.replace(/_/g, ' ').toLowerCase()}...`,
+      <PrefMatcher
+        myPref={user.audioPref}
+        myAccPrefs={user.accAudioPrefs.map(lf => lf.name)}
+        myAge={user.age}
+        myGender={user.gender}
+        theirPref={u.audioPref}
+        theirAccPrefs={u.accAudioPrefs.map(lf => lf.name)}
+        theirAge={u.age}
+        theirGender={u.gender}
+      />,
     )
     startCountdown()
+    setEnabledWidgets({ localVideo: true })
   }
 
   // Starts socket.io up
@@ -112,7 +124,7 @@ export default function SocketProvider(props) {
         if (hackyUser) {
           setRemoteStream(e.streams[0])
         }
-      }, 5000)
+      }, 8000)
     }
     newSocketHelper.onIdentity = onIdentity
     newSocketHelper.onIceConnectionStateChange = e => {

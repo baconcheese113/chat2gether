@@ -108,11 +108,6 @@ export default function UserCreateForm(props) {
 
   return (
     <StyledForm>
-      {isLoading && (
-        <Modal>
-          <SVGTester height="50vh" width="50vh" />
-        </Modal>
-      )}
       <Row>
         <InputLabel>I&apos;m</InputLabel>
         <Summary>{GENDERS[gender]}</Summary>
@@ -181,7 +176,13 @@ export default function UserCreateForm(props) {
         />
       </Row>
       {error}
-      <SubmitButton onClick={handleSubmit} h2 primary data-cy="startButton" label="Start" />
+      <SubmitButton onClick={handleSubmit} h2 primary data-cy="startButton" label="Enter" />
+
+      {isLoading && (
+        <Modal>
+          <SVGTester height="50vh" width="50vh" />
+        </Modal>
+      )}
     </StyledForm>
   )
 }
