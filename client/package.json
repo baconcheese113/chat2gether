@@ -20,11 +20,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint ./src --fix"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "eject": "react-scripts eject"
   },
   "browserslist": [
     ">0.2%",
@@ -33,16 +29,7 @@
     "not op_mini all"
   ],
   "proxy": "http://localhost:4000",
-  "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.1.0",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.19.0",
-    "prettier": "^1.19.1"
-  },
+  "devDependencies": {},
   "optionalDependencies": {
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3"
