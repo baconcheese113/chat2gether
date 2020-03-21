@@ -78,6 +78,8 @@ export default function InCallNavBar(props) {
     setChatSettings({ ...chatSettings, micMute: !chatSettings.micMute })
   }
 
+  const hiddenNotifications = (countdownNotify | 0) + (videoNotify | 0) + (textNotify || 0)
+
   if (!enabledWidgets) return ''
 
   const isPC = window.innerWidth > 600
@@ -174,7 +176,12 @@ export default function InCallNavBar(props) {
             )}
           </>
         ) : (
-          <ToggleButton iconClass="fas fa-chevron-left" onClick={() => setShowLeft(false)} active />
+          <ToggleButton
+            iconClass="fas fa-chevron-left"
+            onClick={() => setShowLeft(false)}
+            active
+            notification={hiddenNotifications}
+          />
         )}
       </RightAligned>
     </StyledNavBar>
