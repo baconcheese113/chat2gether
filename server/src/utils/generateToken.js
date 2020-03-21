@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
 
 export default userId => {
-  return jwt.sign({ userId: userId }, process.env.JWT_SECRET, { expiresIn: '2 days' });
-};
+  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '2 days' })
+}

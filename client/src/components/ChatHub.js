@@ -55,7 +55,7 @@ export default function ChatHub() {
   const updateFlowDirection = React.useCallback(() => {
     const direction = window.innerWidth > window.innerHeight ? 'row' : 'column'
     setFlowDirection(direction)
-  }, [window.innerHeight, window.innerHeight])
+  }, [])
 
   const logWindowError = e => console.log(e)
   React.useEffect(() => {
@@ -65,7 +65,7 @@ export default function ChatHub() {
       window.removeEventListener('resize', updateFlowDirection)
       window.removeEventListener('error', logWindowError)
     }
-  }, [])
+  }, [updateFlowDirection])
 
   const onUnload = React.useCallback(
     e => {

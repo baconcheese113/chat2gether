@@ -57,7 +57,7 @@ const Pill = styled.div`
   font-size: 1.8rem;
 `
 
-export default function ProfileCard(props) {
+export default function ProfileCard() {
   const { otherUser } = useSocket()
 
   const { enabledWidgets } = useEnabledWidgets()

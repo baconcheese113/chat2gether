@@ -120,62 +120,68 @@ export default function VideoPlayer(props) {
   }
 
   // Changing sync state when remote user clicks sync button
-  const receiveSyncMsg = newMsg => {
-    if (newMsg.userId === userId) return
-    let newState = syncState
-    // Handle other user toggling on sync
-    if (newMsg.type === 'start') {
-      if (syncState === SYNC.OFF) {
-        newState = SYNC.UNACCEPTED
-      } else if (syncState === SYNC.REQUESTED) {
-        newState = SYNC.ACCEPTED
-        socketHelper.emit('videoPlayerSync', {
-          ...msg,
-          videoId: currentVideo,
-          videoUrl,
-          currentTime: player.current && player.current.currentTime,
-          type: 'setVideo',
-        })
+  const receiveSyncMsg = React.useCallback(
+    newMsg => {
+      if (newMsg.userId === userId) return
+      let newState = syncState
+      // Handle other user toggling on sync
+      if (newMsg.type === 'start') {
+        if (syncState === SYNC.OFF) {
+          newState = SYNC.UNACCEPTED
+        } else if (syncState === SYNC.REQUESTED) {
+          newState = SYNC.ACCEPTED
+          socketHelper.emit('videoPlayerSync', {
+            ...msg,
+            videoId: currentVideo,
+            videoUrl,
+            currentTime: player.current && player.current.currentTime,
+            type: 'setVideo',
+          })
+        }
+        // Handle other user toggling off sync
+      } else if (newMsg.type === 'stop') {
+        if (syncState === SYNC.UNACCEPTED) {
+          newState = SYNC.OFF
+        } else if (syncState === SYNC.ACCEPTED) {
+          newState = SYNC.REQUESTED
+        }
+        // Handle other user changing the video
+      } else if (newMsg.type === 'setVideo' && syncState === SYNC.ACCEPTED) {
+        if (!active) setVideoNotify(true)
+        if (!newMsg.videoId) return
+        setCurrentVideo(newMsg.videoId)
+        setVideoUrl(newMsg.videoUrl)
+        if (player.current && newMsg.currentTime) {
+          player.current.currentTime = parseFloat(newMsg.currentTime)
+        }
       }
-      // Handle other user toggling off sync
-    } else if (newMsg.type === 'stop') {
-      if (syncState === SYNC.UNACCEPTED) {
-        newState = SYNC.OFF
-      } else if (syncState === SYNC.ACCEPTED) {
-        newState = SYNC.REQUESTED
+      // Notify if state was changed
+      if (syncState !== newState && !active) {
+        setVideoNotify(true)
       }
-      // Handle other user changing the video
-    } else if (newMsg.type === 'setVideo' && syncState === SYNC.ACCEPTED) {
-      if (!active) setVideoNotify(true)
-      if (!newMsg.videoId) return
-      setCurrentVideo(newMsg.videoId)
-      setVideoUrl(newMsg.videoUrl)
-      if (player.current && newMsg.currentTime) {
-        player.current.currentTime = parseFloat(newMsg.currentTime)
-      }
-    }
-    // Notify if state was changed
-    if (syncState !== newState && !active) {
-      setVideoNotify(true)
-    }
-    setSyncState(newState)
-  }
+      setSyncState(newState)
+    },
+    [active, currentVideo, msg, setVideoNotify, socketHelper, syncState, userId, videoUrl],
+  )
 
   // Changing local player when remote user updates player
-  const receiveUpdateMsg = newMsg => {
-    if (!player.current || newMsg.userId === userId || syncState !== SYNC.ACCEPTED) return
-    // If other user paused the video
-    if (newMsg.type === UPDATE.PAUSE) {
-      player.current.pause()
-      player.current.currentTime = newMsg.currentTime
-    } else if (newMsg.type === UPDATE.PLAY) {
-      player.current.play()
-      player.current.currentTime = newMsg.currentTime
-    } else if (newMsg.type === UPDATE.SEEKED) {
-      player.current.currentTime = newMsg.currentTime
-    } else return
-    setDisabled(true)
-  }
+  const receiveUpdateMsg = React.useCallback(
+    newMsg => {
+      if (!player.current || newMsg.userId === userId || syncState !== SYNC.ACCEPTED) return
+      // If other user paused the video
+      if (newMsg.type === UPDATE.PAUSE) {
+        player.current.pause()
+        player.current.currentTime = newMsg.currentTime
+      } else if (newMsg.type === UPDATE.PLAY) {
+        player.current.play()
+        player.current.currentTime = newMsg.currentTime
+      } else if (newMsg.type === UPDATE.SEEKED) {
+        player.current.currentTime = newMsg.currentTime
+      } else return
+      setDisabled(true)
+    },
+    [syncState, userId],
+  )
 
   const handlePlayerUpdate = e => {
     if (disabled) {
@@ -196,14 +202,14 @@ export default function VideoPlayer(props) {
       socketHelper.socket.off('videoPlayerSync')
       socketHelper.socket.off('videoPlayerUpdate')
     }
-  }, [socketHelper, currentVideo, syncState, active])
+  }, [socketHelper, currentVideo, syncState, active, receiveSyncMsg, receiveUpdateMsg])
 
   // Clearing the notify when player is made active
   React.useEffect(() => {
     if (videoNotify && active) {
       setVideoNotify(false)
     }
-  }, [active])
+  }, [active, setVideoNotify, videoNotify])
 
   // Clicking the player's toggle sync button
   const toggleSync = () => {

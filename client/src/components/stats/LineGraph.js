@@ -87,36 +87,39 @@ export default function LineGraph() {
 
   const client = useApolloClient()
 
-  const getTimeGroupings = usersList => {
-    const d = new Date()
-    const initialTimeInts = Array(numIntervals + 1)
-      .fill({})
-      .map((val, index) => {
-        return { start: new Date().setMinutes(d.getMinutes() - index * intervalRange), users: [] }
-      })
+  const getTimeGroupings = React.useCallback(
+    usersList => {
+      const d = new Date()
+      const initialTimeInts = Array(numIntervals + 1)
+        .fill({})
+        .map((val, index) => {
+          return { start: new Date().setMinutes(d.getMinutes() - index * intervalRange), users: [] }
+        })
 
-    // arr[0][{start: 189418, users: []]
-    const timeGroups = usersList.reduce((timeInts, user) => {
-      // return arr[x]['genders'] with the user added to all
-      return timeInts.map((timeInt, index) => {
-        if (
-          index < numIntervals &&
-          Date.parse(user.updatedAt) > timeInts[index + 1].start &&
-          Date.parse(user.createdAt) < timeInt.start
-        ) {
-          return { ...timeInt, users: [...timeInt.users, user] }
-        }
-        return timeInt
+      // arr[0][{start: 189418, users: []]
+      const timeGroups = usersList.reduce((timeInts, user) => {
+        // return arr[x]['genders'] with the user added to all
+        return timeInts.map((timeInt, index) => {
+          if (
+            index < numIntervals &&
+            Date.parse(user.updatedAt) > timeInts[index + 1].start &&
+            Date.parse(user.createdAt) < timeInt.start
+          ) {
+            return { ...timeInt, users: [...timeInt.users, user] }
+          }
+          return timeInt
+        })
+      }, initialTimeInts)
+      timeGroups.forEach(v => {
+        const l = v.users.length
+        if (l > maxLineHeight.current) maxLineHeight.current = l
       })
-    }, initialTimeInts)
-    timeGroups.forEach(v => {
-      const l = v.users.length
-      if (l > maxLineHeight.current) maxLineHeight.current = l
-    })
-    setTimeGroupings(timeGroups.slice(0, -1))
-  }
+      setTimeGroupings(timeGroups.slice(0, -1))
+    },
+    [intervalRange],
+  )
 
-  const refreshUserCount = async () => {
+  const refreshUserCount = React.useCallback(async () => {
     maxLineHeight.current = 10
     const d = new Date()
     d.setMinutes(d.getMinutes() - intervalRange * (numIntervals + 1))
@@ -133,11 +136,11 @@ export default function LineGraph() {
     gradAnimateF2M.current.beginElement()
     gradAnimateM2F.current.beginElement()
     getTimeGroupings(data.users)
-  }
+  }, [client, getTimeGroupings, intervalRange])
 
   React.useEffect(() => {
     refreshUserCount()
-  }, [minuteSpread])
+  }, [minuteSpread, refreshUserCount])
 
   const makeStatsObj = timeSlot => {
     const timeUsers = timeGroupings[timeGroupings.length - timeSlot - 1].users
@@ -288,7 +291,7 @@ export default function LineGraph() {
 
   React.useEffect(() => {
     refreshUserCount()
-  }, [])
+  }, [refreshUserCount])
 
   const printGrid = () => {
     return Array(numIntervalsY)

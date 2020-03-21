@@ -43,11 +43,10 @@ export default function Button(props) {
     if (primary) return '#aa32cc'
     if (light) return '#555'
     return '#313131'
-  }, [primary])
+  }, [light, primary])
 
   const flexStyle = React.useMemo(() => {
     if (flex) return 1
-    return
   }, [flex])
 
   const borderRadius = React.useMemo(() => {
@@ -61,7 +60,7 @@ export default function Button(props) {
     if (h3) return '20px'
     if (small) return '14px'
     return '18px'
-  }, [h1, h2, h3])
+  }, [h1, h2, h3, small])
 
   return (
     <StyledButton

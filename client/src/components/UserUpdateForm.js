@@ -156,7 +156,7 @@ export default function UserUpdateForm() {
     ) {
       if (!hasChanges) setHasChanges(true)
     } else if (hasChanges) setHasChanges(false)
-  }, [lookingFor, user, maxAge, minAge, audioPref, accAudioPrefs])
+  }, [lookingFor, user, maxAge, minAge, audioPref, accAudioPrefs, hasChanges])
 
   return (
     <StyledForm>

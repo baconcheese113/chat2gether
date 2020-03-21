@@ -79,6 +79,7 @@ const ClippingCircle = styled.div`
 // #2a7fff
 
 export default function SVGTester(props) {
+  const { height, width } = props
   const [isRotateChat, setIsRotateChat] = React.useState(false)
 
   const flipRotateChat = () => {
@@ -93,7 +94,7 @@ export default function SVGTester(props) {
   })
 
   return (
-    <StyledSVGTester {...props}>
+    <StyledSVGTester height={height} width={width}>
       <ClippingCircle>
         <svg viewBox="0 0 100 100" height="120%" width="120%">
           <defs>

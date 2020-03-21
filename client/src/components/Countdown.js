@@ -113,7 +113,7 @@ export default function Countdown(props) {
     if (timer.current) clearTimeout(timer.current)
   }
 
-  const tickTimer = oldTime => {
+  const tickTimer = React.useCallback(oldTime => {
     const time = oldTime - 1
     timer.current = undefined
     if (time < 1) {
@@ -127,8 +127,8 @@ export default function Countdown(props) {
         tickTimer(time)
       }, spacing * 1000) // (4 / time) * 200 + 1000)
     }
-  }
-  const startCountdown = () => {
+  }, [])
+  const startCountdown = React.useCallback(() => {
     // Taking advantage of closure
     const time = 10
     console.log('timer started')
@@ -136,7 +136,7 @@ export default function Countdown(props) {
     timer.current = setTimeout(() => {
       tickTimer(time)
     }, 1000)
-  }
+  }, [tickTimer])
 
   // Cancel on button instead of title (Cancel, Request)
   // Timing has only one slight delay for "Started Countdown" message
@@ -187,7 +187,7 @@ export default function Countdown(props) {
       socketHelper.socket.off('startedCountdown')
       socketHelper.socket.off('cancelledCountdown')
     }
-  }, [socketHelper])
+  }, [active, setCountdownNotify, socketHelper, startCountdown, userId])
 
   const msg = {
     roomId,

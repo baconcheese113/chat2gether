@@ -1,21 +1,19 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
 
 export default (request, requireAuth = true) => {
   // Coming from cookie-parser
   if (request.req.userId) {
-    console.log(request.req.userId);
-    return request.req.userId;
+    console.log('cookie parsed userId', request.req.userId)
+    return request.req.userId
   }
 
-  const header = request.req
-    ? request.req.headers.authorization
-    : request.connection.context.Authorization;
+  const header = request.req ? request.req.headers.authorization : request.connection.context.Authorization
 
   // const token = request.req.headers.cookie
   if (header) {
-    const token = header.replace('Bearer ', '');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded.userId;
+    const token = header.replace('Bearer ', '')
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    return decoded.userId
   }
 
   // COOKIE SHOULD ALREADY BE PARSED
@@ -28,7 +26,7 @@ export default (request, requireAuth = true) => {
   // }
 
   if (requireAuth) {
-    throw new Error('Authentication required');
+    throw new Error('Authentication required')
   }
-  return null;
-};
+  return null
+}

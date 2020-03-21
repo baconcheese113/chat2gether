@@ -112,10 +112,10 @@ export default function UserCreate(props) {
           <br />
           Chat together
         </IntroText>
-        <TitleFeature {...props}>
+        <TitleFeature>
           <i className="far fa-check-square" /> 100% free
         </TitleFeature>
-        <TitleFeature {...props}>
+        <TitleFeature>
           <i className="far fa-check-square" /> No account required
         </TitleFeature>
         <UserCreateStats>

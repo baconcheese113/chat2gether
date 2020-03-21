@@ -1,12 +1,12 @@
-import server from './server';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-import fs from 'fs';
+// import fs from 'fs';
 import path from 'path';
 import Fingerprint from 'express-fingerprint';
 import SocketIO from 'socket.io';
 import http from 'http';
+import server from './server';
 import socket from './socket';
 
 const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname)));
@@ -34,7 +34,7 @@ if (process.env.IS_UNDER_CONSTRUCTION === 'true') {
   });
 } else if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../../client/build')));
-  app.get('/', function(req, res) {
+  app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
   });
 } else {
@@ -74,7 +74,7 @@ server.applyMiddleware({
   path: '/graphql',
   cors: {
     credentials: true,
-    origin: process.env.DOMAIN_FULL + ':' + process.env.PORT || '3000'
+    origin: `${process.env.DOMAIN_FULL}:${process.env.PORT}` || '3000'
   }
 });
 

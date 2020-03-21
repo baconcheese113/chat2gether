@@ -66,51 +66,52 @@ export default function BarGraph() {
 
   const client = useApolloClient()
 
-  const getTimeGroupings = usersList => {
-    const d = new Date()
-    const initialTimeInts = Array(numIntervals + 1)
-      .fill({})
-      .map((val, index) => {
-        return { start: new Date().setMinutes(d.getMinutes() - index * intervalRange), users: [] }
-      })
+  const getTimeGroupings = React.useCallback(
+    usersList => {
+      const d = new Date()
+      const initialTimeInts = Array(numIntervals + 1)
+        .fill({})
+        .map((val, index) => {
+          return { start: new Date().setMinutes(d.getMinutes() - index * intervalRange), users: [] }
+        })
 
-    // arr[0][{start: 189418, users: []]
-    const timeGroups = usersList.reduce((timeInts, user) => {
-      // return arr[x]['genders'] with the user added to all
-      return timeInts.map((timeInt, index) => {
-        if (
-          index < numIntervals &&
-          Date.parse(user.updatedAt) > timeInts[index + 1].start &&
-          Date.parse(user.createdAt) < timeInt.start
-        ) {
-          return { ...timeInt, users: [...timeInt.users, user] }
-        }
-        return timeInt
+      // arr[0][{start: 189418, users: []]
+      const timeGroups = usersList.reduce((timeInts, user) => {
+        // return arr[x]['genders'] with the user added to all
+        return timeInts.map((timeInt, index) => {
+          if (
+            index < numIntervals &&
+            Date.parse(user.updatedAt) > timeInts[index + 1].start &&
+            Date.parse(user.createdAt) < timeInt.start
+          ) {
+            return { ...timeInt, users: [...timeInt.users, user] }
+          }
+          return timeInt
+        })
+      }, initialTimeInts)
+      timeGroups.forEach(v => {
+        const l = v.users.length
+        if (l > maxLineHeight.current) maxLineHeight.current = l
       })
-    }, initialTimeInts)
-    timeGroups.forEach(v => {
-      const l = v.users.length
-      if (l > maxLineHeight.current) maxLineHeight.current = l
-    })
-    setTimeGroupings(timeGroups)
-  }
+      setTimeGroupings(timeGroups)
+    },
+    [intervalRange],
+  )
 
-  const refreshUserCount = async () => {
+  const refreshUserCount = React.useCallback(async () => {
     maxLineHeight.current = 10
     const d = new Date()
     d.setMinutes(d.getMinutes() - intervalRange * (numIntervals + 1))
     const where = { where: { updatedAt_gt: d.toISOString() } }
-    const { loading, err, data } = await client.query({ query: GET_USERS, variables: where })
+    const { loading, data } = await client.query({ query: GET_USERS, variables: where })
     if (loading) console.log('loading ', loading)
-    if (err) {
-      console.error(err)
-    }
+
     getTimeGroupings(data.users)
-  }
+  }, [client, getTimeGroupings, intervalRange])
 
   React.useEffect(() => {
     refreshUserCount()
-  }, [minuteSpread])
+  }, [minuteSpread, refreshUserCount])
 
   const buildBars = timeSlot => {
     if (!timeGroupings) return <g key={`empty${timeSlot}`} />
@@ -216,7 +217,7 @@ export default function BarGraph() {
 
   React.useEffect(() => {
     refreshUserCount()
-  }, [])
+  }, [refreshUserCount])
 
   const printGrid = () => {
     return Array(numIntervalsY)

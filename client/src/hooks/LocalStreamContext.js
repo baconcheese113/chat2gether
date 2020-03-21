@@ -31,7 +31,7 @@ export const LocalStreamProvider = props => {
         deviceId: audioSource ? { exact: audioSource } : undefined,
       },
     }
-    console.log(constraints)
+    console.log('constraints', constraints)
     // Get stream
     try {
       console.log(navigator.mediaDevices)
@@ -40,7 +40,7 @@ export const LocalStreamProvider = props => {
       console.log('tracks stopped')
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       // If we have an existing connection
-      console.log(stream)
+      console.log('stream', stream)
       // TODO: pull in socketHelper
       if (remoteStream && videoSource) {
         socketHelper.replaceTrack(stream)

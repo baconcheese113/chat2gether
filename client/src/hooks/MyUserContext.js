@@ -13,13 +13,9 @@ export default function MyUserProvider(props) {
   const [user, setUser] = React.useState()
   console.log('MyUserProvider render')
 
-  React.useEffect(() => {
-    getMe()
-  }, [])
-
   const client = useApolloClient()
 
-  const getMe = async () => {
+  const getMe = React.useCallback(async () => {
     // setUser(updatedUser)
     const { data, error } = await client.query({ query: GET_ME })
     if (data.me) {
@@ -27,7 +23,11 @@ export default function MyUserProvider(props) {
     }
     console.log(data, error)
     return data.me
-  }
+  }, [client])
+
+  React.useEffect(() => {
+    getMe()
+  }, [getMe])
 
   return <MyUserContext.Provider value={{ user, getMe }}>{user ? children : ''}</MyUserContext.Provider>
 }

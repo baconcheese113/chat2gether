@@ -49,13 +49,13 @@ const Slider = styled.div`
   `
 
 export default function ChoiceSlider(props) {
-  const { cur, change, choices } = props
+  const { cur, change, choices, width, fontSize } = props
   // props.choices is a list of strings to display as choices
   // props.cur is the selected element
   // props.change is how to change the cur selected element
 
   return (
-    <StyledChoiceSlider {...props}>
+    <StyledChoiceSlider width={width} fontSize={fontSize}>
       <Slider choices={choices} selected={cur} />
       {choices.map((choice, index) => (
         <Option active={cur === index} onClick={() => change(index)} key={choice}>

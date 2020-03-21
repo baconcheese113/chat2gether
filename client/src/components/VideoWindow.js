@@ -80,17 +80,17 @@ export default function VideoWindow(props) {
   }
 
   React.useEffect(() => {
-    containerRef.current.addEventListener('mousedown', e => {
+    const container = containerRef.current
+    container.addEventListener('mousedown', e => {
       handleDrag(e)
-      containerRef.current.parentElement.addEventListener('mousemove', handleDrag)
+      container.parentElement.addEventListener('mousemove', handleDrag)
     })
-    containerRef.current.parentElement.addEventListener('mouseup', () => {
-      if (!containerRef.current) return
-      containerRef.current.parentElement.removeEventListener('mousemove', handleDrag)
+    container.parentElement.addEventListener('mouseup', () => {
+      if (!container) return
+      container.parentElement.removeEventListener('mousemove', handleDrag)
     })
-    // trySetMediaStream()
     return () => {
-      containerRef.current.parentElement.removeEventListener('mousemove', handleDrag)
+      container.parentElement.removeEventListener('mousemove', handleDrag)
     }
   }, [])
 

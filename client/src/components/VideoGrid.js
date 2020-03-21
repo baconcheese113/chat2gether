@@ -124,7 +124,7 @@ export default function VideoGrid(props) {
   }
 
   const handleSearchSubmit = async e => {
-    e && e.preventDefault()
+    if (e) e.preventDefault()
     if (query.length < 1 || query === submittedQuery) return
     setSubmittedQuery(query)
     setIsLoading(true)

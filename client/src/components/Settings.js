@@ -138,9 +138,8 @@ export default function Settings() {
   const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
   const client = useApolloClient()
 
-  const getDevices = async () => {
+  const getDevices = React.useCallback(async () => {
     try {
-      console.log(selectedVideo)
       const allDevices = await navigator.mediaDevices.enumerateDevices()
       const vids = allDevices.map((cur, idx) => {
         if (cur.kind === 'videoinput') {
@@ -158,14 +157,14 @@ export default function Settings() {
       console.error(e)
       alert(e.message)
     }
-  }
+  }, [])
 
   React.useEffect(() => {
     if (!localStream) return
     const videoId = localStream.getVideoTracks()[0].getSettings().deviceId
     setSelectedVideo(videoId)
     getDevices()
-  }, [])
+  }, [getDevices, localStream])
 
   const handleClose = (shouldApply = true) => {
     if (shouldApply) {
@@ -190,7 +189,10 @@ export default function Settings() {
     return null
   }
 
-  console.log(feedbackText)
+  const handleChangeDevice = e => {
+    console.log('device change id', e.target.value)
+    setSelectedVideo(e.target.value)
+  }
 
   return (
     <StyledSettings>
@@ -205,11 +207,7 @@ export default function Settings() {
         <SettingsList>
           <label htmlFor="video-source">
             Video Source
-            <DeviceSelect
-              id="video-source"
-              value={selectedVideo || ''}
-              onChange={e => setSelectedVideo(e.target.value)}
-            >
+            <DeviceSelect id="video-source" value={selectedVideo || ''} onChange={handleChangeDevice}>
               {devices}
             </DeviceSelect>
           </label>

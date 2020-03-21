@@ -46,7 +46,7 @@ export default function InCallNavBar(props) {
         console.error(err)
       }
     })()
-  }, [navigator.mediaDevices])
+  }, [])
 
   const flipCamera = async e => {
     e.stopPropagation()

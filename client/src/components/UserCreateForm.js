@@ -65,20 +65,12 @@ const Modal = styled.div`
 export default function UserCreateForm(props) {
   const { error, onSubmit } = props
   const [gender, setGender] = React.useState(0)
-  const [lookingFor, setLookingFor] = React.useState(
-    GENDERS.map(x => {
-      return { name: x }
-    }),
-  )
+  const [lookingFor, setLookingFor] = React.useState(GENDERS.map(name => ({ name })))
   const [age, setAge] = React.useState(30)
   const [minAge, setMinAge] = React.useState(18)
   const [maxAge, setMaxAge] = React.useState(90)
   const [audioPref, setAudioPref] = React.useState(0)
-  const [accAudioPrefs, setAccAudioPrefs] = React.useState(
-    AUDIO_PREFS.map(x => {
-      return { name: x }
-    }),
-  )
+  const [accAudioPrefs, setAccAudioPrefs] = React.useState(AUDIO_PREFS.map(name => ({ name })))
   const [isLoading, setIsLoading] = React.useState(false)
 
   const changeNumbers = newArr => {
@@ -124,7 +116,7 @@ export default function UserCreateForm(props) {
         <InputLabel>I want to chat with</InputLabel>
         <Summary>
           {lookingFor &&
-            GENDERS.filter(gender => lookingFor.some(g => g.name === gender))
+            GENDERS.filter(g => lookingFor.some(gObj => gObj.name === g))
               .join(', ')
               .replace(/_/g, ' ')}
         </Summary>
@@ -161,7 +153,7 @@ export default function UserCreateForm(props) {
         <InputLabel>Preferences I&apos;ll do</InputLabel>
         <Summary>
           {accAudioPrefs &&
-            AUDIO_PREFS.filter(pref => accAudioPrefs.some(p => p.name === pref))
+            AUDIO_PREFS.filter(pref => accAudioPrefs.some(pObj => pObj.name === pref))
               .join(', ')
               .replace(/_/g, ' ')}
         </Summary>

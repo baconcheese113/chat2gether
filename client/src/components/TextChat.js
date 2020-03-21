@@ -74,7 +74,7 @@ const TextConsole = styled.form`
 const ConsoleInput = styled.input`
   background-color: #313131;
   border: 0;
-  border-bottom: 3px solid ${p => (!!p.value ? p.theme.colorPrimary : p.theme.colorPrimaryLight)};
+  border-bottom: 3px solid ${p => (p.value ? p.theme.colorPrimary : p.theme.colorPrimaryLight)};
   border-radius: 10px 0 0 10px;
   padding: 4px;
   flex: 1;
@@ -127,10 +127,10 @@ export default function TextChat(props) {
       setTextNotify(textChat.length - 1 - lastReadMsg)
     }
     console.log(lastReadMsg)
-  }, [enabledWidgets.text, textChat, lastReadMsg])
+  }, [enabledWidgets.text, textChat, lastReadMsg, setTextNotify])
 
   const handleSubmit = e => {
-    e && e.preventDefault()
+    if (e) e.preventDefault()
     if (!socketHelper || !comment) {
       console.log(`No sockethelper! ${socketHelper} ${comment}`)
       return
@@ -169,7 +169,7 @@ export default function TextChat(props) {
           onChange={e => setComment(e.target.value)}
         />
         <ConsoleButton data-cy="commentSubmitButton" disabled={!comment} onClick={handleSubmit}>
-          <i className="fas fa-paper-plane"></i>
+          <i className="fas fa-paper-plane" />
         </ConsoleButton>
       </TextConsole>
     </StyledTextChat>

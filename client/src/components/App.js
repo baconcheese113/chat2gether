@@ -46,18 +46,18 @@ export default function App() {
       setCanRender(true)
     }
     fetchData()
-  }, [])
+  }, [client])
 
   const updateViewportHeight = React.useCallback(() => {
     setViewportHeight(window.innerHeight)
-  }, [window.innerHeight])
+  }, [])
 
   React.useEffect(() => {
     window.addEventListener('resize', updateViewportHeight)
     return () => {
       window.removeEventListener('resize', updateViewportHeight)
     }
-  }, [window])
+  }, [updateViewportHeight])
 
   if (canRender) {
     if (user) {
