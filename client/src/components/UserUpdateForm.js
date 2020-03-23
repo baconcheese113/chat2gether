@@ -16,13 +16,12 @@ const StyledForm = styled.div`
   padding: 10px;
   border-radius: 5px;
 
-  width: 90%;
-  max-height: 45%;
+  width: 98%;
+  max-height: 60%;
   max-width: 600px;
   background-color: ${p => p.theme.colorGreyDark1};
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
 `
 const Row = styled.div`
   display: flex;
@@ -31,6 +30,7 @@ const Row = styled.div`
 `
 const ScrollContent = styled.div`
   overflow-y: auto;
+  overflow-x: hidden;
   flex: 1;
 `
 const InputLabel = styled.label`

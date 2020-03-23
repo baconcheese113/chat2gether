@@ -139,7 +139,7 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>My Audio Preference</InputLabel>
-        <Summary>{AUDIO_PREFS[audioPref]}</Summary>
+        <Summary>{AUDIO_PREFS[audioPref].replace(/_/g, ' ')}</Summary>
         <ChoiceSlider
           data-cy="myAudioSlider"
           cur={audioPref}

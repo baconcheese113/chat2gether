@@ -97,7 +97,7 @@ export default function ChatHub() {
             resetState={resetSocket}
             buttons={{ stop: true, mic: true, speaker: true, profile: true, countdown: true, chat: true, video: true }}
           />
-          <VideoWindow videoType="localVideo" stream={localStream} />
+          <VideoWindow videoType="localVideo" stream={localStream} flowDirection={flowDirection} />
         </>
       )
     }
@@ -116,7 +116,7 @@ export default function ChatHub() {
         {enabledWidgets.stats && <LineGraph />}
         {enabledWidgets.matches && <MatchHistory users={user.visited} />}
         <ChatNav />
-        <VideoWindow videoType="localVideo" stream={localStream} />
+        <VideoWindow videoType="localVideo" stream={localStream} flowDirection={flowDirection} />
         <InCallNavBar
           resetState={resetSocket}
           buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
