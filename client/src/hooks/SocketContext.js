@@ -13,6 +13,10 @@ export function useSocket() {
   return React.useContext(SocketContext)
 }
 
+// ¯\_(ツ)_/¯
+let initializeSocket
+let nextMatch
+
 export default function SocketProvider(props) {
   const { children } = props
 
@@ -71,7 +75,7 @@ export default function SocketProvider(props) {
       nextMatch(localStream)
     },
     // eslint-disable-next-line no-use-before-define
-    [client, nextMatch],
+    [client],
   )
 
   const onIdentity = React.useCallback(
@@ -109,7 +113,8 @@ export default function SocketProvider(props) {
   )
 
   // Starts socket.io up
-  const initializeSocket = React.useCallback(
+  // eslint-disable-next-line prefer-const
+  initializeSocket = React.useCallback(
     localStream => {
       const newSocketHelper = new SocketHelper()
       newSocketHelper.localStream = localStream
@@ -162,7 +167,7 @@ export default function SocketProvider(props) {
     [client, getMe, onIdentity, onNextRoom, otherUser, resetSocket],
   )
 
-  const nextMatch = React.useCallback(
+  nextMatch = React.useCallback(
     async localStream => {
       console.log('in nextMatch with ', user)
       if (!canNextMatch) return
@@ -239,7 +244,7 @@ export default function SocketProvider(props) {
       }
       setCanNextMatch(true)
     },
-    [canNextMatch, client, getMe, initializeSocket, otherUser, resetSocket, user],
+    [canNextMatch, client, getMe, otherUser, resetSocket, user],
   )
 
   React.useEffect(() => {
@@ -250,14 +255,13 @@ export default function SocketProvider(props) {
         nextMatch(socketHelper.localStream)
       }, 15000)
     }
-  }, [connectionMsg, nextMatch, otherUser, socketHelper.localStream])
+  }, [connectionMsg, otherUser, socketHelper.localStream])
 
   return (
     <SocketContext.Provider
       value={{
         socketHelper,
         connectionMsg,
-        initializeSocket,
         remoteStream,
         nextMatch,
         canNextMatch,

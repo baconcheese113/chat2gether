@@ -194,6 +194,9 @@ export default class SocketHelper {
 
   leaveRooms() {
     this.socket.disconnect()
+    this.pc = null
+    this.remoteStream = null
+    this.isCaller = false
   }
 
   // Helper function for creating and joining a specific room
