@@ -1,6 +1,6 @@
-// eslint-disable-next-line spaced-comment
+/* eslint-disable */
 /// <reference types="cypress" />
-const wp = require('@cypress/webpack-preprocessor')
+const wp = require('@cypress/webpack-preprocessor');
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -17,17 +17,16 @@ const wp = require('@cypress/webpack-preprocessor')
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = on => {
+module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  on('before:browser:launch', (_: {}, launchOptions) => {
+  on('before:browser:launch', (browser = {}, launchOptions) => {
     // args.push('--use-fake-device-for-media-stream');
-    launchOptions.args.push('--use-fake-ui-for-media-stream')
-    launchOptions.args.push(`--use-file-for-fake-video-capture=${__dirname}\\miss_am_qcif.y4m`)
+    launchOptions.args.push('--use-fake-ui-for-media-stream');
+    launchOptions.args.push(`--use-file-for-fake-video-capture=${__dirname}\\miss_am_qcif.y4m`);
 
-    return launchOptions
-  })
-  // eslint-disable-next-line global-require
-  const options = { webpackOptions: require('../../webpack.config') }
+    return launchOptions;
+  });
+  const options = { webpackOptions: require('../../webpack.config') };
   on('file:preprocessor', wp(options))
-}
+};
