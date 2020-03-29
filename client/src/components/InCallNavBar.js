@@ -89,10 +89,10 @@ export default function InCallNavBar(props) {
       <LeftAligned>
         {showLeft || isPC ? (
           <>
-            {buttons.stop && <ToggleButton iconClass="fas fa-stop" dataCy="navStopButton" onClick={resetState} />}
+            {buttons.stop && <ToggleButton iconClass="fas fa-stop" data-cy="navStopButton" onClick={resetState} />}
             {buttons.mic && (
               <ToggleButton
-                dataCy="navMicButton"
+                data-cy="navMicButton"
                 iconClass={`fas fa-microphone${chatSettings.micMute ? '-slash' : ''}`}
                 onClick={handleMutePress}
                 active={chatSettings.micMute ? 0 : 1}
@@ -100,13 +100,13 @@ export default function InCallNavBar(props) {
             )}
             {buttons.speaker && (
               <ToggleButton
-                dataCy="navSpeakerButton"
+                data-cy="navSpeakerButton"
                 iconClass={`fas fa-volume${chatSettings.speakerMute ? '-mute' : '-up'}`}
                 onClick={() => setChatSettings({ ...chatSettings, speakerMute: !chatSettings.speakerMute })}
                 active={chatSettings.speakerMute ? 0 : 1}
               />
             )}
-            {isMobile && <ToggleButton dataCy="navCameraFlipButton" iconClass="fas fa-camera" onClick={flipCamera} />}
+            {isMobile && <ToggleButton data-cy="navCameraFlipButton" iconClass="fas fa-camera" onClick={flipCamera} />}
           </>
         ) : (
           <ToggleButton iconClass="fas fa-chevron-right" onClick={() => setShowLeft(true)} active />
@@ -117,7 +117,7 @@ export default function InCallNavBar(props) {
           <>
             {buttons.profile && (
               <ToggleButton
-                dataCy="navProfileButton"
+                data-cy="navProfileButton"
                 iconClass="fas fa-user-alt"
                 onClick={() => featureToggle('profile')}
                 active={enabledWidgets.profile ? 1 : 0}
@@ -125,7 +125,7 @@ export default function InCallNavBar(props) {
             )}
             {buttons.countdown && (
               <ToggleButton
-                dataCy="navCountdownButton"
+                data-cy="navCountdownButton"
                 iconClass="fas fa-stopwatch"
                 onClick={() => featureToggle('countdown')}
                 active={enabledWidgets.countdown ? 1 : 0}
@@ -134,7 +134,7 @@ export default function InCallNavBar(props) {
             )}
             {buttons.chat && (
               <ToggleButton
-                dataCy="navCommentButton"
+                data-cy="navCommentButton"
                 iconClass="fas fa-comment"
                 onClick={() => featureToggle('text')}
                 active={enabledWidgets.text ? 1 : 0}
@@ -143,7 +143,7 @@ export default function InCallNavBar(props) {
             )}
             {buttons.video && (
               <ToggleButton
-                dataCy="navPlayerButton"
+                data-cy="navPlayerButton"
                 iconClass="fab fa-youtube"
                 onClick={() => featureToggle('video')}
                 active={enabledWidgets.video ? 1 : 0}
@@ -152,7 +152,7 @@ export default function InCallNavBar(props) {
             )}
             {buttons.updatePref && (
               <ToggleButton
-                dataCy="navUpdateUserButton"
+                data-cy="navUpdateUserButton"
                 iconClass="fas fa-user-edit"
                 onClick={() => featureToggle('updatePref')}
                 active={enabledWidgets.updatePref ? 1 : 0}
@@ -160,7 +160,7 @@ export default function InCallNavBar(props) {
             )}
             {buttons.stats && (
               <ToggleButton
-                dataCy="navStatsButton"
+                data-cy="navStatsButton"
                 iconClass="fas fa-chart-area"
                 onClick={() => featureToggle('stats')}
                 active={enabledWidgets.stats ? 1 : 0}
@@ -168,7 +168,7 @@ export default function InCallNavBar(props) {
             )}
             {buttons.matches && (
               <ToggleButton
-                dataCy="navMatchesButton"
+                data-cy="navMatchesButton"
                 iconClass="fas fa-users"
                 onClick={() => featureToggle('matches')}
                 active={enabledWidgets.matches ? 1 : 0}

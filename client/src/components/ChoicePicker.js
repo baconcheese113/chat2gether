@@ -36,7 +36,7 @@ const OptionText = styled.span`
 `
 
 export default function ChoicePicker(props) {
-  const { selected, change, choices, height, width, fontSize } = props
+  const { selected, change, choices, height, width, fontSize, 'data-cy': dataCy } = props
   // props.choices is a list of strings to display as choices
   // props.selected is a list of the selected choices
   // props.change is how to change the selected elements
@@ -52,7 +52,7 @@ export default function ChoicePicker(props) {
   }
 
   return (
-    <StyledChoicePicker width={width} fontSize={fontSize}>
+    <StyledChoicePicker width={width} fontSize={fontSize} data-cy={dataCy}>
       {choices.map((choice, index) => (
         <Option
           key={choice}

@@ -36,7 +36,7 @@ const Notification = styled.p`
 `
 
 export default function ToggleButton(props) {
-  const { title, iconClass, onClick, notification, active, dataCy } = props
+  const { title, iconClass, onClick, notification, active, 'data-cy': dataCy } = props
   return (
     <StyledToggleButton data-cy={dataCy}>
       <ButtonElem flex onClick={onClick} active={active}>

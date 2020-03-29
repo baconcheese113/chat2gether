@@ -174,7 +174,7 @@ export default function UserUpdateForm() {
         </Row>
         <Row>
           <InputLabel>Their Age</InputLabel>
-          <NumberSlider dataCy="theirAgeSlider" numbers={[minAge, maxAge]} change={changeNumbers} showFill />
+          <NumberSlider data-cy="theirAgeSlider" numbers={[minAge, maxAge]} change={changeNumbers} showFill />
         </Row>
         <Row>
           <InputLabel>My Audio Preference</InputLabel>

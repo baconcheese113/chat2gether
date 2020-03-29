@@ -23,7 +23,7 @@ const StyledSlider = styled(Slider)`
 `
 
 export default function NumberSlider(props) {
-  const { numbers, change, dataCy } = props
+  const { numbers, change, 'data-cy': dataCy } = props
   const MIN_AGE = 18
   const MAX_AGE = 90
 
