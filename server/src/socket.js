@@ -11,12 +11,13 @@ export default io => {
         socket.emit('full room', roomId)
         return
       }
-      // const numClients = io.sockets.server.engine.clientsCount;
       if (numClients === 1) {
+        // eslint-disable-next-line no-param-reassign
         socket.username = 'host'
         socket.emit('created', roomId)
         console.log('emitted create')
       } else {
+        // eslint-disable-next-line no-param-reassign
         socket.username = 'client'
         socket.emit('joined', roomId)
       }

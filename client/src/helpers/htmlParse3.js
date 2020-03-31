@@ -40,10 +40,7 @@ class HtmlParse {
     const regex = /\//g
     for (const i of ulResults) {
       const newItem = {}
-      newItem.id = i
-        .querySelector('.video_link')
-        .getAttribute('href')
-        .replace(regex, '')
+      newItem.id = i.querySelector('.video_link').getAttribute('href').replace(regex, '')
       newItem.title = i.querySelector('img').getAttribute('alt')
       newItem.img = i.querySelector('img').getAttribute('data-src')
       newItem.duration = i.querySelector('.duration').innerText

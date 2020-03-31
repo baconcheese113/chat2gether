@@ -93,7 +93,6 @@ export default function PrefMatcher(props) {
     console.log('accPrfs is ', accPrefs)
     return AUDIO_PREFS.map(pref => {
       const matchedPref = pref === matchPref
-      console.log(`grayedOut for ${pref} is `, !accPrefs.includes(pref))
       return (
         <Chip
           key={pref}

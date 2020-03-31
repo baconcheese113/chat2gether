@@ -36,10 +36,7 @@ class HtmlParse {
       if (i.hasAttribute('_vkey') || isMobile) {
         const newItem = {}
         newItem.id = isMobile
-          ? i
-              .querySelector('.imageLink')
-              .getAttribute('href')
-              .split('=')[1]
+          ? i.querySelector('.imageLink').getAttribute('href').split('=')[1]
           : i.getAttribute('_vkey')
         newItem.title = i.querySelector('img').getAttribute('alt')
         newItem.img = i.querySelector('img').getAttribute('data-thumb_url')

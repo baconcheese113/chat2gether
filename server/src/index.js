@@ -9,6 +9,7 @@ import http from 'http';
 import server from './server';
 import socket from './socket';
 
+// eslint-disable-next-line prettier/prettier
 const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).pathname)));
 
 const app = express();
