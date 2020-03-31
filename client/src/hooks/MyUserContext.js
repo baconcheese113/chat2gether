@@ -9,9 +9,7 @@ export function useMyUser() {
 
 export default function MyUserProvider(props) {
   const { children } = props
-
   const [user, setUser] = React.useState()
-  console.log('MyUserProvider render')
 
   const client = useApolloClient()
 

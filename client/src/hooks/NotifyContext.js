@@ -10,7 +10,6 @@ export const NotifyProvider = props => {
   const [countdownNotify, setCountdownNotify] = React.useState(false)
   const [videoNotify, setVideoNotify] = React.useState(false)
   const [textNotify, setTextNotify] = React.useState(0)
-  console.log('NotifyProvider render')
 
   return (
     <NotifyContext.Provider

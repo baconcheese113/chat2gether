@@ -34,14 +34,16 @@ export function EnabledWidgetsProvider(props) {
 
     localVideo: true,
   })
-  console.log('enabledWidgetsProvider render')
 
   const [chatSettings, setChatSettings] = React.useState({ micMute: false, speakerMute: false })
 
-  const featureToggle = elem => {
-    const { text, countdown, profile, video, localVideo } = enabledWidgets
-    setEnabledWidgets({ text, countdown, profile, video, localVideo, [elem]: !enabledWidgets[elem] })
-  }
+  const featureToggle = React.useCallback(
+    elem => {
+      const { text, countdown, profile, video, localVideo } = enabledWidgets
+      setEnabledWidgets({ text, countdown, profile, video, localVideo, [elem]: !enabledWidgets[elem] })
+    },
+    [enabledWidgets],
+  )
 
   return (
     <EnabledWidgetsContext.Provider
