@@ -189,7 +189,7 @@ export default function SocketProvider(props) {
       if (socketHelper) {
         console.log('Could have used cached socketHelper', tempSocketHelper)
       }
-      const compatibleHost = await client.query({ query: FIND_ROOM })
+      const compatibleHost = await client.query({ query: FIND_ROOM, fetchPolicy: 'network-only' })
       if (compatibleHost.error) {
         setCanNextMatch(true)
         console.error(compatibleHost.error)
@@ -227,10 +227,12 @@ export default function SocketProvider(props) {
       console.log('effect cleared')
       clearTimeout(probeTimer.current)
       probeTimer.current = setTimeout(() => {
-        nextMatch()
+        if (socketHelper) {
+          nextMatch(socketHelper.localStream)
+        }
       }, 15000)
     }
-  }, [connectionMsg, otherUser])
+  }, [connectionMsg, otherUser, socketHelper])
 
   return (
     <SocketContext.Provider

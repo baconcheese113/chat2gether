@@ -90,7 +90,6 @@ export default function PrefMatcher(props) {
   }, [])
 
   const getPrefs = (chosenPref, canExtend, accPrefs) => {
-    console.log('accPrfs is ', accPrefs)
     return AUDIO_PREFS.map(pref => {
       const matchedPref = pref === matchPref
       return (

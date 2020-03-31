@@ -88,6 +88,10 @@ export default class SocketHelper {
 
     // This code is called from ready and offer, once per user
     const createPC = () => {
+      if (!this.localStream) {
+        console.error('Missing localStream!')
+        return
+      }
       this.pc = new RTCPeerConnection(this.iceServers)
       this.pc.onicecandidate = onIceCandidate
       this.pc.ontrack = e => {
