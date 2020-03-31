@@ -194,15 +194,12 @@ export default class SocketHelper {
 
   leaveRooms() {
     this.socket.disconnect()
-    this.pc = null
-    this.remoteStream = null
-    this.isCaller = false
   }
 
   // Helper function for creating and joining a specific room
   joinRoom(roomId) {
     this.socket.emit('create or join', roomId)
-    console.log(`socketHelper getting started with ${roomId}`)
+    console.log(`joinRoom ${roomId}`)
     this.roomId = roomId
   }
 

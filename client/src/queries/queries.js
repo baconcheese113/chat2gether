@@ -23,9 +23,9 @@ export const GET_USERS = gql`
   }
 `
 
-export const FIND_ROOM = gql`
-  query FindRoom($where: UserWhereInput) {
-    users(where: $where) {
+export const GET_ME = gql`
+  query GetMe {
+    me {
       id
       gender
       lookingFor {
@@ -39,15 +39,19 @@ export const FIND_ROOM = gql`
         name
       }
       lastActive
-      isConnected
       isHost
+      isConnected
+      visited {
+        id
+        gender
+        age
+      }
     }
   }
 `
-
-export const GET_ME = gql`
-  query GetMe {
-    me {
+export const FIND_ROOM = gql`
+  query FindRoom {
+    findRoom {
       id
       gender
       lookingFor {

@@ -14,13 +14,12 @@ export function useSocket() {
 }
 
 // ¯\_(ツ)_/¯
-let initializeSocket
 let nextMatch
 
 export default function SocketProvider(props) {
   const { children } = props
 
-  const [socketHelper, setSocketHelper] = React.useState({})
+  const [socketHelper, setSocketHelper] = React.useState()
   const [otherUser, setOtherUser] = React.useState(null)
   const [connectionMsg, setConnectionMsg] = React.useState('Welcome to Chat2Gether')
   const [remoteStream, setRemoteStream] = React.useState(null)
@@ -34,7 +33,6 @@ export default function SocketProvider(props) {
   const { user, getMe } = useMyUser()
   const client = useApolloClient()
   const { setEnabledWidgets } = useEnabledWidgets()
-  console.log('SocketProvider render')
 
   const resetSocket = React.useCallback(() => {
     console.log('reset state')
@@ -48,7 +46,7 @@ export default function SocketProvider(props) {
     if (socketHelper && socketHelper.leaveRooms) socketHelper.leaveRooms()
   }, [socketHelper])
 
-  const startCountdown = () => {
+  const startCountdown = React.useCallback(() => {
     setMatchCountdown(8)
     let num = 8
     const timer = setInterval(() => {
@@ -59,11 +57,11 @@ export default function SocketProvider(props) {
       setMatchCountdown(num)
     }, 1000)
     matchTimer.current = timer
-  }
+  }, [])
 
   const onNextRoom = React.useCallback(
     async (roomId, localStream) => {
-      console.log('onNextRoom')
+      console.log('onNextRoom with localStream', localStream)
       if (roomId) {
         const { error } = await client.mutate({
           mutation: UPDATE_USER,
@@ -71,10 +69,8 @@ export default function SocketProvider(props) {
         })
         if (error) console.error(error)
       }
-      // eslint-disable-next-line no-use-before-define
       nextMatch(localStream)
     },
-    // eslint-disable-next-line no-use-before-define
     [client],
   )
 
@@ -109,12 +105,11 @@ export default function SocketProvider(props) {
       startCountdown()
       setEnabledWidgets({ localVideo: true })
     },
-    [setEnabledWidgets, user.accAudioPrefs, user.age, user.audioPref, user.gender],
+    [setEnabledWidgets, startCountdown, user.accAudioPrefs, user.age, user.audioPref, user.gender],
   )
 
   // Starts socket.io up
-  // eslint-disable-next-line prefer-const
-  initializeSocket = React.useCallback(
+  const initializeSocket = React.useCallback(
     localStream => {
       const newSocketHelper = new SocketHelper()
       newSocketHelper.localStream = localStream
@@ -131,7 +126,7 @@ export default function SocketProvider(props) {
         const updatedUser = await getMe()
         console.log('ontrack dump', updatedUser, room.current, e.streams[0])
         newSocketHelper.emit('identity', { user: updatedUser, roomId: room.current })
-        // setRemoteStream(e.streams[0])
+
         setTimeout(() => {
           console.log(`other user is ${otherUser}`)
           let hackyUser = null
@@ -191,71 +186,51 @@ export default function SocketProvider(props) {
       const d = new Date()
       d.setMinutes(d.getMinutes() - 0.25)
       const tempSocketHelper = await initializeSocket(localStream)
-      // tempSocketHelper.leaveRooms()
-      const compatibleHosts = await client.query({
-        query: FIND_ROOM,
-        variables: {
-          where: {
-            AND: [
-              { id_not: updatedUser.id },
-              { id_not_in: updatedUser.visited ? updatedUser.visited.map(x => x.id) : [] },
-              { gender_in: updatedUser.lookingFor.map(x => x.name) },
-              { lookingFor_some: { name: updatedUser.gender } },
-              { minAge_lte: updatedUser.age },
-              { maxAge_gte: updatedUser.age },
-              { age_lte: updatedUser.maxAge },
-              { age_gte: updatedUser.minAge },
-              { audioPref_in: updatedUser.accAudioPrefs.map(x => x.name) },
-              { accAudioPrefs_some: { name: updatedUser.audioPref } },
-              { isHost: true },
-              { isConnected: false },
-              { visited_none: { id: updatedUser.id } },
-              { updatedAt_gt: d.toISOString() },
-            ],
-          },
-        },
-      })
-      if (compatibleHosts.error) {
+      if (socketHelper) {
+        console.log('Could have used cached socketHelper', tempSocketHelper)
+      }
+      const compatibleHost = await client.query({ query: FIND_ROOM })
+      if (compatibleHost.error) {
         setCanNextMatch(true)
-        console.error(compatibleHosts.error)
+        console.error(compatibleHost.error)
         return
       }
-      const hosts = compatibleHosts.data.users
-      console.log(hosts)
+      const host = compatibleHost.data.findRoom
 
-      if (hosts.length < 1) {
+      if (!host) {
         setConnectionMsg('No Hosts Found')
         // Become a host
-        const updateUserRes = await client.mutate({
+        await client.mutate({
           mutation: UPDATE_USER,
           variables: { data: { isHost: true } },
         })
-        console.log('updateUserRes is ', updateUserRes)
         updatedUser = await getMe()
         setConnectionMsg('Waiting for matches...')
         room.current = updatedUser.id
-        console.log(`FUCK WE JOINING ${updatedUser.id} BRUH`)
+        console.log(`No match, creating my room with id ${updatedUser.id}`)
         tempSocketHelper.joinRoom(updatedUser.id)
       } else {
         // Join a host
-        room.current = hosts[0].id
-        setOtherUser(hosts[0])
-        tempSocketHelper.joinRoom(hosts[0].id)
+        console.log(`Match found, joining ${host.id}`)
+        room.current = host.id
+        setOtherUser(host)
+        tempSocketHelper.joinRoom(host.id)
       }
       setCanNextMatch(true)
     },
-    [canNextMatch, client, getMe, otherUser, resetSocket, user],
+    [canNextMatch, client, getMe, initializeSocket, otherUser, resetSocket, socketHelper, user],
   )
 
+  // Repeat search functionality
   React.useEffect(() => {
     if (connectionMsg === 'Waiting for matches...' && !otherUser) {
       console.log('effect cleared')
       clearTimeout(probeTimer.current)
       probeTimer.current = setTimeout(() => {
-        nextMatch(socketHelper.localStream)
+        nextMatch()
       }, 15000)
     }
-  }, [connectionMsg, otherUser, socketHelper.localStream])
+  }, [connectionMsg, otherUser])
 
   return (
     <SocketContext.Provider

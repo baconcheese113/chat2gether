@@ -13,6 +13,7 @@ type Query {
   ): [User!]!
   user(where: UserWhereUniqueInput!): User
   me: User!
+  findRoom: User
 }
 
 type Mutation {
