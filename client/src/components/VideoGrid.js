@@ -47,6 +47,7 @@ const ScrollList = styled.div`
   gap: 1rem;
   height: 93%;
   overflow-y: auto;
+  overflow-x: hidden;
 `
 const Result = styled.figure`
   height: 100%;

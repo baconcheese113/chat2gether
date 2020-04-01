@@ -42,11 +42,11 @@ describe('chat_hub_spec', function () {
     // Update user widget
     cy.dataCy('navUpdateUserButton').click()
     cy.dataCy('applyChangesButton').should('be.disabled')
-    cy.dataCy('theirGenderPicker', '.active').should('have.length', 2)
+    cy.dataCy('theirGenderPicker', '[data-cy="picker-active"]').should('have.length', 2)
     cy.dataCy('theirAgeSlider').should('contain.text', 40).should('contain.text', 60)
-    cy.dataCy('myAudioSlider').contains('CONVERSATION').should('have.class', 'active')
+    cy.dataCy('myAudioSlider').contains('CONVERSATION').invoke('attr', 'data-cy').should('contain', 'slider-active')
     cy.dataCy('theirAudioPicker').scrollIntoView({ duration: 500 })
-    cy.dataCy('theirAudioPicker', '.active').should('have.length', 2)
+    cy.dataCy('theirAudioPicker', '[data-cy="picker-active"]').should('have.length', 2)
 
     // Try changing and resetting
     cy.dataCy('theirAudioPicker').contains('CONVERSATION').as('conversation').click()

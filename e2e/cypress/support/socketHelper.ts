@@ -43,8 +43,8 @@ export default class SocketHelper implements ISocketHelper {
       };
 
       pc.ontrack = async (e: RTCTrackEvent) => {
+        console.log('their user is', this.user);
         this.emit('identity', { user: this.user, roomId });
-        console.log('their id is', this.user.id);
       };
 
       const offer = await pc.createOffer();

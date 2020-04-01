@@ -60,10 +60,11 @@ const Pill = styled.div`
 export default function ProfileCard() {
   const { otherUser } = useSocket()
 
+  console.log('otherUser is ', otherUser)
   const { enabledWidgets } = useEnabledWidgets()
   const active = enabledWidgets.profile
 
-  if (!otherUser) return ''
+  if (!otherUser || !otherUser.lookingFor) return ''
   return (
     <StyledProfileCard>
       <Card active={active}>

@@ -58,7 +58,12 @@ export default function ChoiceSlider(props) {
     <StyledChoiceSlider width={width} fontSize={fontSize} data-cy={dataCy}>
       <Slider choices={choices} selected={cur} />
       {choices.map((choice, index) => (
-        <Option active={cur === index} onClick={() => change(index)} key={choice}>
+        <Option
+          active={cur === index}
+          data-cy={cur === index && 'slider-active'}
+          onClick={() => change(index)}
+          key={choice}
+        >
           {choice.replace(/_/g, ' ')}
         </Option>
       ))}

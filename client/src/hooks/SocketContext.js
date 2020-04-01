@@ -88,7 +88,8 @@ export default function SocketProvider(props) {
       } catch (err) {
         console.error(`can't play this shit`, err)
       }
-      console.log(`Chatting with ${u.id}`)
+      console.log('I am ', user)
+      console.log(`Chatting with ${u.id}`, u)
       setOtherUser(u)
       setConnectionMsg(
         <PrefMatcher
@@ -105,7 +106,7 @@ export default function SocketProvider(props) {
       startCountdown()
       setEnabledWidgets({ localVideo: true })
     },
-    [setEnabledWidgets, startCountdown, user.accAudioPrefs, user.age, user.audioPref, user.gender],
+    [setEnabledWidgets, startCountdown, user],
   )
 
   // Starts socket.io up

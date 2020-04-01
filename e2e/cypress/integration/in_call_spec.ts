@@ -50,7 +50,7 @@ describe('in_call_spec', function () {
     cy.server().route('POST', '/graphql').as('graphql')
 
     cy.dataCy('nextMatchButton').click().wait('@graphql') // connection countdown length
-    cy.contains(/connection complete/i).should('exist')
+    cy.contains(/connection complete/i, { timeout: 10000 }).should('exist')
 
     cy.get('[data-cy=remoteVideo]', { timeout: 15000 }).should('exist')
   })
@@ -74,12 +74,14 @@ describe('in_call_spec', function () {
       theirSocketHelper.sendComment('That was beautiful, gahhhh')
     })
     cy.contains(/that was beautiful/i).wait(300)
+    cy.dataCy('navCommentButton').click()
   })
 
   it('Uses profile widget', function () {
     cy.dataCy('navProfileButton').click()
     // Make sure their gender is correct, if so the others should be correct
-    cy.dataCy('profileGender').contains(/m2f/i).click().wait(1000)
+    cy.dataCy('profileGender').contains(/m2f/i).should('exist').wait(1000)
+    cy.dataCy('navProfileButton').click()
   })
 
   it('Uses countdown widget', function () {
@@ -91,6 +93,7 @@ describe('in_call_spec', function () {
     cy.dataCy('countdownText').contains(/go/i, { timeout: 20000 }).should('exist')
     cy.dataCy('countdownCancelButton').click()
     cy.wait(1000)
+    cy.dataCy('navCountdownButton').click()
   })
 
   it('Uses video player widget', function () {
@@ -141,6 +144,7 @@ describe('in_call_spec', function () {
         expect(videoEl.currentTime).to.be.greaterThan(99)
       })
 
+    cy.dataCy('navPlayerButton').click()
     cy.dataCy('navStopButton').click()
   })
 })
