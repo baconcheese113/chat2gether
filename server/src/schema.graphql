@@ -21,6 +21,8 @@ type Mutation {
   deleteUser: User!
   updateUser(data: UserUpdateInput!): User!
   createFeedback(data: FeedbackCreateInput!): Feedback!
+  createReport(data: CreateReportInput!): Report!
+  
 }
 
 # type Subscription {
@@ -34,6 +36,11 @@ type GenderObject {
 type AudioPrefObject {
   id: ID!
   name: AudioPrefType!
+}
+
+input CreateReportInput {
+  type: ReportType!
+  offenderId: ID!
 }
 
 input CreateUserInput {

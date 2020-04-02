@@ -59,4 +59,44 @@ export default {
       info,
     )
   },
+
+  async createReport(parent, args, { prisma, request }, info) {
+    const userId = getUserId(request)
+
+    console.log('createReport', args)
+    const { type, offenderId } = args.data
+    const offender = await prisma.query.user(
+      { where: { id: offenderId } },
+      `{reportsReceived { type reporter { id } }}`,
+    )
+    if (!offender) {
+      throw new Error('Offender not valid')
+    }
+    // if reported before, throw error
+    if (offender.reportsReceived.some(r => r.reporter.id === userId)) {
+      throw new Error('Already reported this user')
+    }
+    // createReport
+    const report = await prisma.mutation.createReport(
+      { data: { type, offender: { connect: { id: offenderId } }, reporter: { connect: { id: userId } } } },
+      info,
+    )
+    // if >3 reports for same type, create ban
+    const reportsOfThisType = offender.reportsReceived.filter(r => r.type === type)
+    if (reportsOfThisType.length >= 2) {
+      // HAMMER TIME
+      const now = new Date()
+      const endAt = new Date().setHours(now.getHours() + 24)
+      await prisma.mutation.createBan({
+        data: {
+          reason: type,
+          startAt: now.toISOString(),
+          endAt: endAt.toISOString(),
+          user: { connect: { id: offenderId } },
+        },
+      })
+    }
+
+    return report
+  },
 }

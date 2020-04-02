@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useApolloClient } from '@apollo/client'
 import { Button } from './common'
+import { CREATE_REPORT } from '../queries/mutations'
 
 const StyledMatchHistory = styled.section`
   background-color: #3f3f3f;
@@ -57,11 +59,26 @@ const EmptyText = styled.p`
 export default function MatchHistory(props) {
   const { users } = props
 
+  const client = useApolloClient()
+
   const getIcon = gender => {
     if (gender === 'MALE') return 'fas fa-user-secret'
     if (gender === 'FEMALE') return 'fas fa-user-nurse'
     if (gender === 'M2F') return 'fas fa-user-ninja'
     return 'fas fa-user-astronaut'
+  }
+
+  const handleReport = async u => {
+    if (!u) return
+    try {
+      const { error } = await client.mutate({
+        mutation: CREATE_REPORT,
+        variables: { data: { type: 'NO_VIDEO', offenderId: u.id } },
+      })
+      if (error) console.log('Error reporting', error)
+    } catch (err) {
+      console.log('now we swallowed', err)
+    }
   }
 
   return (
@@ -83,7 +100,7 @@ export default function MatchHistory(props) {
               </PillContainer>
               <ActionButtons>
                 <Button label="Message" />
-                <Button label="Report" />
+                <Button label="Report" onClick={() => handleReport(u)} />
               </ActionButtons>
             </MatchItem>
           ))

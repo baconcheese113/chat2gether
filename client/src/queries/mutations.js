@@ -47,3 +47,11 @@ export const CREATE_FEEDBACK = gql`
     }
   }
 `
+
+export const CREATE_REPORT = gql`
+  mutation CreateReportMutation($data: CreateReportInput!) {
+    createReport(data: $data) {
+      id
+    }
+  }
+`

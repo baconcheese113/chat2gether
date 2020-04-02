@@ -13,6 +13,8 @@ type User {
   isHost: Boolean!
   isConnected: Boolean!
   visited: [User!]! @relation(name: "VisitedUsers", onDelete: SET_NULL)
+  reportsMade: [Report!]! @relation(name: "ReportsMade")
+  reportsReceived: [Report!]! @relation(name: "ReportsReceived")
   updatedAt: DateTime! @updatedAt
   createdAt: DateTime! @createdAt
 }
@@ -22,6 +24,34 @@ type Feedback {
   text: String!
   updatedAt: DateTime! @updatedAt
   createdAt: DateTime! @createdAt
+}
+
+type Report {
+  id: ID! @unique @id
+  type: ReportType!
+  reporter: User! @relation(name: "ReportsMade")
+  offender: User! @relation(name: "ReportsReceived")
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+type Ban {
+  id: ID! @unique @id
+  user: User!
+  reason: ReportType!
+  startAt: DateTime!
+  endAt: DateTime!
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+enum ReportType {
+  UNDERAGE
+  ABUSIVE
+  NO_VIDEO
+  ADULT_BUT_FALSE_AGE
+  FALSE_SEX
+  FALSE_AUDIO
 }
 
 type GenderObject {
