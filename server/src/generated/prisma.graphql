@@ -1,6 +1,3 @@
-# source: http://192.168.99.100:4466/c2g/dev
-# timestamp: Thu Apr 02 2020 02:02:14 GMT-0600 (Mountain Daylight Time)
-
 type AggregateAudioPrefObject {
   count: Int!
 }
@@ -25,17 +22,13 @@ type AggregateUser {
   count: Int!
 }
 
-type AudioPrefObject implements Node {
+type AudioPrefObject {
   id: ID!
   name: AudioPrefType!
 }
 
-"""A connection to a list of items."""
 type AudioPrefObjectConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [AudioPrefObjectEdge]!
   aggregate: AggregateAudioPrefObject!
 }
@@ -50,12 +43,8 @@ input AudioPrefObjectCreateManyInput {
   connect: [AudioPrefObjectWhereUniqueInput!]
 }
 
-"""An edge in a connection."""
 type AudioPrefObjectEdge {
-  """The item at the end of the edge."""
   node: AudioPrefObject!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -72,64 +61,27 @@ type AudioPrefObjectPreviousValues {
 }
 
 input AudioPrefObjectScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [AudioPrefObjectScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [AudioPrefObjectScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [AudioPrefObjectScalarWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   name: AudioPrefType
-
-  """All values that are not equal to given value."""
   name_not: AudioPrefType
-
-  """All values that are contained in given list."""
   name_in: [AudioPrefType!]
-
-  """All values that are not contained in given list."""
   name_not_in: [AudioPrefType!]
+  AND: [AudioPrefObjectScalarWhereInput!]
+  OR: [AudioPrefObjectScalarWhereInput!]
+  NOT: [AudioPrefObjectScalarWhereInput!]
 }
 
 type AudioPrefObjectSubscriptionPayload {
@@ -140,33 +92,14 @@ type AudioPrefObjectSubscriptionPayload {
 }
 
 input AudioPrefObjectSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [AudioPrefObjectSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [AudioPrefObjectSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [AudioPrefObjectSubscriptionWhereInput!]
-
-  """The subscription event gets dispatched when it's listed in mutation_in"""
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: AudioPrefObjectWhereInput
+  AND: [AudioPrefObjectSubscriptionWhereInput!]
+  OR: [AudioPrefObjectSubscriptionWhereInput!]
+  NOT: [AudioPrefObjectSubscriptionWhereInput!]
 }
 
 input AudioPrefObjectUpdateDataInput {
@@ -183,14 +116,14 @@ input AudioPrefObjectUpdateManyDataInput {
 
 input AudioPrefObjectUpdateManyInput {
   create: [AudioPrefObjectCreateInput!]
+  update: [AudioPrefObjectUpdateWithWhereUniqueNestedInput!]
+  upsert: [AudioPrefObjectUpsertWithWhereUniqueNestedInput!]
+  delete: [AudioPrefObjectWhereUniqueInput!]
   connect: [AudioPrefObjectWhereUniqueInput!]
   set: [AudioPrefObjectWhereUniqueInput!]
   disconnect: [AudioPrefObjectWhereUniqueInput!]
-  delete: [AudioPrefObjectWhereUniqueInput!]
-  update: [AudioPrefObjectUpdateWithWhereUniqueNestedInput!]
-  updateMany: [AudioPrefObjectUpdateManyWithWhereNestedInput!]
   deleteMany: [AudioPrefObjectScalarWhereInput!]
-  upsert: [AudioPrefObjectUpsertWithWhereUniqueNestedInput!]
+  updateMany: [AudioPrefObjectUpdateManyWithWhereNestedInput!]
 }
 
 input AudioPrefObjectUpdateManyMutationInput {
@@ -214,64 +147,27 @@ input AudioPrefObjectUpsertWithWhereUniqueNestedInput {
 }
 
 input AudioPrefObjectWhereInput {
-  """Logical AND on all given filters."""
-  AND: [AudioPrefObjectWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [AudioPrefObjectWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [AudioPrefObjectWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   name: AudioPrefType
-
-  """All values that are not equal to given value."""
   name_not: AudioPrefType
-
-  """All values that are contained in given list."""
   name_in: [AudioPrefType!]
-
-  """All values that are not contained in given list."""
   name_not_in: [AudioPrefType!]
+  AND: [AudioPrefObjectWhereInput!]
+  OR: [AudioPrefObjectWhereInput!]
+  NOT: [AudioPrefObjectWhereInput!]
 }
 
 input AudioPrefObjectWhereUniqueInput {
@@ -286,7 +182,7 @@ enum AudioPrefType {
   CHAT_FIRST
 }
 
-type Ban implements Node {
+type Ban {
   id: ID!
   user: User!
   reason: ReportType!
@@ -296,30 +192,22 @@ type Ban implements Node {
   createdAt: DateTime!
 }
 
-"""A connection to a list of items."""
 type BanConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [BanEdge]!
   aggregate: AggregateBan!
 }
 
 input BanCreateInput {
   id: ID
+  user: UserCreateOneInput!
   reason: ReportType!
   startAt: DateTime!
   endAt: DateTime!
-  user: UserCreateOneInput!
 }
 
-"""An edge in a connection."""
 type BanEdge {
-  """The item at the end of the edge."""
   node: Ban!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -355,40 +243,21 @@ type BanSubscriptionPayload {
 }
 
 input BanSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [BanSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [BanSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [BanSubscriptionWhereInput!]
-
-  """The subscription event gets dispatched when it's listed in mutation_in"""
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: BanWhereInput
+  AND: [BanSubscriptionWhereInput!]
+  OR: [BanSubscriptionWhereInput!]
+  NOT: [BanSubscriptionWhereInput!]
 }
 
 input BanUpdateInput {
+  user: UserUpdateOneRequiredInput
   reason: ReportType
   startAt: DateTime
   endAt: DateTime
-  user: UserUpdateOneRequiredInput
 }
 
 input BanUpdateManyMutationInput {
@@ -398,153 +267,60 @@ input BanUpdateManyMutationInput {
 }
 
 input BanWhereInput {
-  """Logical AND on all given filters."""
-  AND: [BanWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [BanWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [BanWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
+  user: UserWhereInput
   reason: ReportType
-
-  """All values that are not equal to given value."""
   reason_not: ReportType
-
-  """All values that are contained in given list."""
   reason_in: [ReportType!]
-
-  """All values that are not contained in given list."""
   reason_not_in: [ReportType!]
   startAt: DateTime
-
-  """All values that are not equal to given value."""
   startAt_not: DateTime
-
-  """All values that are contained in given list."""
   startAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   startAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   startAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   startAt_lte: DateTime
-
-  """All values greater than the given value."""
   startAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   startAt_gte: DateTime
   endAt: DateTime
-
-  """All values that are not equal to given value."""
   endAt_not: DateTime
-
-  """All values that are contained in given list."""
   endAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   endAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   endAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   endAt_lte: DateTime
-
-  """All values greater than the given value."""
   endAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   endAt_gte: DateTime
   updatedAt: DateTime
-
-  """All values that are not equal to given value."""
   updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
   updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
   updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   createdAt: DateTime
-
-  """All values that are not equal to given value."""
   createdAt_not: DateTime
-
-  """All values that are contained in given list."""
   createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   createdAt_lte: DateTime
-
-  """All values greater than the given value."""
   createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   createdAt_gte: DateTime
-  user: UserWhereInput
+  AND: [BanWhereInput!]
+  OR: [BanWhereInput!]
+  NOT: [BanWhereInput!]
 }
 
 input BanWhereUniqueInput {
@@ -552,25 +328,20 @@ input BanWhereUniqueInput {
 }
 
 type BatchPayload {
-  """The number of nodes that have been affected by the Batch operation."""
   count: Long!
 }
 
 scalar DateTime
 
-type Feedback implements Node {
+type Feedback {
   id: ID!
   text: String!
   updatedAt: DateTime!
   createdAt: DateTime!
 }
 
-"""A connection to a list of items."""
 type FeedbackConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [FeedbackEdge]!
   aggregate: AggregateFeedback!
 }
@@ -580,12 +351,8 @@ input FeedbackCreateInput {
   text: String!
 }
 
-"""An edge in a connection."""
 type FeedbackEdge {
-  """The item at the end of the edge."""
   node: Feedback!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -615,33 +382,14 @@ type FeedbackSubscriptionPayload {
 }
 
 input FeedbackSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [FeedbackSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [FeedbackSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [FeedbackSubscriptionWhereInput!]
-
-  """The subscription event gets dispatched when it's listed in mutation_in"""
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: FeedbackWhereInput
+  AND: [FeedbackSubscriptionWhereInput!]
+  OR: [FeedbackSubscriptionWhereInput!]
+  NOT: [FeedbackSubscriptionWhereInput!]
 }
 
 input FeedbackUpdateInput {
@@ -653,155 +401,66 @@ input FeedbackUpdateManyMutationInput {
 }
 
 input FeedbackWhereInput {
-  """Logical AND on all given filters."""
-  AND: [FeedbackWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [FeedbackWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [FeedbackWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   text: String
-
-  """All values that are not equal to given value."""
   text_not: String
-
-  """All values that are contained in given list."""
   text_in: [String!]
-
-  """All values that are not contained in given list."""
   text_not_in: [String!]
-
-  """All values less than the given value."""
   text_lt: String
-
-  """All values less than or equal the given value."""
   text_lte: String
-
-  """All values greater than the given value."""
   text_gt: String
-
-  """All values greater than or equal the given value."""
   text_gte: String
-
-  """All values containing the given string."""
   text_contains: String
-
-  """All values not containing the given string."""
   text_not_contains: String
-
-  """All values starting with the given string."""
   text_starts_with: String
-
-  """All values not starting with the given string."""
   text_not_starts_with: String
-
-  """All values ending with the given string."""
   text_ends_with: String
-
-  """All values not ending with the given string."""
   text_not_ends_with: String
   updatedAt: DateTime
-
-  """All values that are not equal to given value."""
   updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
   updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
   updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   createdAt: DateTime
-
-  """All values that are not equal to given value."""
   createdAt_not: DateTime
-
-  """All values that are contained in given list."""
   createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   createdAt_lte: DateTime
-
-  """All values greater than the given value."""
   createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   createdAt_gte: DateTime
+  AND: [FeedbackWhereInput!]
+  OR: [FeedbackWhereInput!]
+  NOT: [FeedbackWhereInput!]
 }
 
 input FeedbackWhereUniqueInput {
   id: ID
 }
 
-type GenderObject implements Node {
+type GenderObject {
   id: ID!
   name: GenderType!
 }
 
-"""A connection to a list of items."""
 type GenderObjectConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [GenderObjectEdge]!
   aggregate: AggregateGenderObject!
 }
@@ -816,12 +475,8 @@ input GenderObjectCreateManyInput {
   connect: [GenderObjectWhereUniqueInput!]
 }
 
-"""An edge in a connection."""
 type GenderObjectEdge {
-  """The item at the end of the edge."""
   node: GenderObject!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -838,64 +493,27 @@ type GenderObjectPreviousValues {
 }
 
 input GenderObjectScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [GenderObjectScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [GenderObjectScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [GenderObjectScalarWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   name: GenderType
-
-  """All values that are not equal to given value."""
   name_not: GenderType
-
-  """All values that are contained in given list."""
   name_in: [GenderType!]
-
-  """All values that are not contained in given list."""
   name_not_in: [GenderType!]
+  AND: [GenderObjectScalarWhereInput!]
+  OR: [GenderObjectScalarWhereInput!]
+  NOT: [GenderObjectScalarWhereInput!]
 }
 
 type GenderObjectSubscriptionPayload {
@@ -906,33 +524,14 @@ type GenderObjectSubscriptionPayload {
 }
 
 input GenderObjectSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [GenderObjectSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [GenderObjectSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [GenderObjectSubscriptionWhereInput!]
-
-  """The subscription event gets dispatched when it's listed in mutation_in"""
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: GenderObjectWhereInput
+  AND: [GenderObjectSubscriptionWhereInput!]
+  OR: [GenderObjectSubscriptionWhereInput!]
+  NOT: [GenderObjectSubscriptionWhereInput!]
 }
 
 input GenderObjectUpdateDataInput {
@@ -949,14 +548,14 @@ input GenderObjectUpdateManyDataInput {
 
 input GenderObjectUpdateManyInput {
   create: [GenderObjectCreateInput!]
+  update: [GenderObjectUpdateWithWhereUniqueNestedInput!]
+  upsert: [GenderObjectUpsertWithWhereUniqueNestedInput!]
+  delete: [GenderObjectWhereUniqueInput!]
   connect: [GenderObjectWhereUniqueInput!]
   set: [GenderObjectWhereUniqueInput!]
   disconnect: [GenderObjectWhereUniqueInput!]
-  delete: [GenderObjectWhereUniqueInput!]
-  update: [GenderObjectUpdateWithWhereUniqueNestedInput!]
-  updateMany: [GenderObjectUpdateManyWithWhereNestedInput!]
   deleteMany: [GenderObjectScalarWhereInput!]
-  upsert: [GenderObjectUpsertWithWhereUniqueNestedInput!]
+  updateMany: [GenderObjectUpdateManyWithWhereNestedInput!]
 }
 
 input GenderObjectUpdateManyMutationInput {
@@ -980,64 +579,27 @@ input GenderObjectUpsertWithWhereUniqueNestedInput {
 }
 
 input GenderObjectWhereInput {
-  """Logical AND on all given filters."""
-  AND: [GenderObjectWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [GenderObjectWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [GenderObjectWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   name: GenderType
-
-  """All values that are not equal to given value."""
   name_not: GenderType
-
-  """All values that are contained in given list."""
   name_in: [GenderType!]
-
-  """All values that are not contained in given list."""
   name_not_in: [GenderType!]
+  AND: [GenderObjectWhereInput!]
+  OR: [GenderObjectWhereInput!]
+  NOT: [GenderObjectWhereInput!]
 }
 
 input GenderObjectWhereUniqueInput {
@@ -1052,53 +614,45 @@ enum GenderType {
   F2M
 }
 
-"""Raw JSON value"""
-scalar Json
-
-"""
-The `Long` scalar type represents non-fractional signed whole numeric values.
-Long can represent values between -(2^63) and 2^63 - 1.
-"""
 scalar Long
 
 type Mutation {
-  createFeedback(data: FeedbackCreateInput!): Feedback!
-  createReport(data: ReportCreateInput!): Report!
-  createBan(data: BanCreateInput!): Ban!
-  createGenderObject(data: GenderObjectCreateInput!): GenderObject!
   createAudioPrefObject(data: AudioPrefObjectCreateInput!): AudioPrefObject!
-  createUser(data: UserCreateInput!): User!
-  updateFeedback(data: FeedbackUpdateInput!, where: FeedbackWhereUniqueInput!): Feedback
-  updateReport(data: ReportUpdateInput!, where: ReportWhereUniqueInput!): Report
-  updateBan(data: BanUpdateInput!, where: BanWhereUniqueInput!): Ban
-  updateGenderObject(data: GenderObjectUpdateInput!, where: GenderObjectWhereUniqueInput!): GenderObject
   updateAudioPrefObject(data: AudioPrefObjectUpdateInput!, where: AudioPrefObjectWhereUniqueInput!): AudioPrefObject
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  deleteFeedback(where: FeedbackWhereUniqueInput!): Feedback
-  deleteReport(where: ReportWhereUniqueInput!): Report
-  deleteBan(where: BanWhereUniqueInput!): Ban
-  deleteGenderObject(where: GenderObjectWhereUniqueInput!): GenderObject
-  deleteAudioPrefObject(where: AudioPrefObjectWhereUniqueInput!): AudioPrefObject
-  deleteUser(where: UserWhereUniqueInput!): User
-  upsertFeedback(where: FeedbackWhereUniqueInput!, create: FeedbackCreateInput!, update: FeedbackUpdateInput!): Feedback!
-  upsertReport(where: ReportWhereUniqueInput!, create: ReportCreateInput!, update: ReportUpdateInput!): Report!
-  upsertBan(where: BanWhereUniqueInput!, create: BanCreateInput!, update: BanUpdateInput!): Ban!
-  upsertGenderObject(where: GenderObjectWhereUniqueInput!, create: GenderObjectCreateInput!, update: GenderObjectUpdateInput!): GenderObject!
-  upsertAudioPrefObject(where: AudioPrefObjectWhereUniqueInput!, create: AudioPrefObjectCreateInput!, update: AudioPrefObjectUpdateInput!): AudioPrefObject!
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  updateManyFeedbacks(data: FeedbackUpdateManyMutationInput!, where: FeedbackWhereInput): BatchPayload!
-  updateManyReports(data: ReportUpdateManyMutationInput!, where: ReportWhereInput): BatchPayload!
-  updateManyBans(data: BanUpdateManyMutationInput!, where: BanWhereInput): BatchPayload!
-  updateManyGenderObjects(data: GenderObjectUpdateManyMutationInput!, where: GenderObjectWhereInput): BatchPayload!
   updateManyAudioPrefObjects(data: AudioPrefObjectUpdateManyMutationInput!, where: AudioPrefObjectWhereInput): BatchPayload!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
-  deleteManyFeedbacks(where: FeedbackWhereInput): BatchPayload!
-  deleteManyReports(where: ReportWhereInput): BatchPayload!
-  deleteManyBans(where: BanWhereInput): BatchPayload!
-  deleteManyGenderObjects(where: GenderObjectWhereInput): BatchPayload!
+  upsertAudioPrefObject(where: AudioPrefObjectWhereUniqueInput!, create: AudioPrefObjectCreateInput!, update: AudioPrefObjectUpdateInput!): AudioPrefObject!
+  deleteAudioPrefObject(where: AudioPrefObjectWhereUniqueInput!): AudioPrefObject
   deleteManyAudioPrefObjects(where: AudioPrefObjectWhereInput): BatchPayload!
+  createBan(data: BanCreateInput!): Ban!
+  updateBan(data: BanUpdateInput!, where: BanWhereUniqueInput!): Ban
+  updateManyBans(data: BanUpdateManyMutationInput!, where: BanWhereInput): BatchPayload!
+  upsertBan(where: BanWhereUniqueInput!, create: BanCreateInput!, update: BanUpdateInput!): Ban!
+  deleteBan(where: BanWhereUniqueInput!): Ban
+  deleteManyBans(where: BanWhereInput): BatchPayload!
+  createFeedback(data: FeedbackCreateInput!): Feedback!
+  updateFeedback(data: FeedbackUpdateInput!, where: FeedbackWhereUniqueInput!): Feedback
+  updateManyFeedbacks(data: FeedbackUpdateManyMutationInput!, where: FeedbackWhereInput): BatchPayload!
+  upsertFeedback(where: FeedbackWhereUniqueInput!, create: FeedbackCreateInput!, update: FeedbackUpdateInput!): Feedback!
+  deleteFeedback(where: FeedbackWhereUniqueInput!): Feedback
+  deleteManyFeedbacks(where: FeedbackWhereInput): BatchPayload!
+  createGenderObject(data: GenderObjectCreateInput!): GenderObject!
+  updateGenderObject(data: GenderObjectUpdateInput!, where: GenderObjectWhereUniqueInput!): GenderObject
+  updateManyGenderObjects(data: GenderObjectUpdateManyMutationInput!, where: GenderObjectWhereInput): BatchPayload!
+  upsertGenderObject(where: GenderObjectWhereUniqueInput!, create: GenderObjectCreateInput!, update: GenderObjectUpdateInput!): GenderObject!
+  deleteGenderObject(where: GenderObjectWhereUniqueInput!): GenderObject
+  deleteManyGenderObjects(where: GenderObjectWhereInput): BatchPayload!
+  createReport(data: ReportCreateInput!): Report!
+  updateReport(data: ReportUpdateInput!, where: ReportWhereUniqueInput!): Report
+  updateManyReports(data: ReportUpdateManyMutationInput!, where: ReportWhereInput): BatchPayload!
+  upsertReport(where: ReportWhereUniqueInput!, create: ReportCreateInput!, update: ReportUpdateInput!): Report!
+  deleteReport(where: ReportWhereUniqueInput!): Report
+  deleteManyReports(where: ReportWhereInput): BatchPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  executeRaw(database: PrismaDatabase, query: String!): Json!
 }
 
 enum MutationType {
@@ -1107,59 +661,40 @@ enum MutationType {
   DELETED
 }
 
-"""An object with an ID"""
 interface Node {
-  """The id of the object."""
   id: ID!
 }
 
-"""Information about pagination in a connection."""
 type PageInfo {
-  """When paginating forwards, are there more items?"""
   hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
   startCursor: String
-
-  """When paginating forwards, the cursor to continue."""
   endCursor: String
 }
 
-enum PrismaDatabase {
-  default
-}
-
 type Query {
-  feedbacks(where: FeedbackWhereInput, orderBy: FeedbackOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feedback]!
-  reports(where: ReportWhereInput, orderBy: ReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Report]!
-  bans(where: BanWhereInput, orderBy: BanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ban]!
-  genderObjects(where: GenderObjectWhereInput, orderBy: GenderObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GenderObject]!
-  audioPrefObjects(where: AudioPrefObjectWhereInput, orderBy: AudioPrefObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AudioPrefObject]!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  feedback(where: FeedbackWhereUniqueInput!): Feedback
-  report(where: ReportWhereUniqueInput!): Report
-  ban(where: BanWhereUniqueInput!): Ban
-  genderObject(where: GenderObjectWhereUniqueInput!): GenderObject
   audioPrefObject(where: AudioPrefObjectWhereUniqueInput!): AudioPrefObject
-  user(where: UserWhereUniqueInput!): User
-  feedbacksConnection(where: FeedbackWhereInput, orderBy: FeedbackOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FeedbackConnection!
-  reportsConnection(where: ReportWhereInput, orderBy: ReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ReportConnection!
-  bansConnection(where: BanWhereInput, orderBy: BanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BanConnection!
-  genderObjectsConnection(where: GenderObjectWhereInput, orderBy: GenderObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GenderObjectConnection!
+  audioPrefObjects(where: AudioPrefObjectWhereInput, orderBy: AudioPrefObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AudioPrefObject]!
   audioPrefObjectsConnection(where: AudioPrefObjectWhereInput, orderBy: AudioPrefObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AudioPrefObjectConnection!
+  ban(where: BanWhereUniqueInput!): Ban
+  bans(where: BanWhereInput, orderBy: BanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ban]!
+  bansConnection(where: BanWhereInput, orderBy: BanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BanConnection!
+  feedback(where: FeedbackWhereUniqueInput!): Feedback
+  feedbacks(where: FeedbackWhereInput, orderBy: FeedbackOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feedback]!
+  feedbacksConnection(where: FeedbackWhereInput, orderBy: FeedbackOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FeedbackConnection!
+  genderObject(where: GenderObjectWhereUniqueInput!): GenderObject
+  genderObjects(where: GenderObjectWhereInput, orderBy: GenderObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GenderObject]!
+  genderObjectsConnection(where: GenderObjectWhereInput, orderBy: GenderObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GenderObjectConnection!
+  report(where: ReportWhereUniqueInput!): Report
+  reports(where: ReportWhereInput, orderBy: ReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Report]!
+  reportsConnection(where: ReportWhereInput, orderBy: ReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ReportConnection!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-
-  """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
+  node(id: ID!): Node
 }
 
-type Report implements Node {
+type Report {
   id: ID!
   type: ReportType!
   reporter: User!
@@ -1168,12 +703,8 @@ type Report implements Node {
   createdAt: DateTime!
 }
 
-"""A connection to a list of items."""
 type ReportConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [ReportEdge]!
   aggregate: AggregateReport!
 }
@@ -1207,12 +738,8 @@ input ReportCreateWithoutReporterInput {
   offender: UserCreateOneWithoutReportsReceivedInput!
 }
 
-"""An edge in a connection."""
 type ReportEdge {
-  """The item at the end of the edge."""
   node: Report!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -1235,108 +762,43 @@ type ReportPreviousValues {
 }
 
 input ReportScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ReportScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ReportScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ReportScalarWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   type: ReportType
-
-  """All values that are not equal to given value."""
   type_not: ReportType
-
-  """All values that are contained in given list."""
   type_in: [ReportType!]
-
-  """All values that are not contained in given list."""
   type_not_in: [ReportType!]
   updatedAt: DateTime
-
-  """All values that are not equal to given value."""
   updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
   updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
   updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   createdAt: DateTime
-
-  """All values that are not equal to given value."""
   createdAt_not: DateTime
-
-  """All values that are contained in given list."""
   createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   createdAt_lte: DateTime
-
-  """All values greater than the given value."""
   createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   createdAt_gte: DateTime
+  AND: [ReportScalarWhereInput!]
+  OR: [ReportScalarWhereInput!]
+  NOT: [ReportScalarWhereInput!]
 }
 
 type ReportSubscriptionPayload {
@@ -1347,33 +809,14 @@ type ReportSubscriptionPayload {
 }
 
 input ReportSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ReportSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ReportSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ReportSubscriptionWhereInput!]
-
-  """The subscription event gets dispatched when it's listed in mutation_in"""
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: ReportWhereInput
+  AND: [ReportSubscriptionWhereInput!]
+  OR: [ReportSubscriptionWhereInput!]
+  NOT: [ReportSubscriptionWhereInput!]
 }
 
 enum ReportType {
@@ -1401,26 +844,26 @@ input ReportUpdateManyMutationInput {
 
 input ReportUpdateManyWithoutOffenderInput {
   create: [ReportCreateWithoutOffenderInput!]
+  delete: [ReportWhereUniqueInput!]
   connect: [ReportWhereUniqueInput!]
   set: [ReportWhereUniqueInput!]
   disconnect: [ReportWhereUniqueInput!]
-  delete: [ReportWhereUniqueInput!]
   update: [ReportUpdateWithWhereUniqueWithoutOffenderInput!]
-  updateMany: [ReportUpdateManyWithWhereNestedInput!]
-  deleteMany: [ReportScalarWhereInput!]
   upsert: [ReportUpsertWithWhereUniqueWithoutOffenderInput!]
+  deleteMany: [ReportScalarWhereInput!]
+  updateMany: [ReportUpdateManyWithWhereNestedInput!]
 }
 
 input ReportUpdateManyWithoutReporterInput {
   create: [ReportCreateWithoutReporterInput!]
+  delete: [ReportWhereUniqueInput!]
   connect: [ReportWhereUniqueInput!]
   set: [ReportWhereUniqueInput!]
   disconnect: [ReportWhereUniqueInput!]
-  delete: [ReportWhereUniqueInput!]
   update: [ReportUpdateWithWhereUniqueWithoutReporterInput!]
-  updateMany: [ReportUpdateManyWithWhereNestedInput!]
-  deleteMany: [ReportScalarWhereInput!]
   upsert: [ReportUpsertWithWhereUniqueWithoutReporterInput!]
+  deleteMany: [ReportScalarWhereInput!]
+  updateMany: [ReportUpdateManyWithWhereNestedInput!]
 }
 
 input ReportUpdateManyWithWhereNestedInput {
@@ -1461,110 +904,45 @@ input ReportUpsertWithWhereUniqueWithoutReporterInput {
 }
 
 input ReportWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ReportWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ReportWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ReportWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   type: ReportType
-
-  """All values that are not equal to given value."""
   type_not: ReportType
-
-  """All values that are contained in given list."""
   type_in: [ReportType!]
-
-  """All values that are not contained in given list."""
   type_not_in: [ReportType!]
-  updatedAt: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
   reporter: UserWhereInput
   offender: UserWhereInput
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [ReportWhereInput!]
+  OR: [ReportWhereInput!]
+  NOT: [ReportWhereInput!]
 }
 
 input ReportWhereUniqueInput {
@@ -1572,15 +950,15 @@ input ReportWhereUniqueInput {
 }
 
 type Subscription {
-  feedback(where: FeedbackSubscriptionWhereInput): FeedbackSubscriptionPayload
-  report(where: ReportSubscriptionWhereInput): ReportSubscriptionPayload
-  ban(where: BanSubscriptionWhereInput): BanSubscriptionPayload
-  genderObject(where: GenderObjectSubscriptionWhereInput): GenderObjectSubscriptionPayload
   audioPrefObject(where: AudioPrefObjectSubscriptionWhereInput): AudioPrefObjectSubscriptionPayload
+  ban(where: BanSubscriptionWhereInput): BanSubscriptionPayload
+  feedback(where: FeedbackSubscriptionWhereInput): FeedbackSubscriptionPayload
+  genderObject(where: GenderObjectSubscriptionWhereInput): GenderObjectSubscriptionPayload
+  report(where: ReportSubscriptionWhereInput): ReportSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
-type User implements Node {
+type User {
   id: ID!
   ip: String!
   fingerprint: String!
@@ -1601,12 +979,8 @@ type User implements Node {
   createdAt: DateTime!
 }
 
-"""A connection to a list of items."""
 type UserConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [UserEdge]!
   aggregate: AggregateUser!
 }
@@ -1616,22 +990,22 @@ input UserCreateInput {
   ip: String!
   fingerprint: String!
   gender: GenderType!
+  lookingFor: GenderObjectCreateManyInput
   age: Int!
   minAge: Int!
   maxAge: Int!
   audioPref: AudioPrefType!
+  accAudioPrefs: AudioPrefObjectCreateManyInput
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
-  lookingFor: GenderObjectCreateManyInput
-  accAudioPrefs: AudioPrefObjectCreateManyInput
-  visited: UserCreateManyInput
+  visited: UserCreateManyWithoutVisitedInput
   reportsMade: ReportCreateManyWithoutReporterInput
   reportsReceived: ReportCreateManyWithoutOffenderInput
 }
 
-input UserCreateManyInput {
-  create: [UserCreateInput!]
+input UserCreateManyWithoutVisitedInput {
+  create: [UserCreateWithoutVisitedInput!]
   connect: [UserWhereUniqueInput!]
 }
 
@@ -1655,16 +1029,16 @@ input UserCreateWithoutReportsMadeInput {
   ip: String!
   fingerprint: String!
   gender: GenderType!
+  lookingFor: GenderObjectCreateManyInput
   age: Int!
   minAge: Int!
   maxAge: Int!
   audioPref: AudioPrefType!
+  accAudioPrefs: AudioPrefObjectCreateManyInput
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
-  lookingFor: GenderObjectCreateManyInput
-  accAudioPrefs: AudioPrefObjectCreateManyInput
-  visited: UserCreateManyInput
+  visited: UserCreateManyWithoutVisitedInput
   reportsReceived: ReportCreateManyWithoutOffenderInput
 }
 
@@ -1673,25 +1047,39 @@ input UserCreateWithoutReportsReceivedInput {
   ip: String!
   fingerprint: String!
   gender: GenderType!
+  lookingFor: GenderObjectCreateManyInput
   age: Int!
   minAge: Int!
   maxAge: Int!
   audioPref: AudioPrefType!
+  accAudioPrefs: AudioPrefObjectCreateManyInput
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
-  lookingFor: GenderObjectCreateManyInput
-  accAudioPrefs: AudioPrefObjectCreateManyInput
-  visited: UserCreateManyInput
+  visited: UserCreateManyWithoutVisitedInput
   reportsMade: ReportCreateManyWithoutReporterInput
 }
 
-"""An edge in a connection."""
-type UserEdge {
-  """The item at the end of the edge."""
-  node: User!
+input UserCreateWithoutVisitedInput {
+  id: ID
+  ip: String!
+  fingerprint: String!
+  gender: GenderType!
+  lookingFor: GenderObjectCreateManyInput
+  age: Int!
+  minAge: Int!
+  maxAge: Int!
+  audioPref: AudioPrefType!
+  accAudioPrefs: AudioPrefObjectCreateManyInput
+  lastActive: DateTime!
+  isHost: Boolean!
+  isConnected: Boolean!
+  reportsMade: ReportCreateManyWithoutReporterInput
+  reportsReceived: ReportCreateManyWithoutOffenderInput
+}
 
-  """A cursor for use in pagination."""
+type UserEdge {
+  node: User!
   cursor: String!
 }
 
@@ -1741,294 +1129,111 @@ type UserPreviousValues {
 }
 
 input UserScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [UserScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [UserScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserScalarWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   ip: String
-
-  """All values that are not equal to given value."""
   ip_not: String
-
-  """All values that are contained in given list."""
   ip_in: [String!]
-
-  """All values that are not contained in given list."""
   ip_not_in: [String!]
-
-  """All values less than the given value."""
   ip_lt: String
-
-  """All values less than or equal the given value."""
   ip_lte: String
-
-  """All values greater than the given value."""
   ip_gt: String
-
-  """All values greater than or equal the given value."""
   ip_gte: String
-
-  """All values containing the given string."""
   ip_contains: String
-
-  """All values not containing the given string."""
   ip_not_contains: String
-
-  """All values starting with the given string."""
   ip_starts_with: String
-
-  """All values not starting with the given string."""
   ip_not_starts_with: String
-
-  """All values ending with the given string."""
   ip_ends_with: String
-
-  """All values not ending with the given string."""
   ip_not_ends_with: String
   fingerprint: String
-
-  """All values that are not equal to given value."""
   fingerprint_not: String
-
-  """All values that are contained in given list."""
   fingerprint_in: [String!]
-
-  """All values that are not contained in given list."""
   fingerprint_not_in: [String!]
-
-  """All values less than the given value."""
   fingerprint_lt: String
-
-  """All values less than or equal the given value."""
   fingerprint_lte: String
-
-  """All values greater than the given value."""
   fingerprint_gt: String
-
-  """All values greater than or equal the given value."""
   fingerprint_gte: String
-
-  """All values containing the given string."""
   fingerprint_contains: String
-
-  """All values not containing the given string."""
   fingerprint_not_contains: String
-
-  """All values starting with the given string."""
   fingerprint_starts_with: String
-
-  """All values not starting with the given string."""
   fingerprint_not_starts_with: String
-
-  """All values ending with the given string."""
   fingerprint_ends_with: String
-
-  """All values not ending with the given string."""
   fingerprint_not_ends_with: String
   gender: GenderType
-
-  """All values that are not equal to given value."""
   gender_not: GenderType
-
-  """All values that are contained in given list."""
   gender_in: [GenderType!]
-
-  """All values that are not contained in given list."""
   gender_not_in: [GenderType!]
   age: Int
-
-  """All values that are not equal to given value."""
   age_not: Int
-
-  """All values that are contained in given list."""
   age_in: [Int!]
-
-  """All values that are not contained in given list."""
   age_not_in: [Int!]
-
-  """All values less than the given value."""
   age_lt: Int
-
-  """All values less than or equal the given value."""
   age_lte: Int
-
-  """All values greater than the given value."""
   age_gt: Int
-
-  """All values greater than or equal the given value."""
   age_gte: Int
   minAge: Int
-
-  """All values that are not equal to given value."""
   minAge_not: Int
-
-  """All values that are contained in given list."""
   minAge_in: [Int!]
-
-  """All values that are not contained in given list."""
   minAge_not_in: [Int!]
-
-  """All values less than the given value."""
   minAge_lt: Int
-
-  """All values less than or equal the given value."""
   minAge_lte: Int
-
-  """All values greater than the given value."""
   minAge_gt: Int
-
-  """All values greater than or equal the given value."""
   minAge_gte: Int
   maxAge: Int
-
-  """All values that are not equal to given value."""
   maxAge_not: Int
-
-  """All values that are contained in given list."""
   maxAge_in: [Int!]
-
-  """All values that are not contained in given list."""
   maxAge_not_in: [Int!]
-
-  """All values less than the given value."""
   maxAge_lt: Int
-
-  """All values less than or equal the given value."""
   maxAge_lte: Int
-
-  """All values greater than the given value."""
   maxAge_gt: Int
-
-  """All values greater than or equal the given value."""
   maxAge_gte: Int
   audioPref: AudioPrefType
-
-  """All values that are not equal to given value."""
   audioPref_not: AudioPrefType
-
-  """All values that are contained in given list."""
   audioPref_in: [AudioPrefType!]
-
-  """All values that are not contained in given list."""
   audioPref_not_in: [AudioPrefType!]
   lastActive: DateTime
-
-  """All values that are not equal to given value."""
   lastActive_not: DateTime
-
-  """All values that are contained in given list."""
   lastActive_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   lastActive_not_in: [DateTime!]
-
-  """All values less than the given value."""
   lastActive_lt: DateTime
-
-  """All values less than or equal the given value."""
   lastActive_lte: DateTime
-
-  """All values greater than the given value."""
   lastActive_gt: DateTime
-
-  """All values greater than or equal the given value."""
   lastActive_gte: DateTime
   isHost: Boolean
-
-  """All values that are not equal to given value."""
   isHost_not: Boolean
   isConnected: Boolean
-
-  """All values that are not equal to given value."""
   isConnected_not: Boolean
   updatedAt: DateTime
-
-  """All values that are not equal to given value."""
   updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
   updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
   updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   createdAt: DateTime
-
-  """All values that are not equal to given value."""
   createdAt_not: DateTime
-
-  """All values that are contained in given list."""
   createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
   createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
   createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
   createdAt_lte: DateTime
-
-  """All values greater than the given value."""
   createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
   createdAt_gte: DateTime
+  AND: [UserScalarWhereInput!]
+  OR: [UserScalarWhereInput!]
+  NOT: [UserScalarWhereInput!]
 }
 
 type UserSubscriptionPayload {
@@ -2039,49 +1244,30 @@ type UserSubscriptionPayload {
 }
 
 input UserSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [UserSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [UserSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserSubscriptionWhereInput!]
-
-  """The subscription event gets dispatched when it's listed in mutation_in"""
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: UserWhereInput
+  AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
 }
 
 input UserUpdateDataInput {
   ip: String
   fingerprint: String
   gender: GenderType
+  lookingFor: GenderObjectUpdateManyInput
   age: Int
   minAge: Int
   maxAge: Int
   audioPref: AudioPrefType
+  accAudioPrefs: AudioPrefObjectUpdateManyInput
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
-  lookingFor: GenderObjectUpdateManyInput
-  accAudioPrefs: AudioPrefObjectUpdateManyInput
-  visited: UserUpdateManyInput
+  visited: UserUpdateManyWithoutVisitedInput
   reportsMade: ReportUpdateManyWithoutReporterInput
   reportsReceived: ReportUpdateManyWithoutOffenderInput
 }
@@ -2090,16 +1276,16 @@ input UserUpdateInput {
   ip: String
   fingerprint: String
   gender: GenderType
+  lookingFor: GenderObjectUpdateManyInput
   age: Int
   minAge: Int
   maxAge: Int
   audioPref: AudioPrefType
+  accAudioPrefs: AudioPrefObjectUpdateManyInput
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
-  lookingFor: GenderObjectUpdateManyInput
-  accAudioPrefs: AudioPrefObjectUpdateManyInput
-  visited: UserUpdateManyInput
+  visited: UserUpdateManyWithoutVisitedInput
   reportsMade: ReportUpdateManyWithoutReporterInput
   reportsReceived: ReportUpdateManyWithoutOffenderInput
 }
@@ -2117,18 +1303,6 @@ input UserUpdateManyDataInput {
   isConnected: Boolean
 }
 
-input UserUpdateManyInput {
-  create: [UserCreateInput!]
-  connect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  delete: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueNestedInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-  deleteMany: [UserScalarWhereInput!]
-  upsert: [UserUpsertWithWhereUniqueNestedInput!]
-}
-
 input UserUpdateManyMutationInput {
   ip: String
   fingerprint: String
@@ -2142,6 +1316,18 @@ input UserUpdateManyMutationInput {
   isConnected: Boolean
 }
 
+input UserUpdateManyWithoutVisitedInput {
+  create: [UserCreateWithoutVisitedInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutVisitedInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutVisitedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+}
+
 input UserUpdateManyWithWhereNestedInput {
   where: UserScalarWhereInput!
   data: UserUpdateManyDataInput!
@@ -2149,39 +1335,39 @@ input UserUpdateManyWithWhereNestedInput {
 
 input UserUpdateOneRequiredInput {
   create: UserCreateInput
-  connect: UserWhereUniqueInput
   update: UserUpdateDataInput
   upsert: UserUpsertNestedInput
+  connect: UserWhereUniqueInput
 }
 
 input UserUpdateOneRequiredWithoutReportsMadeInput {
   create: UserCreateWithoutReportsMadeInput
-  connect: UserWhereUniqueInput
   update: UserUpdateWithoutReportsMadeDataInput
   upsert: UserUpsertWithoutReportsMadeInput
+  connect: UserWhereUniqueInput
 }
 
 input UserUpdateOneRequiredWithoutReportsReceivedInput {
   create: UserCreateWithoutReportsReceivedInput
-  connect: UserWhereUniqueInput
   update: UserUpdateWithoutReportsReceivedDataInput
   upsert: UserUpsertWithoutReportsReceivedInput
+  connect: UserWhereUniqueInput
 }
 
 input UserUpdateWithoutReportsMadeDataInput {
   ip: String
   fingerprint: String
   gender: GenderType
+  lookingFor: GenderObjectUpdateManyInput
   age: Int
   minAge: Int
   maxAge: Int
   audioPref: AudioPrefType
+  accAudioPrefs: AudioPrefObjectUpdateManyInput
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
-  lookingFor: GenderObjectUpdateManyInput
-  accAudioPrefs: AudioPrefObjectUpdateManyInput
-  visited: UserUpdateManyInput
+  visited: UserUpdateManyWithoutVisitedInput
   reportsReceived: ReportUpdateManyWithoutOffenderInput
 }
 
@@ -2189,22 +1375,39 @@ input UserUpdateWithoutReportsReceivedDataInput {
   ip: String
   fingerprint: String
   gender: GenderType
+  lookingFor: GenderObjectUpdateManyInput
   age: Int
   minAge: Int
   maxAge: Int
   audioPref: AudioPrefType
+  accAudioPrefs: AudioPrefObjectUpdateManyInput
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
-  lookingFor: GenderObjectUpdateManyInput
-  accAudioPrefs: AudioPrefObjectUpdateManyInput
-  visited: UserUpdateManyInput
+  visited: UserUpdateManyWithoutVisitedInput
   reportsMade: ReportUpdateManyWithoutReporterInput
 }
 
-input UserUpdateWithWhereUniqueNestedInput {
+input UserUpdateWithoutVisitedDataInput {
+  ip: String
+  fingerprint: String
+  gender: GenderType
+  lookingFor: GenderObjectUpdateManyInput
+  age: Int
+  minAge: Int
+  maxAge: Int
+  audioPref: AudioPrefType
+  accAudioPrefs: AudioPrefObjectUpdateManyInput
+  lastActive: DateTime
+  isHost: Boolean
+  isConnected: Boolean
+  reportsMade: ReportUpdateManyWithoutReporterInput
+  reportsReceived: ReportUpdateManyWithoutOffenderInput
+}
+
+input UserUpdateWithWhereUniqueWithoutVisitedInput {
   where: UserWhereUniqueInput!
-  data: UserUpdateDataInput!
+  data: UserUpdateWithoutVisitedDataInput!
 }
 
 input UserUpsertNestedInput {
@@ -2222,307 +1425,105 @@ input UserUpsertWithoutReportsReceivedInput {
   create: UserCreateWithoutReportsReceivedInput!
 }
 
-input UserUpsertWithWhereUniqueNestedInput {
+input UserUpsertWithWhereUniqueWithoutVisitedInput {
   where: UserWhereUniqueInput!
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
+  update: UserUpdateWithoutVisitedDataInput!
+  create: UserCreateWithoutVisitedInput!
 }
 
 input UserWhereInput {
-  """Logical AND on all given filters."""
-  AND: [UserWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [UserWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   ip: String
-
-  """All values that are not equal to given value."""
   ip_not: String
-
-  """All values that are contained in given list."""
   ip_in: [String!]
-
-  """All values that are not contained in given list."""
   ip_not_in: [String!]
-
-  """All values less than the given value."""
   ip_lt: String
-
-  """All values less than or equal the given value."""
   ip_lte: String
-
-  """All values greater than the given value."""
   ip_gt: String
-
-  """All values greater than or equal the given value."""
   ip_gte: String
-
-  """All values containing the given string."""
   ip_contains: String
-
-  """All values not containing the given string."""
   ip_not_contains: String
-
-  """All values starting with the given string."""
   ip_starts_with: String
-
-  """All values not starting with the given string."""
   ip_not_starts_with: String
-
-  """All values ending with the given string."""
   ip_ends_with: String
-
-  """All values not ending with the given string."""
   ip_not_ends_with: String
   fingerprint: String
-
-  """All values that are not equal to given value."""
   fingerprint_not: String
-
-  """All values that are contained in given list."""
   fingerprint_in: [String!]
-
-  """All values that are not contained in given list."""
   fingerprint_not_in: [String!]
-
-  """All values less than the given value."""
   fingerprint_lt: String
-
-  """All values less than or equal the given value."""
   fingerprint_lte: String
-
-  """All values greater than the given value."""
   fingerprint_gt: String
-
-  """All values greater than or equal the given value."""
   fingerprint_gte: String
-
-  """All values containing the given string."""
   fingerprint_contains: String
-
-  """All values not containing the given string."""
   fingerprint_not_contains: String
-
-  """All values starting with the given string."""
   fingerprint_starts_with: String
-
-  """All values not starting with the given string."""
   fingerprint_not_starts_with: String
-
-  """All values ending with the given string."""
   fingerprint_ends_with: String
-
-  """All values not ending with the given string."""
   fingerprint_not_ends_with: String
   gender: GenderType
-
-  """All values that are not equal to given value."""
   gender_not: GenderType
-
-  """All values that are contained in given list."""
   gender_in: [GenderType!]
-
-  """All values that are not contained in given list."""
   gender_not_in: [GenderType!]
-  age: Int
-
-  """All values that are not equal to given value."""
-  age_not: Int
-
-  """All values that are contained in given list."""
-  age_in: [Int!]
-
-  """All values that are not contained in given list."""
-  age_not_in: [Int!]
-
-  """All values less than the given value."""
-  age_lt: Int
-
-  """All values less than or equal the given value."""
-  age_lte: Int
-
-  """All values greater than the given value."""
-  age_gt: Int
-
-  """All values greater than or equal the given value."""
-  age_gte: Int
-  minAge: Int
-
-  """All values that are not equal to given value."""
-  minAge_not: Int
-
-  """All values that are contained in given list."""
-  minAge_in: [Int!]
-
-  """All values that are not contained in given list."""
-  minAge_not_in: [Int!]
-
-  """All values less than the given value."""
-  minAge_lt: Int
-
-  """All values less than or equal the given value."""
-  minAge_lte: Int
-
-  """All values greater than the given value."""
-  minAge_gt: Int
-
-  """All values greater than or equal the given value."""
-  minAge_gte: Int
-  maxAge: Int
-
-  """All values that are not equal to given value."""
-  maxAge_not: Int
-
-  """All values that are contained in given list."""
-  maxAge_in: [Int!]
-
-  """All values that are not contained in given list."""
-  maxAge_not_in: [Int!]
-
-  """All values less than the given value."""
-  maxAge_lt: Int
-
-  """All values less than or equal the given value."""
-  maxAge_lte: Int
-
-  """All values greater than the given value."""
-  maxAge_gt: Int
-
-  """All values greater than or equal the given value."""
-  maxAge_gte: Int
-  audioPref: AudioPrefType
-
-  """All values that are not equal to given value."""
-  audioPref_not: AudioPrefType
-
-  """All values that are contained in given list."""
-  audioPref_in: [AudioPrefType!]
-
-  """All values that are not contained in given list."""
-  audioPref_not_in: [AudioPrefType!]
-  lastActive: DateTime
-
-  """All values that are not equal to given value."""
-  lastActive_not: DateTime
-
-  """All values that are contained in given list."""
-  lastActive_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  lastActive_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  lastActive_lt: DateTime
-
-  """All values less than or equal the given value."""
-  lastActive_lte: DateTime
-
-  """All values greater than the given value."""
-  lastActive_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  lastActive_gte: DateTime
-  isHost: Boolean
-
-  """All values that are not equal to given value."""
-  isHost_not: Boolean
-  isConnected: Boolean
-
-  """All values that are not equal to given value."""
-  isConnected_not: Boolean
-  updatedAt: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
   lookingFor_every: GenderObjectWhereInput
   lookingFor_some: GenderObjectWhereInput
   lookingFor_none: GenderObjectWhereInput
+  age: Int
+  age_not: Int
+  age_in: [Int!]
+  age_not_in: [Int!]
+  age_lt: Int
+  age_lte: Int
+  age_gt: Int
+  age_gte: Int
+  minAge: Int
+  minAge_not: Int
+  minAge_in: [Int!]
+  minAge_not_in: [Int!]
+  minAge_lt: Int
+  minAge_lte: Int
+  minAge_gt: Int
+  minAge_gte: Int
+  maxAge: Int
+  maxAge_not: Int
+  maxAge_in: [Int!]
+  maxAge_not_in: [Int!]
+  maxAge_lt: Int
+  maxAge_lte: Int
+  maxAge_gt: Int
+  maxAge_gte: Int
+  audioPref: AudioPrefType
+  audioPref_not: AudioPrefType
+  audioPref_in: [AudioPrefType!]
+  audioPref_not_in: [AudioPrefType!]
   accAudioPrefs_every: AudioPrefObjectWhereInput
   accAudioPrefs_some: AudioPrefObjectWhereInput
   accAudioPrefs_none: AudioPrefObjectWhereInput
+  lastActive: DateTime
+  lastActive_not: DateTime
+  lastActive_in: [DateTime!]
+  lastActive_not_in: [DateTime!]
+  lastActive_lt: DateTime
+  lastActive_lte: DateTime
+  lastActive_gt: DateTime
+  lastActive_gte: DateTime
+  isHost: Boolean
+  isHost_not: Boolean
+  isConnected: Boolean
+  isConnected_not: Boolean
   visited_every: UserWhereInput
   visited_some: UserWhereInput
   visited_none: UserWhereInput
@@ -2532,6 +1533,25 @@ input UserWhereInput {
   reportsReceived_every: ReportWhereInput
   reportsReceived_some: ReportWhereInput
   reportsReceived_none: ReportWhereInput
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
 }
 
 input UserWhereUniqueInput {
