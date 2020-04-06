@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import SVGTester from './SVGTester'
 import { Button } from './common'
+import useWindowSize from '../hooks/WindowSizeHook'
 
 const StyledVideoGrid = styled.div`
   position: absolute;
@@ -115,6 +116,8 @@ export default function VideoGrid(props) {
   const [submittedQuery, setSubmittedQuery] = React.useState('')
   const [isLoading, setIsLoading] = React.useState(false)
 
+  const { innerWidth } = useWindowSize()
+
   const handleClose = () => {
     setIsShown(false)
   }
@@ -140,7 +143,7 @@ export default function VideoGrid(props) {
   const getContent = () => {
     if (isLoading) {
       console.log('displayed')
-      const length = `${window.innerWidth / 3}px`
+      const length = `${innerWidth / 3}px`
       return (
         <SearchContent>
           <SVGTester height={length} width={length} />

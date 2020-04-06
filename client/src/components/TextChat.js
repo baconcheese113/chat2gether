@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useNotify } from '../hooks/NotifyContext'
 import { Button } from './common'
+import useWindowSize from '../hooks/WindowSizeHook'
 
 const consoleShow = keyframes`
   0% {bottom: -100px;}
@@ -100,6 +101,7 @@ export default function TextChat(props) {
 
   const { setTextNotify } = useNotify()
   const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
+  const { isPC } = useWindowSize()
 
   const onComment = e => {
     setTextChat(prev => [...prev, { comment: e.text, userId: e.userId }])
@@ -145,7 +147,7 @@ export default function TextChat(props) {
   }
 
   const handleConsoleFocus = isFocus => {
-    if (window.innerWidth > 600) return
+    if (isPC) return
     setEnabledWidgets({ ...enabledWidgets, localVideo: !isFocus })
   }
 

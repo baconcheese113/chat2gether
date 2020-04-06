@@ -5,6 +5,7 @@ import VideoGrid from './VideoGrid'
 import { useNotify } from '../hooks/NotifyContext'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { Button } from './common'
+import useWindowSize from '../hooks/WindowSizeHook'
 
 const syncRotate = keyframes`
   0% {transform: rotate(0deg);}
@@ -76,7 +77,7 @@ const UPDATE = { PAUSE: 'pause', PLAY: 'play', SEEKED: 'seeked' }
 
 /** ******************* Component Starts */
 export default function VideoPlayer(props) {
-  const { socketHelper, roomId, userId, flowDirection } = props
+  const { socketHelper, roomId, userId } = props
   const [currentVideo, setCurrentVideo] = React.useState(null)
   const [isShown, setIsShown] = React.useState(false)
   const [parser, setParser] = React.useState(new HtmlParse(null))
@@ -86,11 +87,12 @@ export default function VideoPlayer(props) {
 
   const player = React.useRef()
 
+  const { flowDirection, innerWidth, innerHeight } = useWindowSize()
   const { enabledWidgets } = useEnabledWidgets()
   const active = enabledWidgets.video
   const { videoNotify, setVideoNotify } = useNotify()
 
-  const coords = { x: window.innerWidth / 2, y: window.innerHeight / 3 }
+  const coords = { x: innerWidth / 2, y: innerHeight / 3 }
 
   // When user presses search
   const onSubmitSearch = async newQuery => {

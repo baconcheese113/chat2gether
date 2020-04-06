@@ -16,6 +16,7 @@ import { useSocket } from '../hooks/SocketContext'
 import { useMyUser } from '../hooks/MyUserContext'
 import ChatNav from './ChatNav'
 import { Button } from './common'
+import useWindowSize from '../hooks/WindowSizeHook'
 
 const StyledChatHub = styled.div`
   display: flex;
@@ -45,27 +46,19 @@ const CountdownSpan = styled.span`
 // On connection end or Find Next -> Find Room()
 
 export default function ChatHub() {
-  const [flowDirection, setFlowDirection] = React.useState(window.innerWidth > window.innerHeight ? 'row' : 'column')
-
   const { user } = useMyUser()
   const { localStream, requestCamera } = useLocalStream()
   const { enabledWidgets } = useEnabledWidgets()
   const { socketHelper, connectionMsg, remoteStream, roomId, resetSocket, otherUser, matchCountdown } = useSocket()
-
-  const updateFlowDirection = React.useCallback(() => {
-    const direction = window.innerWidth > window.innerHeight ? 'row' : 'column'
-    setFlowDirection(direction)
-  }, [])
+  const { flowDirection } = useWindowSize()
 
   const logWindowError = e => console.log(e)
   React.useEffect(() => {
-    window.addEventListener('resize', updateFlowDirection)
     window.addEventListener('error', logWindowError)
     return () => {
-      window.removeEventListener('resize', updateFlowDirection)
       window.removeEventListener('error', logWindowError)
     }
-  }, [updateFlowDirection])
+  }, [])
 
   const onUnload = React.useCallback(
     e => {
@@ -87,7 +80,7 @@ export default function ChatHub() {
     if (remoteStream) {
       return (
         <>
-          <VideoPlayer socketHelper={socketHelper} userId={user.id} roomId={roomId} flowDirection={flowDirection} />
+          <VideoPlayer socketHelper={socketHelper} userId={user.id} roomId={roomId} />
           <VideoWindow videoType="remoteVideo" stream={remoteStream} flowDirection={flowDirection} />
           <ProfileCard user={otherUser} />
           <TextChat user={user} socketHelper={socketHelper} room={roomId} />

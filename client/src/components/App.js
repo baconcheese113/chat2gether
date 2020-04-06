@@ -10,6 +10,7 @@ import { NotifyProvider } from '../hooks/NotifyContext'
 import SocketProvider from '../hooks/SocketContext'
 import { GET_ME } from '../queries/queries'
 import MyUserProvider from '../hooks/MyUserContext'
+import useWindowSize from '../hooks/WindowSizeHook'
 
 /**
  * App just handles passing to UserCreate, and passing to ChatHub
@@ -27,9 +28,9 @@ const StyledApp = styled.div`
 export default function App() {
   const [user, setUser] = React.useState(null)
   const [canRender, setCanRender] = React.useState(false)
-  const [viewportHeight, setViewportHeight] = React.useState(window.innerHeight)
 
   const client = useApolloClient()
+  const { innerHeight } = useWindowSize()
 
   React.useEffect(() => {
     if (document.cookie.split(';').filter(item => item.trim().startsWith('token=')).length === 0) {
@@ -48,21 +49,10 @@ export default function App() {
     fetchData()
   }, [client])
 
-  const updateViewportHeight = React.useCallback(() => {
-    setViewportHeight(window.innerHeight)
-  }, [])
-
-  React.useEffect(() => {
-    window.addEventListener('resize', updateViewportHeight)
-    return () => {
-      window.removeEventListener('resize', updateViewportHeight)
-    }
-  }, [updateViewportHeight])
-
   if (canRender) {
     if (user) {
       return (
-        <StyledApp height={viewportHeight}>
+        <StyledApp height={innerHeight}>
           <MyUserProvider>
             <EnabledWidgetsProvider>
               <SocketProvider>

@@ -4,6 +4,7 @@ import ToggleButton from './ToggleButton'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import { useNotify } from '../hooks/NotifyContext'
+import useWindowSize from '../hooks/WindowSizeHook'
 
 const StyledNavBar = styled.div`
   position: absolute;
@@ -33,6 +34,7 @@ export default function InCallNavBar(props) {
   const { localStream, requestCamera } = useLocalStream()
   const { videoNotify, countdownNotify, textNotify } = useNotify()
   const { enabledWidgets, featureToggle, chatSettings, setChatSettings } = useEnabledWidgets()
+  const { isPC } = useWindowSize()
 
   React.useEffect(() => {
     ;(async () => {
@@ -81,8 +83,6 @@ export default function InCallNavBar(props) {
   const hiddenNotifications = (countdownNotify | 0) + (videoNotify | 0) + (textNotify || 0)
 
   if (!enabledWidgets) return ''
-
-  const isPC = window.innerWidth > 600
 
   return (
     <StyledNavBar>

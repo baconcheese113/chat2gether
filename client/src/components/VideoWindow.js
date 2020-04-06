@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
+import useWindowSize from '../hooks/WindowSizeHook'
 
 const circlingDashes = keyframes`
   from { box-shadow: 0 0 0 10px #5e5e5e; }
@@ -81,7 +82,7 @@ function getMultiplier(videoWidth, videoHeight) {
 }
 
 export default function VideoWindow(props) {
-  const { stream, videoType, flowDirection } = props
+  const { stream, videoType } = props
 
   const [top, setTop] = React.useState(50)
   const [left, setLeft] = React.useState(50)
@@ -94,6 +95,7 @@ export default function VideoWindow(props) {
   const expansionTimerRef = React.useRef()
 
   const { chatSettings, enabledWidgets } = useEnabledWidgets()
+  const { flowDirection } = useWindowSize
 
   const handleDrag = e => {
     if (e.dataTransfer) {
