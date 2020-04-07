@@ -74,7 +74,8 @@ export default function Button(props) {
       className={className}
       onClick={onClick}
     >
-      {label || children}
+      {label}
+      {children}
     </StyledButton>
   )
 }

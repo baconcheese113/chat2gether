@@ -4,16 +4,54 @@ import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import { useSocket } from '../hooks/SocketContext'
 import Button from './common/Button'
+import useWindowSize from '../hooks/WindowSizeHook'
 
 const StyledChatNav = styled.div`
   position: absolute;
-  right: 20px;
+  right: 0;
   top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
+  overflow: hidden;
+  padding: 2px;
+`
+const Slide = styled.div`
+  display: flex;
+  left: ${p => (p.isExpanded ? 0 : p.slideWidth)}px;
+  position: relative;
+  transition: all 0.6s;
+`
+const Container = styled.div`
+  position: relative;
+  padding: 2px 0 2px 8px;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.6s;
+`
+const ExpansionButton = styled(Button)`
+  border-radius: 50% 0 0 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+`
+const ExpansionIcon = styled.i`
+  transform: scaleX(${p => (p.isExpanded ? 1 : -1)});
+  transition: all 0.8s;
+`
+const Row = styled.div`
+  position: relative;
+  display: flex;
 `
 const NextMatchButton = styled(Button)`
   border-radius: 10px 0 0 10px;
   color: ${p => (p.disabled ? '#aaa' : '#fff')};
 `
+
+const ReportButton = styled(Button)`
+  margin-top: 10px;
+`
+
 const NextMatchSVG = styled.svg`
   pointer-events: none;
   position: absolute;
@@ -36,26 +74,53 @@ const SettingsButton = styled(Button)`
 `
 
 export default function ChatNav() {
+  const [isExpanded, setIsExpanded] = React.useState(true)
+
   const { localStream } = useLocalStream()
   const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
-  const { nextMatch, canNextMatch } = useSocket()
+  const { nextMatch, canNextMatch, remoteStream } = useSocket()
+  const { isPC } = useWindowSize()
 
   const handleNextMatch = e => {
     e.stopPropagation()
     if (localStream && canNextMatch) nextMatch(localStream)
   }
 
+  const slideWidth = isPC ? 151 : 118
+
+  const getNextMatchButtonLabel = () => {
+    if (remoteStream) return 'Next Match'
+    if (!canNextMatch) return 'I gotchu...'
+    return 'Find Match'
+  }
+
   return (
-    <StyledChatNav>
-      <NextMatchButton data-cy="nextMatchButton" onClick={handleNextMatch} disabled={!canNextMatch}>
-        Next Match
-        <NextMatchSVG width="100%" height="100%" fill="transparent">
-          <NextMatchRect disabled={!canNextMatch} height="100%" width="100%" rx="15px" />
-        </NextMatchSVG>
-      </NextMatchButton>
-      <SettingsButton onClick={() => setEnabledWidgets({ ...enabledWidgets, menu: true })}>
-        <i className="fas fa-ellipsis-v" />
-      </SettingsButton>
+    <StyledChatNav isPC={isPC}>
+      <Slide isExpanded={isExpanded} slideWidth={slideWidth}>
+        <ExpansionButton onClick={() => setIsExpanded(!isExpanded)}>
+          <ExpansionIcon isExpanded={isExpanded} className="fas fa-chevron-right" />
+        </ExpansionButton>
+        <Container isExpanded={isExpanded}>
+          <Row>
+            <NextMatchButton
+              data-cy="nextMatchButton"
+              onClick={handleNextMatch}
+              disabled={!canNextMatch}
+              label={getNextMatchButtonLabel()}
+            >
+              <NextMatchSVG width="100%" height="100%" fill="transparent">
+                <NextMatchRect disabled={!canNextMatch} height="100%" width="100%" rx="15px" />
+              </NextMatchSVG>
+            </NextMatchButton>
+            {isPC && (
+              <SettingsButton onClick={() => setEnabledWidgets({ ...enabledWidgets, menu: true })}>
+                <i className="fas fa-ellipsis-v" />
+              </SettingsButton>
+            )}
+          </Row>
+          <ReportButton label="Report" disabled={!remoteStream} />
+        </Container>
+      </Slide>
     </StyledChatNav>
   )
 }
