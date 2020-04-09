@@ -86,7 +86,8 @@ export default {
     if (reportsOfThisType.length >= 2) {
       // HAMMER TIME
       const now = new Date()
-      const endAt = new Date().setHours(now.getHours() + 24)
+      const endAt = new Date()
+      endAt.setMinutes(now.getMinutes() + 15)
       await prisma.mutation.createBan({
         data: {
           reason: type,

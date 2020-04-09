@@ -163,6 +163,21 @@ export default function SocketProvider(props) {
     [client, getMe, onIdentity, onNextRoom, otherUser, resetSocket],
   )
 
+  const endCall = React.useCallback(async () => {
+    const data = { isHost: false, isConnected: false }
+    if (otherUser) {
+      console.log('Ending call with', otherUser)
+      data.visited = { connect: [{ id: otherUser.id }] }
+    }
+
+    resetSocket()
+    await client.mutate({
+      mutation: UPDATE_USER,
+      variables: { data },
+    })
+    await getMe()
+  }, [client, getMe, otherUser, resetSocket])
+
   nextMatch = React.useCallback(
     async localStream => {
       console.log('in nextMatch with ', user)
@@ -190,10 +205,11 @@ export default function SocketProvider(props) {
       if (socketHelper) {
         console.log('Could have used cached socketHelper', tempSocketHelper)
       }
-      const compatibleHost = await client.query({ query: FIND_ROOM, fetchPolicy: 'network-only' })
-      if (compatibleHost.error) {
+      const compatibleHost = await client.query({ query: FIND_ROOM, fetchPolicy: 'network-only', errorPolicy: 'all' })
+      if (compatibleHost.errors) {
         setCanNextMatch(true)
-        console.error(compatibleHost.error)
+        console.log(compatibleHost.errors)
+        setConnectionMsg(compatibleHost.errors[0].message)
         return
       }
       const host = compatibleHost.data.findRoom
@@ -241,6 +257,7 @@ export default function SocketProvider(props) {
         socketHelper,
         connectionMsg,
         remoteStream,
+        endCall,
         nextMatch,
         canNextMatch,
         roomId: room.current,

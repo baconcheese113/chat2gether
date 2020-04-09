@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useApolloClient } from '@apollo/client'
 import { Button } from './common'
-import { CREATE_REPORT } from '../queries/mutations'
+import { useMyUser } from '../hooks/MyUserContext'
+import ReportUserDialog from './ReportUserDialog'
 
 const StyledMatchHistory = styled.section`
   background-color: #3f3f3f;
@@ -56,10 +56,10 @@ const EmptyText = styled.p`
   color: #fff;
 `
 
-export default function MatchHistory(props) {
-  const { users } = props
+export default function MatchHistory() {
+  const { user } = useMyUser()
 
-  const client = useApolloClient()
+  const [offenderId, setOffenderId] = React.useState()
 
   const getIcon = gender => {
     if (gender === 'MALE') return 'fas fa-user-secret'
@@ -68,75 +68,44 @@ export default function MatchHistory(props) {
     return 'fas fa-user-astronaut'
   }
 
-  const handleReport = async u => {
-    if (!u) return
-    try {
-      const { error } = await client.mutate({
-        mutation: CREATE_REPORT,
-        variables: { data: { type: 'NO_VIDEO', offenderId: u.id } },
-      })
-      if (error) console.log('Error reporting', error)
-    } catch (err) {
-      console.log('now we swallowed', err)
-    }
-  }
-
   return (
-    <StyledMatchHistory>
-      <MatchList>
-        {users.length > 0 ? (
-          users.map(u => (
-            <MatchItem key={u.id}>
-              <i className={getIcon(u.gender)} />
-              <PillContainer>
-                <Pill>
-                  <i className="fas fa-angle-right" />
-                  {u.gender}
-                </Pill>
-                <Pill>
-                  <i className="fas fa-angle-right" />
-                  {u.age}
-                </Pill>
-              </PillContainer>
-              <ActionButtons>
-                <Button label="Message" />
-                <Button label="Report" onClick={() => handleReport(u)} />
-              </ActionButtons>
-            </MatchItem>
-          ))
-        ) : (
-          <EmptyText>No matches yet</EmptyText>
-        )}
-      </MatchList>
-    </StyledMatchHistory>
-  )
-}
+    <>
+      <StyledMatchHistory>
+        <MatchList>
+          {user.visited.length > 0 ? (
+            user.visited.map(u => {
+              const alreadyReported = user.reportsMade.some(r => r.offender.id === u.id)
+              return (
+                <MatchItem key={u.id}>
+                  <i className={getIcon(u.gender)} />
+                  <PillContainer>
+                    <Pill>
+                      <i className="fas fa-angle-right" />
+                      {u.gender}
+                    </Pill>
+                    <Pill>
+                      <i className="fas fa-angle-right" />
+                      {u.age}
+                    </Pill>
+                  </PillContainer>
+                  <ActionButtons>
+                    {/* <Button label="Message" /> */}
+                    <Button
+                      label={alreadyReported ? 'Reported' : 'Report'}
+                      onClick={() => setOffenderId(u.id)}
+                      disabled={alreadyReported}
+                    />
+                  </ActionButtons>
+                </MatchItem>
+              )
+            })
+          ) : (
+            <EmptyText>No matches yet</EmptyText>
+          )}
+        </MatchList>
+      </StyledMatchHistory>
 
-MatchHistory.defaultProps = {
-  users: [
-    {
-      gender: 'M2F',
-      age: 25,
-    },
-    {
-      gender: 'MALE',
-      age: 32,
-    },
-    {
-      gender: 'F2M',
-      age: 29,
-    },
-    {
-      gender: 'FEMALE',
-      age: 42,
-    },
-    {
-      gender: 'MALE',
-      age: 19,
-    },
-    {
-      gender: 'F2M',
-      age: 34,
-    },
-  ],
+      <ReportUserDialog open={!!offenderId} offenderId={offenderId} onClose={() => setOffenderId()} />
+    </>
+  )
 }

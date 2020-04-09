@@ -36,18 +36,18 @@ const OptionText = styled.span`
 `
 
 export default function ChoicePicker(props) {
-  const { selected, change, choices, height, width, fontSize, 'data-cy': dataCy } = props
+  const { selected, onChange, choices, height, width, fontSize, 'data-cy': dataCy } = props
   // props.choices is a list of strings to display as choices
   // props.selected is a list of the selected choices
-  // props.change is how to change the selected elements
+  // props.onChange is how to change the selected elements
 
   const handleClick = (e, choice) => {
     e.preventDefault()
     if (selected.find(obj => obj.name === choice)) {
       if (selected.length <= 1) return
-      change(selected.filter(obj => obj.name !== choice))
+      onChange(selected.filter(obj => obj.name !== choice))
     } else {
-      change([...selected, { name: choice }])
+      onChange([...selected, { name: choice }])
     }
   }
 

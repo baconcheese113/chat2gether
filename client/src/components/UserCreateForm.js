@@ -106,7 +106,7 @@ export default function UserCreateForm(props) {
         <ChoiceSlider
           data-cy="myGenderSlider"
           cur={gender}
-          change={setGender}
+          onChange={setGender}
           choices={GENDERS}
           height="1.5rem"
           width="100%"
@@ -123,7 +123,7 @@ export default function UserCreateForm(props) {
         <ChoicePicker
           data-cy="theirGenderPicker"
           selected={lookingFor}
-          change={setLookingFor}
+          onChange={setLookingFor}
           choices={GENDERS}
           height="1.5rem"
           width="100%"
@@ -131,11 +131,11 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>My Age</InputLabel>
-        <NumberSlider data-cy="myAgeSlider" numbers={[age]} change={changeNumbers} />
+        <NumberSlider data-cy="myAgeSlider" numbers={[age]} onChange={changeNumbers} />
       </Row>
       <Row>
         <InputLabel>Their age</InputLabel>
-        <NumberSlider data-cy="theirAgeSlider" numbers={[minAge, maxAge]} change={changeNumbers} showFill />
+        <NumberSlider data-cy="theirAgeSlider" numbers={[minAge, maxAge]} onChange={changeNumbers} showFill />
       </Row>
       <Row>
         <InputLabel>My Audio Preference</InputLabel>
@@ -143,7 +143,7 @@ export default function UserCreateForm(props) {
         <ChoiceSlider
           data-cy="myAudioSlider"
           cur={audioPref}
-          change={setAudioPref}
+          onChange={setAudioPref}
           choices={AUDIO_PREFS}
           height="1.5rem"
           width="100%"
@@ -160,7 +160,7 @@ export default function UserCreateForm(props) {
         <ChoicePicker
           data-cy="theirAudioPicker"
           selected={accAudioPrefs}
-          change={setAccAudioPrefs}
+          onChange={setAccAudioPrefs}
           choices={AUDIO_PREFS}
           height="1.5rem"
           width="100%"

@@ -65,6 +65,8 @@ type User {
   isHost: Boolean!
   isConnected: Boolean!
   visited: [User!]!
+  reportsMade: [Report!]
+  reportsReceived: [Report!]
   updatedAt: String!
   createdAt: String!
 }

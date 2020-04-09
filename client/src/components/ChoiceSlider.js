@@ -2,23 +2,28 @@ import React from 'react'
 import styled from 'styled-components'
 
 const StyledChoiceSlider = styled.div`
-  border-radius: 500rem; /* Large number to ensure rounded ends */
   width: ${p => p.width || '90%'};
   margin: 1rem auto;
   background-color: ${p => p.theme.colorGreyDark1};
-  display: flex;
-  justify-content: space-around;
-  position: relative;
   border: 2px solid ${p => p.theme.colorWhite1};
+  border-radius: ${p => (p.vertical ? 20 : 5000)}px; /* Large number to ensure rounded ends */
+  position: relative;
   font-size: ${p => p.fontSize || 'inherit'};
   cursor: pointer;
-`
+  -webkit-tap-highlight-color: transparent;
 
-const Option = styled.span`
+  display: grid;
+  grid-template-columns: ${p => (p.vertical ? '1fr' : `repeat(${p.totalChoices}, 1fr)`)};
+  grid-template-rows: ${p => (p.vertical ? `repeat(${p.totalChoices}, 1fr)` : '1fr')};
+`
+const Option = styled.div`
   border: none;
   border-radius: 3rem;
   width: 100%;
-  padding: ${p => p.height || '1rem'} 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${p => p.height || '1rem'} 0; /* 16px looks better */
   margin: 0;
   opacity: 0.8;
   color: ${p => (p.active ? 'white' : p.theme.colorPrimaryLight)};
@@ -33,35 +38,43 @@ const Option = styled.span`
 `
 
 const Slider = styled.div`
-  /* background-image: linear-gradient(
-    to bottom right,
-    ${p => p.theme.colorPrimary},
-    ${p => p.theme.colorGreyDark1}
-  ); */
   background-color: ${p => p.theme.colorPrimary};
   position: absolute;
-  width: ${p => 100 / p.choices.length}%;
-  top: 0;
+  width: ${p => (p.vertical ? 100 : 100 / p.choices.length)}%;
+  height: ${p => (p.vertical ? 100 / p.choices.length : 100)}%;
+  top: ${p => (p.vertical ? (p.selected / p.choices.length) * 100 : 0)}%;
   bottom: 0;
-  left: ${p => (p.selected / p.choices.length) * 100}%;
-  border-radius: 500rem;
-  transition: all 0.8s;
-  `
+  left: ${p => (p.vertical ? 0 : (p.selected / p.choices.length) * 100)}%;
+  border-radius: ${p => p.sliderBorderRadius};
+  transition: all ${p => (p.vertical ? 0.4 : 0.8)}s;
+`
 
 export default function ChoiceSlider(props) {
-  const { cur, change, choices, width, fontSize, 'data-cy': dataCy } = props
+  const { cur, onChange, choices, width, fontSize, vertical, 'data-cy': dataCy } = props
   // props.choices is a list of strings to display as choices
   // props.cur is the selected element
-  // props.change is how to change the cur selected element
+  // props.onChange is how to change the cur selected element
+
+  const sliderBorderRadius = React.useMemo(() => {
+    if (!vertical) return '5000px'
+    if (cur > 0 && cur < choices.length - 1) return '0px'
+    return `${cur === 0 ? '20px 20px' : '0px 0px'} ${cur === choices.length - 1 ? '20px 20px' : '0px 0px'}`
+  }, [choices.length, cur, vertical])
 
   return (
-    <StyledChoiceSlider width={width} fontSize={fontSize} data-cy={dataCy}>
-      <Slider choices={choices} selected={cur} />
+    <StyledChoiceSlider
+      width={width}
+      fontSize={fontSize}
+      data-cy={dataCy}
+      vertical={vertical}
+      totalChoices={choices.length}
+    >
+      <Slider choices={choices} selected={cur} vertical={vertical} sliderBorderRadius={sliderBorderRadius} />
       {choices.map((choice, index) => (
         <Option
           active={cur === index}
-          data-cy={cur === index && 'slider-active'}
-          onClick={() => change(index)}
+          data-cy={cur === index ? 'slider-active' : null}
+          onClick={() => onChange(index)}
           key={choice}
         >
           {choice.replace(/_/g, ' ')}
@@ -69,4 +82,8 @@ export default function ChoiceSlider(props) {
       ))}
     </StyledChoiceSlider>
   )
+}
+
+ChoiceSlider.defaultProps = {
+  fontSize: '12px',
 }

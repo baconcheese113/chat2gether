@@ -15,7 +15,8 @@ export default function MyUserProvider(props) {
 
   const getMe = React.useCallback(async () => {
     // setUser(updatedUser)
-    const { data, error } = await client.query({ query: GET_ME })
+    console.log('refreshing me')
+    const { data, error } = await client.query({ query: GET_ME, fetchPolicy: 'network-only' })
     if (data.me) {
       setUser(data.me)
     }

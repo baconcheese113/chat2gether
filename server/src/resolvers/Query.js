@@ -37,7 +37,11 @@ export default {
       visited { id } 
     }`,
     )
-    console.log('user', user, 'info', info)
+    // Make sure they're not banned
+    const bans = await prisma.query.bans({ where: { user: { id: userId }, endAt_gte: new Date() } })
+    if (bans.length) {
+      throw Error(`Please contact an admin`)
+    }
     const d = new Date()
     d.setMinutes(d.getMinutes() - 0.25)
     const potentialMatch = await prisma.query.users(

@@ -46,6 +46,12 @@ export const GET_ME = gql`
         gender
         age
       }
+      reportsMade {
+        type
+        offender {
+          id
+        }
+      }
     }
   }
 `

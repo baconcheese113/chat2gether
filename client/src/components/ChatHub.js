@@ -49,7 +49,7 @@ export default function ChatHub() {
   const { user } = useMyUser()
   const { localStream, requestCamera } = useLocalStream()
   const { enabledWidgets } = useEnabledWidgets()
-  const { socketHelper, connectionMsg, remoteStream, roomId, resetSocket, otherUser, matchCountdown } = useSocket()
+  const { socketHelper, connectionMsg, remoteStream, roomId, otherUser, matchCountdown } = useSocket()
   const { flowDirection } = useWindowSize()
 
   const logWindowError = e => console.log(e)
@@ -87,7 +87,6 @@ export default function ChatHub() {
           <Countdown socketHelper={socketHelper} myUserId={user.id} roomId={roomId} />
           <ChatNav />
           <InCallNavBar
-            resetState={resetSocket}
             buttons={{ stop: true, mic: true, speaker: true, profile: true, countdown: true, chat: true, video: true }}
           />
           <VideoWindow videoType="localVideo" stream={localStream} flowDirection={flowDirection} />
@@ -107,11 +106,10 @@ export default function ChatHub() {
         {matchCountdown > 0 && <CountdownSpan>{matchCountdown}</CountdownSpan>}
         {enabledWidgets.updatePref && <UserUpdateForm />}
         {enabledWidgets.stats && <LineGraph />}
-        {enabledWidgets.matches && <MatchHistory users={user.visited} />}
+        {enabledWidgets.matches && <MatchHistory />}
         <ChatNav />
         <VideoWindow videoType="localVideo" stream={localStream} flowDirection={flowDirection} />
         <InCallNavBar
-          resetState={resetSocket}
           buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
         />
       </PageContainer>

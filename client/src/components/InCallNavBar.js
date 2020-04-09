@@ -5,6 +5,7 @@ import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import { useNotify } from '../hooks/NotifyContext'
 import useWindowSize from '../hooks/WindowSizeHook'
+import { useSocket } from '../hooks/SocketContext'
 
 const StyledNavBar = styled.div`
   position: absolute;
@@ -26,7 +27,7 @@ const RightAligned = styled.div`
 `
 
 export default function InCallNavBar(props) {
-  const { resetState, buttons } = props
+  const { buttons } = props
 
   const [showLeft, setShowLeft] = React.useState(false)
   const [isMobile, setIsMobile] = React.useState(false)
@@ -34,6 +35,7 @@ export default function InCallNavBar(props) {
   const { localStream, requestCamera } = useLocalStream()
   const { videoNotify, countdownNotify, textNotify } = useNotify()
   const { enabledWidgets, featureToggle, chatSettings, setChatSettings } = useEnabledWidgets()
+  const { endCall } = useSocket()
   const { isPC } = useWindowSize()
 
   React.useEffect(() => {
@@ -89,7 +91,7 @@ export default function InCallNavBar(props) {
       <LeftAligned>
         {showLeft || isPC ? (
           <>
-            {buttons.stop && <ToggleButton iconClass="fas fa-stop" data-cy="navStopButton" onClick={resetState} />}
+            {buttons.stop && <ToggleButton iconClass="fas fa-stop" data-cy="navStopButton" onClick={endCall} />}
             {buttons.mic && (
               <ToggleButton
                 data-cy="navMicButton"
