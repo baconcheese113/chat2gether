@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ToggleButton from './ToggleButton'
+import ToggleButtonWithMeter from './ToggleButtonWithMeter'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import { useNotify } from '../hooks/NotifyContext'
@@ -35,7 +36,7 @@ export default function InCallNavBar(props) {
   const { localStream, requestCamera } = useLocalStream()
   const { videoNotify, countdownNotify, textNotify } = useNotify()
   const { enabledWidgets, featureToggle, chatSettings, setChatSettings } = useEnabledWidgets()
-  const { endCall } = useSocket()
+  const { endCall, remoteStream } = useSocket()
   const { isPC } = useWindowSize()
 
   React.useEffect(() => {
@@ -93,19 +94,21 @@ export default function InCallNavBar(props) {
           <>
             {buttons.stop && <ToggleButton iconClass="fas fa-stop" data-cy="navStopButton" onClick={endCall} />}
             {buttons.mic && (
-              <ToggleButton
+              <ToggleButtonWithMeter
                 data-cy="navMicButton"
                 iconClass={`fas fa-microphone${chatSettings.micMute ? '-slash' : ''}`}
                 onClick={handleMutePress}
                 active={chatSettings.micMute ? 0 : 1}
+                stream={localStream}
               />
             )}
             {buttons.speaker && (
-              <ToggleButton
+              <ToggleButtonWithMeter
                 data-cy="navSpeakerButton"
                 iconClass={`fas fa-volume${chatSettings.speakerMute ? '-mute' : '-up'}`}
                 onClick={() => setChatSettings({ ...chatSettings, speakerMute: !chatSettings.speakerMute })}
                 active={chatSettings.speakerMute ? 0 : 1}
+                stream={remoteStream}
               />
             )}
             {isMobile && <ToggleButton data-cy="navCameraFlipButton" iconClass="fas fa-camera" onClick={flipCamera} />}

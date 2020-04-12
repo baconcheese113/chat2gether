@@ -11,6 +11,9 @@ const StyledToggleButton = styled.div`
   margin-left: 0.5rem;
 `
 const ButtonElem = styled(Button)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0;
   border-radius: 50%;
   /* background-color: ${p => (p.active ? p.theme.colorPrimary : p.theme.colorGreyDark2)}; */
@@ -36,12 +39,12 @@ const Notification = styled.p`
 `
 
 export default function ToggleButton(props) {
-  const { title, iconClass, onClick, notification, active, 'data-cy': dataCy } = props
+  const { children, iconClass, onClick, notification, active, 'data-cy': dataCy } = props
   return (
     <StyledToggleButton data-cy={dataCy}>
       <ButtonElem flex onClick={onClick} active={active}>
-        {title}
-        {iconClass && <i className={iconClass} />}
+        {children}
+        {!children && iconClass && <i className={iconClass} />}
       </ButtonElem>
       {notification > 0 && <Notification>{notification}</Notification>}
     </StyledToggleButton>
