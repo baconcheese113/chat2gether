@@ -164,49 +164,49 @@ export default function UserUpdateForm() {
         <Row>
           <InputLabel>I want to chat with</InputLabel>
           <ChoicePicker
-            data-cy="theirGenderPicker"
-            selected={lookingFor}
-            onChange={setLookingFor}
             choices={GENDERS}
+            data-cy="theirGenderPicker"
             height="1.5rem"
+            selected={lookingFor}
             width="100%"
+            onChange={setLookingFor}
           />
         </Row>
         <Row>
           <InputLabel>Their Age</InputLabel>
-          <NumberSlider data-cy="theirAgeSlider" numbers={[minAge, maxAge]} onChange={changeNumbers} showFill />
+          <NumberSlider showFill data-cy="theirAgeSlider" numbers={[minAge, maxAge]} onChange={changeNumbers} />
         </Row>
         <Row>
           <InputLabel>My Audio Preference</InputLabel>
           <ChoiceSlider
-            data-cy="myAudioSlider"
-            cur={audioPref}
-            onChange={setAudioPref}
             choices={AUDIO_PREFS}
+            cur={audioPref}
+            data-cy="myAudioSlider"
+            fontSize="1.2rem"
             height="1.5rem"
             width="100%"
-            fontSize="1.2rem"
+            onChange={setAudioPref}
           />
         </Row>
         <Row>
           <InputLabel>Preferences I&apos;ll do</InputLabel>
           <ChoicePicker
-            data-cy="theirAudioPicker"
-            selected={accAudioPrefs}
-            onChange={setAccAudioPrefs}
             choices={AUDIO_PREFS}
-            height="1.5rem"
-            width="100%"
+            data-cy="theirAudioPicker"
             fontSize="1.1rem"
+            height="1.5rem"
+            selected={accAudioPrefs}
+            width="100%"
+            onChange={setAccAudioPrefs}
           />
         </Row>
       </ScrollContent>
       <SubmitButton
-        data-cy="applyChangesButton"
         primary
-        onClick={handleSubmit}
+        data-cy="applyChangesButton"
         disabled={!hasChanges || loading}
         label="Apply"
+        onClick={handleSubmit}
       />
     </StyledForm>
   )

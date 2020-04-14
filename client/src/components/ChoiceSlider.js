@@ -63,19 +63,19 @@ export default function ChoiceSlider(props) {
 
   return (
     <StyledChoiceSlider
-      width={width}
-      fontSize={fontSize}
       data-cy={dataCy}
-      vertical={vertical}
+      fontSize={fontSize}
       totalChoices={choices.length}
+      vertical={vertical}
+      width={width}
     >
-      <Slider choices={choices} selected={cur} vertical={vertical} sliderBorderRadius={sliderBorderRadius} />
+      <Slider choices={choices} selected={cur} sliderBorderRadius={sliderBorderRadius} vertical={vertical} />
       {choices.map((choice, index) => (
         <Option
+          key={choice}
           active={cur === index}
           data-cy={cur === index ? 'slider-active' : null}
           onClick={() => onChange(index)}
-          key={choice}
         >
           {choice.replace(/_/g, ' ')}
         </Option>

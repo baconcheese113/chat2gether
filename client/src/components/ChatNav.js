@@ -108,18 +108,18 @@ export default function ChatNav() {
       <StyledChatNav isPC={isPC}>
         <Slide isExpanded={isExpanded} slideWidth={slideWidth}>
           <ExpansionButton onClick={() => setIsExpanded(!isExpanded)}>
-            <ExpansionIcon isExpanded={isExpanded} className="fas fa-chevron-right" />
+            <ExpansionIcon className="fas fa-chevron-right" isExpanded={isExpanded} />
           </ExpansionButton>
           <Container isExpanded={isExpanded}>
             <Row>
               <NextMatchButton
                 data-cy="nextMatchButton"
-                onClick={handleNextMatch}
                 disabled={!canNextMatch}
                 label={getNextMatchButtonLabel()}
+                onClick={handleNextMatch}
               >
-                <NextMatchSVG width="100%" height="100%" fill="transparent">
-                  <NextMatchRect disabled={!canNextMatch} height="100%" width="100%" rx="15px" />
+                <NextMatchSVG fill="transparent" height="100%" width="100%">
+                  <NextMatchRect disabled={!canNextMatch} height="100%" rx="15px" width="100%" />
                 </NextMatchSVG>
               </NextMatchButton>
               {isPC && (
@@ -128,12 +128,12 @@ export default function ChatNav() {
                 </SettingsButton>
               )}
             </Row>
-            <ReportButton label="Report" disabled={!remoteStream} onClick={() => setDialogOpen(true)} />
+            <ReportButton disabled={!remoteStream} label="Report" onClick={() => setDialogOpen(true)} />
           </Container>
         </Slide>
       </StyledChatNav>
 
-      {otherUser && <ReportUserDialog open={dialogOpen} offenderId={otherUser.id} onClose={handleDialogClose} />}
+      {otherUser && <ReportUserDialog offenderId={otherUser.id} open={dialogOpen} onClose={handleDialogClose} />}
     </>
   )
 }

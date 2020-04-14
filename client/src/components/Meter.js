@@ -201,55 +201,53 @@ export default function Meter() {
     }
   })
 
-  // console.log(isNewVal)
-
   return (
     <MeterContainer>
       <MeterLabels>Them</MeterLabels>
       <Bar ref={mainMeter}>
         <Center speed={number > 0 && !isSliding ? 20 / number : 2} />
-        <BarFill number={number} isNewVal={isNewVal} top={0} bottom={100 - otherNum / 2} />
-        <BarFill number={number} bottom={0} top={100 - number / 2} />
-        <BracketText bottom={bracketAttrs[0].bottom} scale={bracketAttrs[0].scale} opacity={bracketAttrs[0].opacity}>
+        <BarFill bottom={100 - otherNum / 2} isNewVal={isNewVal} number={number} top={0} />
+        <BarFill bottom={0} number={number} top={100 - number / 2} />
+        <BracketText bottom={bracketAttrs[0].bottom} opacity={bracketAttrs[0].opacity} scale={bracketAttrs[0].scale}>
           Oh, we&apos;re starting?
         </BracketText>
-        <BracketText bottom={bracketAttrs[1].bottom} scale={bracketAttrs[1].scale} opacity={bracketAttrs[1].opacity}>
+        <BracketText bottom={bracketAttrs[1].bottom} opacity={bracketAttrs[1].opacity} scale={bracketAttrs[1].scale}>
           I think I like you!
         </BracketText>
-        <BracketText bottom={bracketAttrs[2].bottom} scale={bracketAttrs[2].scale} opacity={bracketAttrs[2].opacity}>
+        <BracketText bottom={bracketAttrs[2].bottom} opacity={bracketAttrs[2].opacity} scale={bracketAttrs[2].scale}>
           This is great!
         </BracketText>
-        <BracketText bottom={bracketAttrs[3].bottom} scale={bracketAttrs[3].scale} opacity={bracketAttrs[3].opacity}>
+        <BracketText bottom={bracketAttrs[3].bottom} opacity={bracketAttrs[3].opacity} scale={bracketAttrs[3].scale}>
           Oh wow, we should be friends!
         </BracketText>
-        <BracketText bottom={bracketAttrs[4].bottom} scale={bracketAttrs[4].scale} opacity={bracketAttrs[4].opacity}>
+        <BracketText bottom={bracketAttrs[4].bottom} opacity={bracketAttrs[4].opacity} scale={bracketAttrs[4].scale}>
           BFF&apos;s Forever!
         </BracketText>
 
-        <BracketText top={otherAttrs[0].top} scale={otherAttrs[0].scale} opacity={otherAttrs[0].opacity}>
+        <BracketText opacity={otherAttrs[0].opacity} scale={otherAttrs[0].scale} top={otherAttrs[0].top}>
           Oh, we&apos;re starting?
         </BracketText>
-        <BracketText top={otherAttrs[1].top} scale={otherAttrs[1].scale} opacity={otherAttrs[1].opacity}>
+        <BracketText opacity={otherAttrs[1].opacity} scale={otherAttrs[1].scale} top={otherAttrs[1].top}>
           I think I like you!
         </BracketText>
-        <BracketText top={otherAttrs[2].top} scale={otherAttrs[2].scale} opacity={otherAttrs[2].opacity}>
+        <BracketText opacity={otherAttrs[2].opacity} scale={otherAttrs[2].scale} top={otherAttrs[2].top}>
           This is great!
         </BracketText>
-        <BracketText top={otherAttrs[3].top} scale={otherAttrs[3].scale} opacity={otherAttrs[3].opacity}>
+        <BracketText opacity={otherAttrs[3].opacity} scale={otherAttrs[3].scale} top={otherAttrs[3].top}>
           Oh wow, we should be friends!
         </BracketText>
-        <BracketText top={otherAttrs[4].top} scale={otherAttrs[4].scale} opacity={otherAttrs[4].opacity}>
+        <BracketText opacity={otherAttrs[4].opacity} scale={otherAttrs[4].scale} top={otherAttrs[4].top}>
           BFF&apos;s Forever!
         </BracketText>
         <Slider
           active={isSliding}
           bottom={number / 2}
-          onTouchStart={e => startUpdating(e)}
           onMouseDown={e => startUpdating(e)}
-          onTouchEnd={e => stopUpdating(e)}
-          onMouseUp={e => stopUpdating(e)}
-          onTouchMove={followUpdate}
           onMouseMove={followUpdate}
+          onMouseUp={e => stopUpdating(e)}
+          onTouchEnd={e => stopUpdating(e)}
+          onTouchMove={followUpdate}
+          onTouchStart={e => startUpdating(e)}
         >
           <i className="fas fa-grip-lines" />
         </Slider>

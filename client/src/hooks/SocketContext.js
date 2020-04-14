@@ -93,14 +93,14 @@ export default function SocketProvider(props) {
       setOtherUser(u)
       setConnectionMsg(
         <PrefMatcher
-          myPref={user.audioPref}
           myAccPrefs={user.accAudioPrefs.map(lf => lf.name)}
           myAge={user.age}
           myGender={user.gender}
-          theirPref={u.audioPref}
+          myPref={user.audioPref}
           theirAccPrefs={u.accAudioPrefs.map(lf => lf.name)}
           theirAge={u.age}
           theirGender={u.gender}
+          theirPref={u.audioPref}
         />,
       )
       startCountdown()

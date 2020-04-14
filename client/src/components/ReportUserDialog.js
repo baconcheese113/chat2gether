@@ -30,23 +30,23 @@ export default function ReportUserDialog(props) {
 
   return (
     <Dialog
-      open={open}
-      onConfirm={handleConfirm}
-      onCancel={onClose}
-      title="Report User"
       confirmText="Report"
-      isLoading={isLoading}
       disabled={selectedTypeIdx === 0}
+      isLoading={isLoading}
+      open={open}
+      title="Report User"
+      onCancel={onClose}
+      onConfirm={handleConfirm}
     >
       <Subtitle>
         Only report if the misuse falls into one of the following categories. Select whichever best describes it.
       </Subtitle>
       <ChoiceSlider
-        width="100%"
-        choices={REPORT_TYPES.map(t => `${t.name} - ${t.desc}`)}
-        onChange={idx => setSelectedTypeIdx(idx)}
-        cur={selectedTypeIdx}
         vertical
+        choices={REPORT_TYPES.map(t => `${t.name} - ${t.desc}`)}
+        cur={selectedTypeIdx}
+        width="100%"
+        onChange={idx => setSelectedTypeIdx(idx)}
       />
     </Dialog>
   )

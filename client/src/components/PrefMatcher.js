@@ -95,11 +95,11 @@ export default function PrefMatcher(props) {
       return (
         <Chip
           key={pref}
-          selected={pref === chosenPref}
-          matched={matchedPref}
-          hiden={!matchedPref && startHide}
-          removed={!matchedPref && startRemove}
           grayedOut={!accPrefs.includes(pref)}
+          hiden={!matchedPref && startHide}
+          matched={matchedPref}
+          removed={!matchedPref && startRemove}
+          selected={pref === chosenPref}
         >
           <ChipTitle>{pref.replace(/_/g, ' ')}</ChipTitle>
           {matchedPref && canExtend && <DrawLine extend={startExtend} />}

@@ -80,23 +80,23 @@ export default function ChatHub() {
     if (remoteStream) {
       return (
         <>
-          <VideoPlayer socketHelper={socketHelper} userId={user.id} roomId={roomId} />
-          <VideoWindow videoType="remoteVideo" stream={remoteStream} flowDirection={flowDirection} />
+          <VideoPlayer roomId={roomId} socketHelper={socketHelper} userId={user.id} />
+          <VideoWindow flowDirection={flowDirection} stream={remoteStream} videoType="remoteVideo" />
           <ProfileCard user={otherUser} />
-          <TextChat user={user} socketHelper={socketHelper} room={roomId} />
-          <Countdown socketHelper={socketHelper} myUserId={user.id} roomId={roomId} />
+          <TextChat room={roomId} socketHelper={socketHelper} user={user} />
+          <Countdown myUserId={user.id} roomId={roomId} socketHelper={socketHelper} />
           <ChatNav />
           <InCallNavBar
             buttons={{ stop: true, mic: true, speaker: true, profile: true, countdown: true, chat: true, video: true }}
           />
-          <VideoWindow videoType="localVideo" stream={localStream} flowDirection={flowDirection} />
+          <VideoWindow flowDirection={flowDirection} stream={localStream} videoType="localVideo" />
         </>
       )
     }
     if (!localStream) {
       return (
         <PageContainer>
-          <Button data-cy="shareVideoButton" onClick={() => requestCamera()} label="Share Video to Begin" />
+          <Button data-cy="shareVideoButton" label="Share Video to Begin" onClick={() => requestCamera()} />
         </PageContainer>
       )
     }
@@ -108,7 +108,7 @@ export default function ChatHub() {
         {enabledWidgets.stats && <LineGraph />}
         {enabledWidgets.matches && <MatchHistory />}
         <ChatNav />
-        <VideoWindow videoType="localVideo" stream={localStream} flowDirection={flowDirection} />
+        <VideoWindow flowDirection={flowDirection} stream={localStream} videoType="localVideo" />
         <InCallNavBar
           buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
         />

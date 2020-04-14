@@ -42,7 +42,7 @@ export default function ToggleButton(props) {
   const { children, iconClass, onClick, notification, active, 'data-cy': dataCy } = props
   return (
     <StyledToggleButton data-cy={dataCy}>
-      <ButtonElem flex onClick={onClick} active={active}>
+      <ButtonElem flex active={active} onClick={onClick}>
         {children}
         {!children && iconClass && <i className={iconClass} />}
       </ButtonElem>

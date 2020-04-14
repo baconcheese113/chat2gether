@@ -223,9 +223,9 @@ export default function Countdown(props) {
     <StyledCountdown active={active}>
       <TextContainer>
         <CountdownText
+          className={status === 'started' && 'animated'}
           data-cy="countdownText"
           fontSize={status === 'started' ? '4.5rem' : '1.4rem'}
-          className={status === 'started' && 'animated'}
           spacing={spacing}
         >
           {countdownText}
@@ -233,17 +233,17 @@ export default function Countdown(props) {
       </TextContainer>
       <ScanLine animated={status === 'started'} spacing={spacing} />
       <ButtonsContainer>
-        {status === 'none' && <ActionButton onClick={handleRequest} label="Request" />}
+        {status === 'none' && <ActionButton label="Request" onClick={handleRequest} />}
         {status === 'requested' && !isRequester && (
-          <ActionButton data-cy="countdownStartButton" onClick={handleStart} label="Start" />
+          <ActionButton data-cy="countdownStartButton" label="Start" onClick={handleStart} />
         )}
         {(status === 'started' || status === 'requested') && (
           <ActionButton
-            data-cy="countdownCancelButton"
             animated={status === 'started'}
+            data-cy="countdownCancelButton"
+            label="Cancel"
             spacing={spacing}
             onClick={handleCancel}
-            label="Cancel"
           />
         )}
       </ButtonsContainer>

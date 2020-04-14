@@ -34,16 +34,16 @@ export default function NumberSlider(props) {
   return (
     <StyledNumberSlider>
       <StyledSlider
+        aria-labelledby="range-slider"
         classes={{ valueLabel: 'slider-label' }}
         data-cy={dataCy}
-        value={numbers}
-        onChange={handleSliderChange}
         defaultValue={numbers}
-        valueLabelDisplay="on"
-        aria-labelledby="range-slider"
         getAriaValueText={val => `${val} years`}
         max={MAX_AGE}
         min={MIN_AGE}
+        value={numbers}
+        valueLabelDisplay="on"
+        onChange={handleSliderChange}
       />
     </StyledNumberSlider>
   )

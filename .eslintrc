@@ -45,6 +45,14 @@
       "absolute-first"
     ],
     "import/newline-after-import": "error",
+    "react/jsx-sort-props": [
+      "error",
+      {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "reservedFirst": true
+      }
+    ],
     "prettier/prettier": "error",
     "react/prop-types": 0,
     "no-underscore-dangle": 0,

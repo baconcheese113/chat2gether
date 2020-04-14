@@ -64,14 +64,14 @@ export default function Button(props) {
 
   return (
     <StyledButton
-      type="button"
-      flex={flexStyle}
-      borderRadius={borderRadius}
       backgroundColor={backgroundColor}
-      fontSize={fontSize}
-      disabled={disabled}
-      data-cy={dataCy}
+      borderRadius={borderRadius}
       className={className}
+      data-cy={dataCy}
+      disabled={disabled}
+      flex={flexStyle}
+      fontSize={fontSize}
+      type="button"
       onClick={onClick}
     >
       {label}

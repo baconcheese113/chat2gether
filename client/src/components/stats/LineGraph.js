@@ -170,17 +170,17 @@ export default function LineGraph() {
     return (
       <rect
         key={timeSlot}
-        onMouseOver={() => setStatsWindow(statsObj)}
-        onMouseOut={() => setStatsWindow(null)}
-        onFocus={() => setStatsWindow(statsObj)}
-        onBlur={() => setStatsWindow(null)}
         height={selectHeight}
-        width={intSpace.x}
-        y={gEnd.y - selectHeight}
-        x={gStart.x + timeSlotSpread - intSpace.x / 2}
         opacity="0"
         rx="5"
         ry="5"
+        width={intSpace.x}
+        x={gStart.x + timeSlotSpread - intSpace.x / 2}
+        y={gEnd.y - selectHeight}
+        onBlur={() => setStatsWindow(null)}
+        onFocus={() => setStatsWindow(statsObj)}
+        onMouseOut={() => setStatsWindow(null)}
+        onMouseOver={() => setStatsWindow(statsObj)}
       />
     )
   }
@@ -210,10 +210,10 @@ export default function LineGraph() {
               key={`circle${gender}${idx}${minuteSpread}`}
               cx={xLoc}
               cy={yLoc}
+              fill={GENDER_COLORS[gender]}
+              r="5"
               timeSlot={idx}
               wave={GENDERS.findIndex(v => v === gender) + 1}
-              r="5"
-              fill={GENDER_COLORS[gender]}
             />,
           ]
           return { leadLine, shadowLine, circles }
@@ -225,18 +225,18 @@ export default function LineGraph() {
       <g key={`line${gender}${minuteSpread}`}>
         <LeadLine
           d={`${leadLine} V ${vb.y} H 0`}
+          dashArray={GENDER_DASHARRAY[gender]}
+          fill={`url(#grad${gender})`}
           stroke={GENDER_COLORS[gender]}
           strokeLinecap="round"
           strokeWidth="3"
-          dashArray={GENDER_DASHARRAY[gender]}
-          fill={`url(#grad${gender})`}
         />
         <ShadowLine
           d={`${shadowLine}`}
+          fill="none"
           stroke={`url(#grad${gender})`}
           strokeLinecap="round"
           strokeWidth="15"
-          fill="none"
         />
         {circles}
       </g>
@@ -258,13 +258,13 @@ export default function LineGraph() {
         const roundedTimeAgo = Math.round((timeAgo * 100) / 100)
         return (
           <text
+            key={idx}
+            alignmentBaseline="central"
+            fill="#ccc"
+            fontSize={intervalSize}
+            textAnchor="middle"
             x={gStart.x + intSpace.x * idx}
             y={gEnd.y + vb.y * 0.02}
-            key={idx}
-            fill="#ccc"
-            textAnchor="middle"
-            fontSize={intervalSize}
-            alignmentBaseline="central"
           >
             {roundedTimeAgo || 'Now'}
           </text>
@@ -273,15 +273,15 @@ export default function LineGraph() {
     return (
       <g>
         {xVals}
-        <text x={gEnd.x + 20} y={gStart.y + intSpace.y} fill="#ccc" fontSize={intervalSize} alignmentBaseline="central">
+        <text alignmentBaseline="central" fill="#ccc" fontSize={intervalSize} x={gEnd.x + 20} y={gStart.y + intSpace.y}>
           {Math.round((maxLineHeight.current * 3) / 4)} Users
         </text>
         <text
-          x={gEnd.x + 20}
-          y={gStart.y + intSpace.y * ((numIntervalsY * 3) / 4)}
+          alignmentBaseline="central"
           fill="#ccc"
           fontSize={intervalSize}
-          alignmentBaseline="central"
+          x={gEnd.x + 20}
+          y={gStart.y + intSpace.y * ((numIntervalsY * 3) / 4)}
         >
           {Math.round(maxLineHeight.current / 4)} Users
         </text>
@@ -299,12 +299,12 @@ export default function LineGraph() {
       .map((_, idx) => (
         <rect
           key={idx}
-          x={gStart.x}
-          width={graph.x}
-          y={gEnd.y - idx * intSpace.y}
-          height="1"
           fill="white"
+          height="1"
           opacity=".1"
+          width={graph.x}
+          x={gStart.x}
+          y={gEnd.y - idx * intSpace.y}
         />
       ))
   }
@@ -318,20 +318,20 @@ export default function LineGraph() {
             return (
               <g key={g}>
                 <rect
+                  fill={GENDER_COLORS[g]}
+                  height="5"
                   rx="2"
                   ry="5"
+                  width="20"
                   x={(vb.x / 4) * idx + 20}
                   y={vb.y * 0.9}
-                  width="20"
-                  height="5"
-                  fill={GENDER_COLORS[g]}
                 />
                 <text
-                  x={(vb.x / 4) * idx + 50}
-                  y={vb.y * 0.9 + 0.005 * vb.x}
+                  alignmentBaseline="central"
                   fill="#ccc"
                   fontSize={legendSize}
-                  alignmentBaseline="central"
+                  x={(vb.x / 4) * idx + 50}
+                  y={vb.y * 0.9 + 0.005 * vb.x}
                 >
                   {g}
                 </text>
@@ -357,15 +357,15 @@ export default function LineGraph() {
   return (
     <StyledLineGraph>
       <SVGContainer
-        width="100%"
         style={{ height: 'auto' }}
         viewBox={`0 0 ${vb.x} ${vb.y}`}
+        width="100%"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
           <linearGradient id="gradMALE" x2="0" y2="100%">
             <stop offset="0%" stopColor={GENDER_COLORS.MALE} stopOpacity=".4">
-              <animate ref={gradAnimateMale} attributeName="stop-opacity" values="0; 0; .4" dur="6s" repeatCount="1" />
+              <animate ref={gradAnimateMale} attributeName="stop-opacity" dur="6s" repeatCount="1" values="0; 0; .4" />
             </stop>
             <stop offset="100%" stopColor={GENDER_COLORS.MALE} stopOpacity="0" />
           </linearGradient>
@@ -374,32 +374,32 @@ export default function LineGraph() {
               <animate
                 ref={gradAnimateFemale}
                 attributeName="stop-opacity"
-                values="0; 0; .4"
                 dur="6s"
                 repeatCount="1"
+                values="0; 0; .4"
               />
             </stop>
             <stop offset="100%" stopColor={GENDER_COLORS.FEMALE} stopOpacity="0" />
           </linearGradient>
           <linearGradient id="gradM2F" x2="0" y2="100%">
             <stop offset="0%" stopColor={GENDER_COLORS.M2F} stopOpacity=".4">
-              <animate ref={gradAnimateM2F} attributeName="stop-opacity" values="0; 0; .4" dur="6s" repeatCount="1" />
+              <animate ref={gradAnimateM2F} attributeName="stop-opacity" dur="6s" repeatCount="1" values="0; 0; .4" />
             </stop>
             <stop offset="100%" stopColor={GENDER_COLORS.M2F} stopOpacity="0" />
           </linearGradient>
           <linearGradient id="gradF2M" x2="0" y2="100%">
             <stop offset="0%" stopColor={GENDER_COLORS.F2M} stopOpacity=".4">
-              <animate ref={gradAnimateF2M} attributeName="stop-opacity" values="0; 0; .4" dur="6s" repeatCount="1" />
+              <animate ref={gradAnimateF2M} attributeName="stop-opacity" dur="6s" repeatCount="1" values="0; 0; .4" />
             </stop>
             <stop offset="100%" stopColor={GENDER_COLORS.F2M} stopOpacity="0" />
           </linearGradient>
 
           <mask id="mask">
-            <rect width={graph.x} height={graph.y} x={gStart.x} y={gStart.y} fill="white" />
+            <rect fill="white" height={graph.y} width={graph.x} x={gStart.x} y={gStart.y} />
           </mask>
         </defs>
-        <path d={`M${gStart.x} ${gEnd.y} H ${gEnd.x} V ${gStart.y}`} className="graph-axis" />
-        <text x={vb.x * 0.1} y={vb.y * 0.1} fill="#ccc" textAnchor="left" fontSize={titleSize}>
+        <path className="graph-axis" d={`M${gStart.x} ${gEnd.y} H ${gEnd.x} V ${gStart.y}`} />
+        <text fill="#ccc" fontSize={titleSize} textAnchor="left" x={vb.x * 0.1} y={vb.y * 0.1}>
           {getTitle()}
         </text>
         <g>{printGrid()}</g>
@@ -419,10 +419,10 @@ export default function LineGraph() {
         }}
       >
         <Select
-          value={minuteSpread}
           data-cy="timeSelect"
-          onChange={handleMinuteSpreadChange}
           style={{ color: 'white' }}
+          value={minuteSpread}
+          onChange={handleMinuteSpreadChange}
         >
           <MenuItem value={60}>1 Hour</MenuItem>
           <MenuItem value={60 * 6}>6 Hours</MenuItem>

@@ -56,7 +56,7 @@ const ConfirmButton = styled(Button)`
 const CancelButton = styled(Button)``
 
 export default function Dialog(props) {
-  const { open, title, confirmText, onCancel, onConfirm, disabled, isLoading, children } = props
+  const { children, confirmText, disabled, isLoading, onCancel, onConfirm, open, title } = props
 
   return (
     <StyledDialog open={open}>
@@ -70,8 +70,8 @@ export default function Dialog(props) {
             flex
             primary
             square
-            label={isLoading ? 'Loading...' : confirmText}
             disabled={disabled || isLoading}
+            label={isLoading ? 'Loading...' : confirmText}
             onClick={onConfirm}
           />
         </Actions>

@@ -252,22 +252,22 @@ export default function VideoPlayer(props) {
   // <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
   return (
     <>
-      <StyledVideoPlayer coords={coords} active={active}>
+      <StyledVideoPlayer active={active} coords={coords}>
         <VideoContainer disabled={disabled}>
           <VideoBlocker disabled={disabled} />
           {currentVideo ? (
             <Video
-              data-cy="playerVideo"
-              flowDirection={flowDirection}
               ref={player}
-              onPause={handlePlayerUpdate}
-              onPlay={handlePlayerUpdate}
-              onSeeked={handlePlayerUpdate}
-              src={videoUrl}
               autoPlay
               controls
               playsInline
               allowFullScreen={false}
+              data-cy="playerVideo"
+              flowDirection={flowDirection}
+              src={videoUrl}
+              onPause={handlePlayerUpdate}
+              onPlay={handlePlayerUpdate}
+              onSeeked={handlePlayerUpdate}
             />
           ) : (
             <EmptyStateText>Click the search and sync buttons in the top left!</EmptyStateText>
@@ -275,15 +275,15 @@ export default function VideoPlayer(props) {
           <SearchButton data-cy="playerSearchButton" onClick={() => setIsShown(true)}>
             <i className="fas fa-search" />
           </SearchButton>
-          <SyncButton data-cy="playerSyncButton" onClick={toggleSync} color={getColor} label={getSyncText()} />
+          <SyncButton color={getColor} data-cy="playerSyncButton" label={getSyncText()} onClick={toggleSync} />
         </VideoContainer>
       </StyledVideoPlayer>
       <VideoGrid
+        isShown={active && isShown}
+        selectVideo={selectVideo}
+        setIsShown={setIsShown}
         videos={parser.videos}
         onSubmitSearch={onSubmitSearch}
-        isShown={active && isShown}
-        setIsShown={setIsShown}
-        selectVideo={selectVideo}
       />
     </>
   )

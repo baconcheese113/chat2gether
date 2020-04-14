@@ -166,9 +166,9 @@ export default function TextChat(props) {
           data-cy="commentInput"
           type="text"
           value={comment}
-          onFocus={() => handleConsoleFocus(true)}
           onBlur={() => handleConsoleFocus(false)}
           onChange={e => setComment(e.target.value)}
+          onFocus={() => handleConsoleFocus(true)}
         />
         <ConsoleButton data-cy="commentSubmitButton" disabled={!comment} onClick={handleSubmit}>
           <i className="fas fa-paper-plane" />

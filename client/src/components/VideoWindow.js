@@ -167,12 +167,12 @@ export default function VideoWindow(props) {
       return (
         <VideoComponent
           ref={videoRef}
-          alignTop={flowDirection === 'column' && enabledWidgets.video}
-          id={videoType}
-          muted={videoType === 'localVideo' || chatSettings.speakerMute}
           autoPlay
           playsInline
+          alignTop={flowDirection === 'column' && enabledWidgets.video}
           controls={false}
+          id={videoType}
+          muted={videoType === 'localVideo' || chatSettings.speakerMute}
         />
       )
     }
@@ -182,14 +182,14 @@ export default function VideoWindow(props) {
   if (videoType === 'localVideo') {
     return (
       <LocalVideoContainer
-        data-cy="localVideo"
-        top={top}
-        left={left}
-        onTouchMove={onTouchMove}
         ref={containerRef}
-        isShown={enabledWidgets.localVideo}
-        isExpanded={isExpanded}
+        data-cy="localVideo"
         dimensions={videoDimensions}
+        isExpanded={isExpanded}
+        isShown={enabledWidgets.localVideo}
+        left={left}
+        top={top}
+        onTouchMove={onTouchMove}
       >
         {!isExpanded && <ExpandIcon className="fas fa-expand" />}
         {getVideo(LocalVideo)}
@@ -197,7 +197,7 @@ export default function VideoWindow(props) {
     )
   }
   return (
-    <RemoteVideoContainer data-cy="remoteVideo" ref={containerRef}>
+    <RemoteVideoContainer ref={containerRef} data-cy="remoteVideo">
       {getVideo(RemoteVideo)}
     </RemoteVideoContainer>
   )

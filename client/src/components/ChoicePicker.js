@@ -52,19 +52,19 @@ export default function ChoicePicker(props) {
   }
 
   return (
-    <StyledChoicePicker width={width} fontSize={fontSize} data-cy={dataCy}>
+    <StyledChoicePicker data-cy={dataCy} fontSize={fontSize} width={width}>
       {choices.map((choice, index) => {
         const active = selected.find(obj => obj.name === choice)
         return (
           <Option
             key={choice}
-            height={height}
-            data-cy={active && 'picker-active'}
-            optionStart={index === 0}
-            optionEnd={index === choices.length - 1}
             active={active}
-            onClick={e => handleClick(e, choice)}
+            data-cy={active && 'picker-active'}
+            height={height}
+            optionEnd={index === choices.length - 1}
+            optionStart={index === 0}
             showBorderRight={index < choices.length - 1}
+            onClick={e => handleClick(e, choice)}
           >
             <OptionText active={active}>{choice.replace(/_/g, ' ')}</OptionText>
           </Option>

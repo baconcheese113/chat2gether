@@ -104,12 +104,12 @@ export default function UserCreateForm(props) {
         <InputLabel>I&apos;m</InputLabel>
         <Summary>{GENDERS[gender]}</Summary>
         <ChoiceSlider
-          data-cy="myGenderSlider"
-          cur={gender}
-          onChange={setGender}
           choices={GENDERS}
+          cur={gender}
+          data-cy="myGenderSlider"
           height="1.5rem"
           width="100%"
+          onChange={setGender}
         />
       </Row>
       <Row>
@@ -121,12 +121,12 @@ export default function UserCreateForm(props) {
               .replace(/_/g, ' ')}
         </Summary>
         <ChoicePicker
-          data-cy="theirGenderPicker"
-          selected={lookingFor}
-          onChange={setLookingFor}
           choices={GENDERS}
+          data-cy="theirGenderPicker"
           height="1.5rem"
+          selected={lookingFor}
           width="100%"
+          onChange={setLookingFor}
         />
       </Row>
       <Row>
@@ -135,18 +135,18 @@ export default function UserCreateForm(props) {
       </Row>
       <Row>
         <InputLabel>Their age</InputLabel>
-        <NumberSlider data-cy="theirAgeSlider" numbers={[minAge, maxAge]} onChange={changeNumbers} showFill />
+        <NumberSlider showFill data-cy="theirAgeSlider" numbers={[minAge, maxAge]} onChange={changeNumbers} />
       </Row>
       <Row>
         <InputLabel>My Audio Preference</InputLabel>
         <Summary>{AUDIO_PREFS[audioPref].replace(/_/g, ' ')}</Summary>
         <ChoiceSlider
-          data-cy="myAudioSlider"
-          cur={audioPref}
-          onChange={setAudioPref}
           choices={AUDIO_PREFS}
+          cur={audioPref}
+          data-cy="myAudioSlider"
           height="1.5rem"
           width="100%"
+          onChange={setAudioPref}
         />
       </Row>
       <Row>
@@ -158,17 +158,17 @@ export default function UserCreateForm(props) {
               .replace(/_/g, ' ')}
         </Summary>
         <ChoicePicker
-          data-cy="theirAudioPicker"
-          selected={accAudioPrefs}
-          onChange={setAccAudioPrefs}
           choices={AUDIO_PREFS}
-          height="1.5rem"
-          width="100%"
+          data-cy="theirAudioPicker"
           fontSize="1.1rem"
+          height="1.5rem"
+          selected={accAudioPrefs}
+          width="100%"
+          onChange={setAccAudioPrefs}
         />
       </Row>
       {error}
-      <SubmitButton onClick={handleSubmit} h2 primary data-cy="startButton" label="Enter" />
+      <SubmitButton h2 primary data-cy="startButton" label="Enter" onClick={handleSubmit} />
 
       {isLoading && (
         <Modal>

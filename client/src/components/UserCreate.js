@@ -103,8 +103,8 @@ export default function UserCreate(props) {
   return (
     <Main>
       <BackdropImage
-        src="https://images.unsplash.com/photo-1541980162-4d2fd81f420d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
         alt="background stock photo"
+        src="https://images.unsplash.com/photo-1541980162-4d2fd81f420d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
       />
       <IntroSection>
         <IntroText>
@@ -127,7 +127,7 @@ export default function UserCreate(props) {
         </UserCreateStats>
       </IntroSection>
 
-      <UserCreateForm isSubmitting={isSubmitting} error={errorMsg} onSubmit={handleUserCreate} />
+      <UserCreateForm error={errorMsg} isSubmitting={isSubmitting} onSubmit={handleUserCreate} />
 
       <p>*You are paired strictly on your preferences and type of sharing (video, audio, text)</p>
     </Main>

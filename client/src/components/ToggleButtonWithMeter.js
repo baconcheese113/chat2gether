@@ -97,7 +97,7 @@ export default function ToggleButtonWithMeter(props) {
   }, [connectProcessor, endProcessor, processor, stream])
 
   return (
-    <ToggleButton onClick={onClick} notification={notification} active={active} data-cy={dataCy}>
+    <ToggleButton active={active} data-cy={dataCy} notification={notification} onClick={onClick}>
       <i className={iconClass} />
       <IconContainer>
         <Expander percent={clamp(volume * 4, 0, 1) * 100} vol={vol}>

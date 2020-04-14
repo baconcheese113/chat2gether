@@ -91,9 +91,9 @@ export default function MatchHistory() {
                   <ActionButtons>
                     {/* <Button label="Message" /> */}
                     <Button
+                      disabled={alreadyReported}
                       label={alreadyReported ? 'Reported' : 'Report'}
                       onClick={() => setOffenderId(u.id)}
-                      disabled={alreadyReported}
                     />
                   </ActionButtons>
                 </MatchItem>
@@ -105,7 +105,7 @@ export default function MatchHistory() {
         </MatchList>
       </StyledMatchHistory>
 
-      <ReportUserDialog open={!!offenderId} offenderId={offenderId} onClose={() => setOffenderId()} />
+      <ReportUserDialog offenderId={offenderId} open={!!offenderId} onClose={() => setOffenderId()} />
     </>
   )
 }

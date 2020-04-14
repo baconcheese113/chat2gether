@@ -216,12 +216,12 @@ export default function Settings() {
             <p>SendFeedback</p>
             <FeedbackInput value={feedbackText} onChange={e => setFeedbackText(e.target.value)} />
             {feedbackMsg}
-            <Button light small disabled={!feedbackText} onClick={handleFeedback} label="Submit" />
+            <Button light small disabled={!feedbackText} label="Submit" onClick={handleFeedback} />
           </FeedbackForm>
         </SettingsList>
         <Actions>
-          <LeftAction square flex onClick={() => handleClose(false)} label="Cancel" />
-          <Button primary square flex onClick={handleClose} label="Apply" />
+          <LeftAction flex square label="Cancel" onClick={() => handleClose(false)} />
+          <Button flex primary square label="Apply" onClick={handleClose} />
         </Actions>
       </Container>
     </StyledSettings>

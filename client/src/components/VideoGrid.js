@@ -162,9 +162,9 @@ export default function VideoGrid(props) {
         <ScrollList>
           {videos.map(video => {
             return (
-              <Result data-cy="playerSearchResult" key={video.id} onClick={() => handleSelectVideo(video.id)}>
+              <Result key={video.id} data-cy="playerSearchResult" onClick={() => handleSelectVideo(video.id)}>
                 <ResultTitle>{video.title}</ResultTitle>
-                <ResultImage src={video.img} alt={video.title} />
+                <ResultImage alt={video.title} src={video.img} />
                 <ResultDuration>{video.duration}</ResultDuration>
               </Result>
             )
@@ -182,10 +182,10 @@ export default function VideoGrid(props) {
   return (
     <StyledVideoGrid isShown={isShown}>
       <Backdrop onClick={handleClose} />
-      <CloseButton onClick={handleClose} label="X" />
+      <CloseButton label="X" onClick={handleClose} />
       <Modal>
         <SearchBarForm onSubmit={handleSearchSubmit}>
-          <SubmitButton data-cy="playerSearchSubmit" onClick={handleSearchSubmit} label="Search" />
+          <SubmitButton data-cy="playerSearchSubmit" label="Search" onClick={handleSearchSubmit} />
           <SearchBar
             data-cy="playerSearchInput"
             placeholder={`Search ${process.env.REACT_APP_SEARCH_DOMAIN} by keyword, URLs are not supported`}

@@ -133,19 +133,19 @@ export default function BarGraph() {
     return (
       <g
         key={timeSlot}
-        onMouseOver={() => setStatsWindow(statsObj)}
-        onMouseOut={() => setStatsWindow(null)}
-        onFocus={() => setStatsWindow(statsObj)}
         onBlur={() => setStatsWindow(null)}
+        onFocus={() => setStatsWindow(statsObj)}
+        onMouseOut={() => setStatsWindow(null)}
+        onMouseOver={() => setStatsWindow(statsObj)}
       >
         <rect
           height={selectHeight}
-          width={barWidth * 4}
-          y={gEnd.y - selectHeight}
-          x={gEnd.x - timeSlotSpread - 4 * barWidth}
           opacity=".3"
           rx="5"
           ry="5"
+          width={barWidth * 4}
+          x={gEnd.x - timeSlotSpread - 4 * barWidth}
+          y={gEnd.y - selectHeight}
         />
         {GENDERS.map((v, idx) => {
           const height = Math.max(graph.y * ((genderObj[v] || 0) / maxLineHeight.current), 5)
@@ -153,15 +153,15 @@ export default function BarGraph() {
           return (
             <Bar
               key={v}
-              stroke="black"
-              strokeWidth=".5"
               fill={`url(#grad${v})`}
-              x={gEnd.x - timeSlotSpread - genderSpread - barWidth}
-              y={gEnd.y - height}
               height={height}
-              width={barWidth}
               rx={barWidth / 3}
               ry={barWidth / 3}
+              stroke="black"
+              strokeWidth=".5"
+              width={barWidth}
+              x={gEnd.x - timeSlotSpread - genderSpread - barWidth}
+              y={gEnd.y - height}
             />
           )
         })}
@@ -184,13 +184,13 @@ export default function BarGraph() {
         const roundedTimeAgo = Math.round((timeAgo * 100) / 100)
         return (
           <text
+            key={idx}
+            alignmentBaseline="central"
+            fill="#ccc"
+            fontSize={intervalSize}
+            textAnchor="middle"
             x={gStart.x + intSpace.x * idx + 2 * barWidth}
             y={gEnd.y + vb.y * 0.02}
-            key={idx}
-            fill="#ccc"
-            textAnchor="middle"
-            fontSize={intervalSize}
-            alignmentBaseline="central"
           >
             {roundedTimeAgo || 'Now'}
           </text>
@@ -199,15 +199,15 @@ export default function BarGraph() {
     return (
       <g>
         {xVals}
-        <text x={gEnd.x + 20} y={gStart.y + intSpace.y} fill="#ccc" fontSize={intervalSize} alignmentBaseline="central">
+        <text alignmentBaseline="central" fill="#ccc" fontSize={intervalSize} x={gEnd.x + 20} y={gStart.y + intSpace.y}>
           {Math.round((maxLineHeight.current * 3) / 4)} Users
         </text>
         <text
-          x={gEnd.x + 20}
-          y={gStart.y + intSpace.y * ((numIntervalsY * 3) / 4)}
+          alignmentBaseline="central"
           fill="#ccc"
           fontSize={intervalSize}
-          alignmentBaseline="central"
+          x={gEnd.x + 20}
+          y={gStart.y + intSpace.y * ((numIntervalsY * 3) / 4)}
         >
           {Math.round(maxLineHeight.current / 4)} Users
         </text>
@@ -225,12 +225,12 @@ export default function BarGraph() {
       .map((_, idx) => (
         <rect
           key={idx}
-          x={gStart.x}
-          width={graph.x}
-          y={gEnd.y - idx * intSpace.y}
-          height="1"
           fill="white"
+          height="1"
           opacity=".1"
+          width={graph.x}
+          x={gStart.x}
+          y={gEnd.y - idx * intSpace.y}
         />
       ))
   }
@@ -244,20 +244,20 @@ export default function BarGraph() {
             return (
               <g key={g}>
                 <rect
+                  fill={GENDER_COLORS[g]}
+                  height="5"
                   rx="2"
                   ry="5"
+                  width="20"
                   x={(vb.x / 4) * idx + 20}
                   y={vb.y * 0.9}
-                  width="20"
-                  height="5"
-                  fill={GENDER_COLORS[g]}
                 />
                 <text
-                  x={(vb.x / 4) * idx + 50}
-                  y={vb.y * 0.9 + 0.005 * vb.x}
+                  alignmentBaseline="central"
                   fill="#ccc"
                   fontSize={legendSize}
-                  alignmentBaseline="central"
+                  x={(vb.x / 4) * idx + 50}
+                  y={vb.y * 0.9 + 0.005 * vb.x}
                 >
                   {g}
                 </text>
@@ -283,31 +283,31 @@ export default function BarGraph() {
   return (
     <StyledBarGraph>
       <SVGContainer
-        width="100%"
         style={{ height: 'auto' }}
         viewBox={`0 0 ${vb.x} ${vb.y}`}
+        width="100%"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id="gradMALE" x1="0%" y1="0%" x2="0" y2="100%">
+          <linearGradient id="gradMALE" x1="0%" x2="0" y1="0%" y2="100%">
             <stop offset="0%" stopColor={GENDER_COLORS.MALE} stopOpacity="1" />
             <stop offset="100%" stopColor={GENDER_COLORS.MALE} stopOpacity=".2" />
           </linearGradient>
-          <linearGradient id="gradFEMALE" x1="0%" y1="0%" x2="0" y2="100%">
+          <linearGradient id="gradFEMALE" x1="0%" x2="0" y1="0%" y2="100%">
             <stop offset="0%" stopColor={GENDER_COLORS.FEMALE} stopOpacity="1" />
             <stop offset="100%" stopColor={GENDER_COLORS.FEMALE} stopOpacity=".2" />
           </linearGradient>
-          <linearGradient id="gradM2F" x1="0%" y1="0%" x2="0" y2="100%">
+          <linearGradient id="gradM2F" x1="0%" x2="0" y1="0%" y2="100%">
             <stop offset="0%" stopColor={GENDER_COLORS.M2F} stopOpacity="1" />
             <stop offset="100%" stopColor={GENDER_COLORS.M2F} stopOpacity=".2" />
           </linearGradient>
-          <linearGradient id="gradF2M" x1="0%" y1="0%" x2="0" y2="100%">
+          <linearGradient id="gradF2M" x1="0%" x2="0" y1="0%" y2="100%">
             <stop offset="0%" stopColor={GENDER_COLORS.F2M} stopOpacity="1" />
             <stop offset="100%" stopColor={GENDER_COLORS.F2M} stopOpacity=".2" />
           </linearGradient>
         </defs>
-        <path d={`M${gStart.x} ${gEnd.y} H ${gEnd.x} V ${gStart.y}`} className="graph-axis" />
-        <text x={vb.x * 0.1} y={vb.y * 0.1} fill="#ccc" textAnchor="left" fontSize={titleSize}>
+        <path className="graph-axis" d={`M${gStart.x} ${gEnd.y} H ${gEnd.x} V ${gStart.y}`} />
+        <text fill="#ccc" fontSize={titleSize} textAnchor="left" x={vb.x * 0.1} y={vb.y * 0.1}>
           {getTitle()}
         </text>
         <g>{printGrid()}</g>
@@ -325,7 +325,7 @@ export default function BarGraph() {
           padding: '0 1rem',
         }}
       >
-        <Select value={minuteSpread} onChange={handleMinuteSpreadChange} style={{ color: 'white' }}>
+        <Select style={{ color: 'white' }} value={minuteSpread} onChange={handleMinuteSpreadChange}>
           <MenuItem value={60}>1 Hour</MenuItem>
           <MenuItem value={60 * 6}>6 Hours</MenuItem>
           <MenuItem value={60 * 24}>1 Day</MenuItem>
