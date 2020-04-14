@@ -3,9 +3,9 @@ import { useApolloClient } from '@apollo/client'
 import SocketHelper from '../helpers/socketHelper'
 import { UPDATE_USER } from '../queries/mutations'
 import { FIND_ROOM } from '../queries/queries'
-import { useMyUser } from './MyUserContext'
 import PrefMatcher from '../components/PrefMatcher'
 import AirPlaneDing from '../assets/air-plane-ding.mp3'
+import { useMyUser } from './MyUserContext'
 import { useEnabledWidgets } from './EnabledWidgetsContext'
 
 const SocketContext = React.createContext()

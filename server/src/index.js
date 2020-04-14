@@ -1,11 +1,10 @@
+import path from 'path';
+import http from 'http';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-// import fs from 'fs';
-import path from 'path';
 import Fingerprint from 'express-fingerprint';
 import SocketIO from 'socket.io';
-import http from 'http';
 import server from './server';
 import socket from './socket';
 
@@ -14,15 +13,6 @@ const __dirname = path.join(path.dirname(decodeURI(new URL(import.meta.url).path
 
 const app = express();
 const httpServer = http.createServer(app);
-// const httpServer = require('https').createServer(
-//   {
-//     key: fs.readFileSync(path.join(__dirname, '../config/server.key')),
-//     cert: fs.readFileSync(path.join(__dirname, '../config/server.cert')),
-//     requestCert: false,
-//     rejectUnauthorized: false
-//   },
-//   app
-// );
 
 const io = new SocketIO(httpServer);
 socket(io);

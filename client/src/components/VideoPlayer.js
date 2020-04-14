@@ -1,11 +1,11 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import HtmlParse from '../helpers/htmlParse3'
-import VideoGrid from './VideoGrid'
 import { useNotify } from '../hooks/NotifyContext'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
-import { Button } from './common'
 import useWindowSize from '../hooks/WindowSizeHook'
+import { Button } from './common'
+import VideoGrid from './VideoGrid'
 
 const syncRotate = keyframes`
   0% {transform: rotate(0deg);}

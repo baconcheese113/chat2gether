@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Button } from './common'
 import { useMyUser } from '../hooks/MyUserContext'
+import { Button } from './common'
 import ReportUserDialog from './ReportUserDialog'
 
 const StyledMatchHistory = styled.section`

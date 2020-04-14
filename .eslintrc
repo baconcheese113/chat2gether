@@ -1,13 +1,18 @@
 {
   "extends": [
+    "eslint:recommended",
     "airbnb",
     "prettier",
-    "prettier/react"
+    "prettier/react",
+    "plugin:prettier/recommended",
+    "plugin:import/errors"
   ],
   "plugins": [
     "prettier",
     "jsx-a11y",
-    "react-hooks"
+    "react",
+    "react-hooks",
+    "import"
   ],
   "ignorePatterns": [
     "build/",
@@ -23,16 +28,28 @@
         ]
       }
     ],
-    "prettier/prettier": "error",
-    "react/prop-types": 0,
-    "no-underscore-dangle": 0,
-    "consistent-return": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "parent",
+          "sibling",
+          "index"
+        ]
+      }
+    ],
     "import/imports-first": [
       "error",
       "absolute-first"
     ],
-    "no-bitwise": 0,
     "import/newline-after-import": "error",
+    "prettier/prettier": "error",
+    "react/prop-types": 0,
+    "no-underscore-dangle": 0,
+    "consistent-return": "off",
+    "no-bitwise": 0,
     "no-console": "off",
     "no-restricted-syntax": "off",
     "no-undef": "off",

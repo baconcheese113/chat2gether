@@ -2,8 +2,8 @@ import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useNotify } from '../hooks/NotifyContext'
-import { Button } from './common'
 import useWindowSize from '../hooks/WindowSizeHook'
+import { Button } from './common'
 
 const consoleShow = keyframes`
   0% {bottom: -100px;}

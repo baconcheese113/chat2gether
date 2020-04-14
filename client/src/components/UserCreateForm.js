@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
+import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
 import ChoiceSlider from './ChoiceSlider'
 import NumberSlider from './NumberSlider'
 import SVGTester from './SVGTester'
 import ChoicePicker from './ChoicePicker'
-import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
 import { Button } from './common'
 
 const StyledForm = styled.div`

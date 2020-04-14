@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import { useSocket } from '../hooks/SocketContext'
-import Button from './common/Button'
 import useWindowSize from '../hooks/WindowSizeHook'
+import Button from './common/Button'
 import ReportUserDialog from './ReportUserDialog'
 
 const StyledChatNav = styled.div`

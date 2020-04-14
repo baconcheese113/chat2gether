@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import ToggleButton from './ToggleButton'
-import ToggleButtonWithMeter from './ToggleButtonWithMeter'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import { useNotify } from '../hooks/NotifyContext'
 import useWindowSize from '../hooks/WindowSizeHook'
 import { useSocket } from '../hooks/SocketContext'
+import ToggleButtonWithMeter from './ToggleButtonWithMeter'
+import ToggleButton from './ToggleButton'
 
 const StyledNavBar = styled.div`
   position: absolute;

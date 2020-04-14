@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import useWindowSize from '../hooks/WindowSizeHook'
 import SVGTester from './SVGTester'
 import { Button } from './common'
-import useWindowSize from '../hooks/WindowSizeHook'
 
 const StyledVideoGrid = styled.div`
   position: absolute;

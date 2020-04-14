@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useApolloClient } from '@apollo/client'
-import { Dialog } from './common'
-import ChoiceSlider from './ChoiceSlider'
 import { REPORT_TYPES } from '../helpers/constants'
 import { CREATE_REPORT } from '../queries/mutations'
+import { Dialog } from './common'
+import ChoiceSlider from './ChoiceSlider'
 
 const Subtitle = styled.h3`
   font-size: 16px;

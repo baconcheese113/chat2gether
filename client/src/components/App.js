@@ -1,9 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useApolloClient } from '@apollo/client'
-import Header from './Header'
-import UserCreate from './UserCreate'
-import ChatHub from './ChatHub'
 import { LocalStreamProvider } from '../hooks/LocalStreamContext'
 import { EnabledWidgetsProvider } from '../hooks/EnabledWidgetsContext'
 import { NotifyProvider } from '../hooks/NotifyContext'
@@ -11,6 +8,9 @@ import SocketProvider from '../hooks/SocketContext'
 import { GET_ME } from '../queries/queries'
 import MyUserProvider from '../hooks/MyUserContext'
 import useWindowSize from '../hooks/WindowSizeHook'
+import ChatHub from './ChatHub'
+import UserCreate from './UserCreate'
+import Header from './Header'
 
 /**
  * App just handles passing to UserCreate, and passing to ChatHub

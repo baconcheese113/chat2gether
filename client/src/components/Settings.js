@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { useApolloClient } from '@apollo/client'
 import { CREATE_FEEDBACK } from '../queries/mutations'
-import SVGTester from './SVGTester'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
+import SVGTester from './SVGTester'
 import { Button } from './common'
 
 const StyledSettings = styled.div`

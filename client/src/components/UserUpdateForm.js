@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useApolloClient } from '@apollo/client'
-import NumberSlider from './NumberSlider'
 import { UPDATE_USER } from '../queries/mutations'
-import ChoicePicker from './ChoicePicker'
-import ChoiceSlider from './ChoiceSlider'
 import { GENDERS, AUDIO_PREFS } from '../helpers/constants'
 import { useSocket } from '../hooks/SocketContext'
 import { useMyUser } from '../hooks/MyUserContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
+import ChoiceSlider from './ChoiceSlider'
+import ChoicePicker from './ChoicePicker'
+import NumberSlider from './NumberSlider'
 import { Button } from './common'
 
 const StyledForm = styled.div`
