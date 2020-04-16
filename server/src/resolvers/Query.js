@@ -64,6 +64,7 @@ export default {
             { updatedAt_gt: d.toISOString() },
           ],
         },
+        orderBy: 'updatedAt_DESC',
         first: 1,
       },
       info,

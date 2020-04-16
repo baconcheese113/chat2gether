@@ -30,7 +30,7 @@ describe('in_call_spec', function () {
 
     // Create their user and have them try to join
 
-    cy.clearCookie('token')
+    cy.clearCookies()
 
     cy.createUser({ gender: 'M2F', lookingFor: { connect: [{ name: 'F2M' }] } })
     cy.updateUser({ isHost: true }).then(data => {
@@ -145,6 +145,6 @@ describe('in_call_spec', function () {
       })
 
     cy.dataCy('navPlayerButton').click()
-    cy.dataCy('navStopButton').click()
+    cy.dataCy('navStopButton').click().wait(2000)
   })
 })

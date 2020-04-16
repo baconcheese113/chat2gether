@@ -170,11 +170,11 @@ export default function SocketProvider(props) {
       data.visited = { connect: [{ id: otherUser.id }] }
     }
 
-    resetSocket()
     await client.mutate({
       mutation: UPDATE_USER,
       variables: { data },
     })
+    resetSocket()
     await getMe()
   }, [client, getMe, otherUser, resetSocket])
 

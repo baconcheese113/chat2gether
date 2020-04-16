@@ -26,6 +26,7 @@ export default (request, requireAuth = true) => {
   // }
 
   if (requireAuth) {
+    console.error('no token was parsed, throwing Authentication error')
     throw new Error('Authentication required')
   }
   return null

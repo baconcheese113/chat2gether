@@ -60,7 +60,7 @@ describe('matchmaking_spec', function () {
     cy.server().route('POST', '/graphql').as('graphql')
 
     cy.dataCy('nextMatchButton').click().wait('@graphql') // connection countdown length
-    cy.contains(/no hosts found/i).should('exist')
+    cy.contains(/no hosts found/i, { timeout: 6000 }).should('exist')
 
     Cypress.Cookies.preserveOnce('token')
   })
@@ -104,7 +104,7 @@ describe('matchmaking_spec', function () {
     cy.server().route('POST', '/graphql').as('graphql')
 
     cy.dataCy('nextMatchButton').click().wait('@graphql') // connection countdown length
-    cy.contains(/no hosts found/i).should('exist')
+    cy.contains(/no hosts found/i, { timeout: 6000 }).should('exist')
 
     Cypress.Cookies.preserveOnce('token')
   })
@@ -131,10 +131,10 @@ describe('matchmaking_spec', function () {
     cy.server().route('POST', '/graphql').as('graphql')
 
     cy.dataCy('nextMatchButton').click().wait('@graphql') // connection countdown length
-    cy.contains(/connection complete/i).should('exist')
-    cy.wait(5000)
+    cy.contains(/connection complete/i, { timeout: 6000 }).should('exist')
+    cy.wait(8000)
 
     cy.get('[data-cy=remoteVideo]', { timeout: 15000 }).should('exist')
-    cy.dataCy('navStopButton').click()
+    cy.dataCy('navStopButton').click().wait(2000)
   })
 })
