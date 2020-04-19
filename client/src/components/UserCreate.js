@@ -98,6 +98,7 @@ export default function UserCreate(props) {
         const fs = window.FS
         if (fs) {
           fs.setUserVars({
+            displayName: `${user.gender} ${user.age} ${user.audioPref}`,
             age_int: user.age,
             gender_str: user.gender,
             lookingFor_str: user.lookingFor,

@@ -146,6 +146,7 @@ export default function UserUpdateForm() {
     const fs = window.FS
     if (fs) {
       await fs.setUserVars({
+        displayName: `${user.gender} ${user.age} ${user.audioPref}`,
         age_int: changedUser.age,
         gender_str: changedUser.gender,
         lookingFor_str: changedUser.lookingFor,
