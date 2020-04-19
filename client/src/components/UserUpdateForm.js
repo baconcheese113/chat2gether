@@ -141,7 +141,18 @@ export default function UserUpdateForm() {
     console.log(data)
 
     // setUser based off changes
-    await getMe()
+    const changedUser = await getMe()
+
+    const fs = window.FS
+    if (fs) {
+      await fs.setUserVars({
+        age_int: changedUser.age,
+        gender_str: changedUser.gender,
+        lookingFor_str: changedUser.lookingFor,
+        audioPref_str: changedUser.audioPref,
+        accAudioPrefs_str: changedUser.accAudioPrefs,
+      })
+    }
     setLoading(false)
     if (roomId && localStream) nextMatch(localStream)
   }

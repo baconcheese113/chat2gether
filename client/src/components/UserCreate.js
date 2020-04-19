@@ -94,6 +94,17 @@ export default function UserCreate(props) {
         })
         console.log(user)
         setUser(user)
+
+        const fs = window.FS
+        if (fs) {
+          fs.setUserVars({
+            age_int: user.age,
+            gender_str: user.gender,
+            lookingFor_str: user.lookingFor,
+            audioPref_str: user.audioPref,
+            accAudioPrefs_str: user.accAudioPrefs,
+          })
+        }
       }
     } else {
       setErrorMsg('Please fill out all fields')
