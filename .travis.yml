@@ -16,5 +16,4 @@ cache:
 # install:
 #   - npm ci
 script:
-  - cd e2e 
-  - npm run cypress:run --record
+  - npm run ci
