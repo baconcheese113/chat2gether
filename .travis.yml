@@ -26,5 +26,6 @@ install:
 before_script:
   - npm start &
 script:
+  - cd e2e
   - npm i
-  - npm run test --record
+  - npm run cypress:run --record
