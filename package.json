@@ -16,7 +16,8 @@
     "start": "npm run start:server && npm run start:client",
     "build": "npm run build:server",
     "heroku-postbuild": "npm run build:client && npm run build:server",
-    "lint": "eslint --fix ."
+    "lint": "eslint --fix .",
+    "ci": "cd e2e && npm run cypress:run"
   },
   "author": "",
   "license": "ISC",

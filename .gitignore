@@ -6,7 +6,7 @@ node_modules
 .pnp.js
 
 # testing
-/coverage
+*.mp4
 
 # production
 build
