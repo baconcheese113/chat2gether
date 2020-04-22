@@ -15,5 +15,6 @@ cache:
     - ~/.cache
 # install:
 #   - npm ci
-# script:
-#   - $(npm bin)/cypress run --record
+script:
+  - cd e2e 
+  - npm run cypress:run --record
