@@ -15,5 +15,7 @@ cache:
     - ~/.cache
 # install:
 #   - npm ci
+before_script:
+  - cd e2e
 script:
-  - npm run ci
+  - $(npm bin)/cypress run --record
