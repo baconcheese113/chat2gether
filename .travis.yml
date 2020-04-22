@@ -18,4 +18,5 @@ cache:
 before_script:
   - cd e2e
 script:
-  - $(npm bin)/cypress run --record
+  - npm i
+  - npm run cypress:run --record
