@@ -24,7 +24,8 @@ install:
   - npm run heroku-postbuild
   - npm ci
 before_script:
-  - npm start &
+  - npm run start:server &
+  - npm run start:client &
 script:
   - cd e2e
   - npm i
