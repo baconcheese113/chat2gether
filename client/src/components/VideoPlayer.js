@@ -7,11 +7,6 @@ import useWindowSize from '../hooks/WindowSizeHook'
 import { Button } from './common'
 import VideoGrid from './VideoGrid'
 
-const syncRotate = keyframes`
-  0% {transform: rotate(0deg);}
-  100% {transform: rotate(360deg);}
-`
-
 const StyledVideoPlayer = styled.div`
   display: ${p => (p.active ? 'flex' : 'none')};
   position: relative;
@@ -52,24 +47,63 @@ const VideoBlocker = styled.div`
   height: 100%;
   width: 100%;
 `
-const SearchButton = styled(Button)`
+const VideoControls = styled.div`
   position: absolute;
-  left: 1rem;
-  top: 1rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 5px;
+`
+const SearchButton = styled(Button)`
   box-shadow: 0 0 4px;
+  margin-left: 4px;
+  min-height: 38px;
+  min-width: 38px;
 `
 const SyncButton = styled(Button)`
-  position: absolute;
-  left: 6rem;
-  top: 1rem;
+  position: relative;
+  margin-left: 8px;
   box-shadow: 0 0 4px;
+  min-height: 38px;
   color: ${p => p.color};
-  .rotate {
-    color: inherit;
-    transform-origin: center;
-    transform-box: fill-box;
-    animation: ${syncRotate} 3s linear;
-  }
+  display: flex;
+  justify-content: center;
+`
+const marquee = keyframes`
+  0% { transform: translateY(0px);}
+  100% { transform: translateY(-8px);}
+`
+const ArrowIcon = styled.i`
+  position: absolute;
+  top: 120%;
+  font-size: 32px;
+  color: white;
+  animation: ${marquee} 0.8s infinite;
+`
+const SideToastContainer = styled.div`
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
+`
+const SideToast = styled.div`
+  position: relative;
+  bottom: 0;
+  right: ${p => (p.showToast ? 0 : -100)}%;
+  background-color: ${p => p.theme.colorPrimary};
+  max-width: 80%;
+  border-radius: 8px 0 0 8px;
+  transition: all 0.6s;
+`
+const SideToastMessage = styled.p`
+  font-size: 18px;
+  padding: 8px 12px;
 `
 
 const SYNC = { OFF: 'off', REQUESTED: 'requested', UNACCEPTED: 'unaccepted', ACCEPTED: 'accepted' }
@@ -84,15 +118,18 @@ export default function VideoPlayer(props) {
   const [syncState, setSyncState] = React.useState(SYNC.OFF)
   const [videoUrl, setVideoUrl] = React.useState('')
   const [disabled, setDisabled] = React.useState(false)
+  const [showVideoSyncToast, setShowVideoSyncToast] = React.useState(false)
 
   const player = React.useRef()
 
   const { flowDirection, innerWidth, innerHeight } = useWindowSize()
-  const { enabledWidgets } = useEnabledWidgets()
+  const { enabledWidgets, setEnabledWidgets } = useEnabledWidgets()
   const active = enabledWidgets.video
   const { videoNotify, setVideoNotify } = useNotify()
 
   const coords = { x: innerWidth / 2, y: innerHeight / 3 }
+
+  const showHintArrow = !window.sessionStorage.getItem('tutVideoSyncButton')
 
   // When user presses search
   const onSubmitSearch = async newQuery => {
@@ -121,6 +158,17 @@ export default function VideoPlayer(props) {
     }
   }
 
+  const tryShowingVideoSyncTutorial = React.useCallback(() => {
+    if (!window.sessionStorage.getItem('tutVideoSyncRequest')) {
+      setShowVideoSyncToast(true)
+      setEnabledWidgets({ ...enabledWidgets, video: true })
+      setTimeout(() => {
+        window.sessionStorage.setItem('tutVideoSyncRequest', true)
+        setShowVideoSyncToast(false)
+      }, 6000)
+    }
+  }, [enabledWidgets, setEnabledWidgets])
+
   // Changing sync state when remote user clicks sync button
   const receiveSyncMsg = React.useCallback(
     newMsg => {
@@ -128,6 +176,7 @@ export default function VideoPlayer(props) {
       let newState = syncState
       // Handle other user toggling on sync
       if (newMsg.type === 'start') {
+        tryShowingVideoSyncTutorial()
         if (syncState === SYNC.OFF) {
           newState = SYNC.UNACCEPTED
         } else if (syncState === SYNC.REQUESTED) {
@@ -163,7 +212,7 @@ export default function VideoPlayer(props) {
       }
       setSyncState(newState)
     },
-    [active, currentVideo, msg, setVideoNotify, socketHelper, syncState, userId, videoUrl],
+    [active, currentVideo, msg, setVideoNotify, socketHelper, syncState, userId, videoUrl, tryShowingVideoSyncTutorial],
   )
 
   // Changing local player when remote user updates player
@@ -215,6 +264,7 @@ export default function VideoPlayer(props) {
 
   // Clicking the player's toggle sync button
   const toggleSync = () => {
+    window.sessionStorage.setItem('tutVideoSyncButton', true)
     let newState = syncState
     if (syncState === SYNC.OFF) {
       newState = SYNC.REQUESTED
@@ -272,10 +322,14 @@ export default function VideoPlayer(props) {
           ) : (
             <EmptyStateText>Click the search and sync buttons in the top left!</EmptyStateText>
           )}
-          <SearchButton data-cy="playerSearchButton" onClick={() => setIsShown(true)}>
-            <i className="fas fa-search" />
-          </SearchButton>
-          <SyncButton color={getColor} data-cy="playerSyncButton" label={getSyncText()} onClick={toggleSync} />
+          <VideoControls>
+            <SearchButton data-cy="playerSearchButton" onClick={() => setIsShown(true)}>
+              <i className="fas fa-search" />
+            </SearchButton>
+            <SyncButton color={getColor} data-cy="playerSyncButton" label={getSyncText()} onClick={toggleSync}>
+              {showHintArrow && <ArrowIcon className="fas fa-long-arrow-alt-up" />}
+            </SyncButton>
+          </VideoControls>
         </VideoContainer>
       </StyledVideoPlayer>
       <VideoGrid
@@ -285,6 +339,11 @@ export default function VideoPlayer(props) {
         videos={parser.videos}
         onSubmitSearch={onSubmitSearch}
       />
+      <SideToastContainer>
+        <SideToast showToast={showVideoSyncToast}>
+          <SideToastMessage>You&apos;ve received a request to watch video together!</SideToastMessage>
+        </SideToast>
+      </SideToastContainer>
     </>
   )
 }
