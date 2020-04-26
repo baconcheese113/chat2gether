@@ -25,7 +25,7 @@ export function EnabledWidgetsProvider(props) {
   const [enabledWidgets, setEnabledWidgets] = React.useState({
     text: false,
     menu: false,
-    video: false,
+    video: true,
     countdown: false,
     profile: false,
     matches: false,

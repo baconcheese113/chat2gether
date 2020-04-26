@@ -104,7 +104,7 @@ export default function SocketProvider(props) {
         />,
       )
       startCountdown()
-      setEnabledWidgets({ localVideo: true })
+      setEnabledWidgets(enabledWidgets => ({ video: enabledWidgets.video, localVideo: true }))
     },
     [setEnabledWidgets, startCountdown, user],
   )
