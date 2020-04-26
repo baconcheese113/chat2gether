@@ -25,7 +25,7 @@ describe('chat_hub_spec', function () {
     }
     cy.request({
       log: true,
-      url: 'http://localhost:4000/graphql',
+      url: 'http://127.0.0.1:4000/graphql',
       method: 'POST',
       body: { query, variables },
     })

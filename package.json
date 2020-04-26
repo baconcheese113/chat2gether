@@ -8,7 +8,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cd e2e && npm run cypress:run",
     "start:server": "cd server && npm start",
     "start:client": "cd client && npm start",
     "build:server": "cd server && npm run build",
@@ -16,8 +16,7 @@
     "start": "npm run start:server && npm run start:client",
     "build": "npm run build:server",
     "heroku-postbuild": "npm run build:client && npm run build:server",
-    "lint": "eslint --fix .",
-    "ci": "cd e2e && npm run cypress:run"
+    "lint": "eslint --fix ."
   },
   "author": "",
   "license": "ISC",

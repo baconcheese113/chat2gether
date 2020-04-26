@@ -28,7 +28,7 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy": "http://localhost:4000",
+  "proxy": "http://127.0.0.1:4000",
   "devDependencies": {},
   "optionalDependencies": {
     "graphql": "^14.6.0",
