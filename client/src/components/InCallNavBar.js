@@ -92,7 +92,9 @@ export default function InCallNavBar(props) {
       <LeftAligned>
         {showLeft || isPC ? (
           <>
-            {buttons.stop && <ToggleButton data-cy="navStopButton" iconClass="fas fa-stop" onClick={endCall} />}
+            {buttons.stop && (
+              <ToggleButton data-cy="navStopButton" iconClass="fas fa-stop" title="Stop" onClick={endCall} />
+            )}
             {buttons.mic && (
               <ToggleButtonWithMeter
                 active={chatSettings.micMute ? 0 : 1}
@@ -114,7 +116,13 @@ export default function InCallNavBar(props) {
             {isMobile && <ToggleButton data-cy="navCameraFlipButton" iconClass="fas fa-camera" onClick={flipCamera} />}
           </>
         ) : (
-          <ToggleButton active iconClass="fas fa-chevron-right" onClick={() => setShowLeft(true)} />
+          <ToggleButton
+            active
+            importantTitle
+            iconClass="fas fa-chevron-right"
+            title="Controls"
+            onClick={() => setShowLeft(true)}
+          />
         )}
       </LeftAligned>
       <RightAligned>
@@ -125,6 +133,7 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.profile ? 1 : 0}
                 data-cy="navProfileButton"
                 iconClass="fas fa-user-alt"
+                title="Profile"
                 onClick={() => featureToggle('profile')}
               />
             )}
@@ -134,6 +143,7 @@ export default function InCallNavBar(props) {
                 data-cy="navCountdownButton"
                 iconClass="fas fa-stopwatch"
                 notification={countdownNotify ? 1 : 0}
+                title="Countdown"
                 onClick={() => featureToggle('countdown')}
               />
             )}
@@ -143,6 +153,7 @@ export default function InCallNavBar(props) {
                 data-cy="navCommentButton"
                 iconClass="fas fa-comment"
                 notification={textNotify}
+                title="Chat"
                 onClick={() => featureToggle('text')}
               />
             )}
@@ -152,6 +163,7 @@ export default function InCallNavBar(props) {
                 data-cy="navPlayerButton"
                 iconClass="fab fa-youtube"
                 notification={videoNotify ? 1 : 0}
+                title="Video"
                 onClick={() => featureToggle('video')}
               />
             )}
@@ -160,6 +172,7 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.updatePref ? 1 : 0}
                 data-cy="navUpdateUserButton"
                 iconClass="fas fa-user-edit"
+                title="Edit"
                 onClick={() => featureToggle('updatePref')}
               />
             )}
@@ -168,6 +181,7 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.stats ? 1 : 0}
                 data-cy="navStatsButton"
                 iconClass="fas fa-chart-area"
+                title="Stats"
                 onClick={() => featureToggle('stats')}
               />
             )}
@@ -176,6 +190,7 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.matches ? 1 : 0}
                 data-cy="navMatchesButton"
                 iconClass="fas fa-users"
+                title="Matches"
                 onClick={() => featureToggle('matches')}
               />
             )}
@@ -183,8 +198,10 @@ export default function InCallNavBar(props) {
         ) : (
           <ToggleButton
             active
+            importantTitle
             iconClass="fas fa-chevron-left"
             notification={hiddenNotifications}
+            title="Widgets"
             onClick={() => setShowLeft(false)}
           />
         )}

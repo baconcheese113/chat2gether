@@ -26,6 +26,7 @@ const StyledSVGTester = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 10000;
 
   svg {
     max-width: 500px;
