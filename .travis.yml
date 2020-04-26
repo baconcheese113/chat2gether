@@ -15,10 +15,7 @@ cache:
     - .cache
     - node_modules
 env:
-  - DOMAIN_FULL=http://127.0.0.1
-  - CLIENT_PORT=3000
-  - SOCKET_PORT=4000
-  - GQL_PORT=4000
+  - DOMAIN_FULL=http://127.0.0.1 CLIENT_PORT=3000 SOCKET_PORT=4000 GQL_PORT=4000
 install:
   - npm run heroku-postbuild
   - npm ci
