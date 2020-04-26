@@ -14,12 +14,11 @@ cache:
     # we also need to cache folder with Cypress binary
     - .cache
     - node_modules
-# env:
-#   - DOMAIN=localhost
-#   - DOMAIN_FULL=http://localhost
-#   - CLIENT_PORT=3000
-#   - SOCKET_PORT=4000
-#   - GQL_PORT=4000
+env:
+  - DOMAIN_FULL=http://127.0.0.1
+  - CLIENT_PORT=3000
+  - SOCKET_PORT=4000
+  - GQL_PORT=4000
 install:
   - npm run heroku-postbuild
   - npm ci
