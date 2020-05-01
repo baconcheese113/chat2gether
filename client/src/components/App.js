@@ -37,13 +37,11 @@ export default function App() {
       setCanRender(true)
       return
     }
-    console.log('Cookie found, proceeding')
     const fetchData = async () => {
-      const { data, error } = await client.query({ query: GET_ME })
+      const { data } = await client.query({ query: GET_ME })
       if (data.me) {
         setUser(data.me)
       }
-      console.log(data, error)
       setCanRender(true)
     }
     fetchData()

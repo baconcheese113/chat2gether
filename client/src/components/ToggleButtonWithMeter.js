@@ -54,7 +54,6 @@ export default function ToggleButtonWithMeter(props) {
   }, [])
 
   const endProcessor = React.useCallback(() => {
-    console.log('endprocessor is', processor.current, 'mediaStreamSource is', mediaStreamSource.current)
     if (processor.current) {
       processor.current.disconnect()
       processor.current = null

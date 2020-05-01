@@ -14,13 +14,10 @@ export default function MyUserProvider(props) {
   const client = useApolloClient()
 
   const getMe = React.useCallback(async () => {
-    // setUser(updatedUser)
-    console.log('refreshing me')
-    const { data, error } = await client.query({ query: GET_ME, fetchPolicy: 'network-only' })
+    const { data } = await client.query({ query: GET_ME, fetchPolicy: 'network-only' })
     if (data.me) {
       setUser(data.me)
     }
-    console.log(data, error)
     return data.me
   }, [client])
 

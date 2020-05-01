@@ -47,8 +47,6 @@ export const LocalStreamProvider = props => {
         }
         setLocalStream(stream)
         const audio = stream.getAudioTracks()
-        console.log(audio)
-        // TODO
         if (audio.length > 0) {
           audio[0].enabled = !chatSettings.micMute
           console.log(`audio enabled is now ${audio[0].enabled}`)

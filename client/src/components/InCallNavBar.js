@@ -77,7 +77,6 @@ export default function InCallNavBar(props) {
       if (audio.length > 0) {
         // enabled is the inverse of mute, but we're inverting that onClick
         audio[0].enabled = chatSettings.micMute
-        console.log(`nav bar mic.enabled is now ${audio[0].enabled}`)
       }
     }
     setChatSettings({ ...chatSettings, micMute: !chatSettings.micMute })

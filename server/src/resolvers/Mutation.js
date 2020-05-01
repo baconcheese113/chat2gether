@@ -61,7 +61,6 @@ export default {
   async createReport(parent, args, { prisma, request }, info) {
     const userId = getUserId(request)
 
-    console.log('createReport', args)
     const { type, offenderId } = args.data
     const offender = await prisma.query.user(
       { where: { id: offenderId } },
@@ -79,7 +78,7 @@ export default {
       { data: { type, offender: { connect: { id: offenderId } }, reporter: { connect: { id: userId } } } },
       info,
     )
-    // if >3 reports for same type, create ban
+    // if >=2 reports for same type, create ban
     const reportsOfThisType = offender.reportsReceived.filter(r => r.type === type)
     if (reportsOfThisType.length >= 2) {
       // HAMMER TIME

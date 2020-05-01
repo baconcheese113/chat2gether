@@ -158,9 +158,8 @@ export default class SocketHelper {
     // Offer emitted by 1st user, only 2nd user executes this and emits the answer
     this.socket.on('offer', async desc => {
       if (!this.isCaller) {
-        console.log('on offer')
+        console.log('on offer', desc)
         createPC()
-        console.log(desc)
         try {
           await this.pc.setRemoteDescription(new RTCSessionDescription(desc))
           console.log('set remote description')

@@ -35,7 +35,7 @@ export default function SocketProvider(props) {
   const { setEnabledWidgets } = useEnabledWidgets()
 
   const resetSocket = React.useCallback(() => {
-    console.log('reset state')
+    console.log('reset socket')
     // Clean up any existing room
     window.clearInterval(matchTimer)
     clearTimeout(probeTimer.current)

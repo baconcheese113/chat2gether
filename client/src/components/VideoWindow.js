@@ -134,7 +134,7 @@ export default function VideoWindow(props) {
     if (stream && videoRef.current.srcObject !== stream) {
       videoRef.current.srcObject = stream
     }
-  })
+  }, [stream])
 
   const handleResize = e => {
     const { videoWidth, videoHeight } = e.target

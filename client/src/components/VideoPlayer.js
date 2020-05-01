@@ -27,6 +27,7 @@ const EmptyStateText = styled.p`
   font-size: 2rem;
   flex: 1;
   align-self: center;
+  user-select: none;
 `
 const Video = styled.video`
   flex: 1;
