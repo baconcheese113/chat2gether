@@ -27,6 +27,7 @@ const StyledChatHub = styled.div`
 `
 const ConnectingText = styled.div`
   padding: 0 1rem;
+  white-space: pre-wrap;
 `
 const PageContainer = styled.div`
   display: flex;

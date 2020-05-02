@@ -15,6 +15,7 @@ dist
 # config
 /server/config
 *.env
+*.env.*
 
 # misc
 .DS_Store

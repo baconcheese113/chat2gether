@@ -8,6 +8,8 @@ import AirPlaneDing from '../assets/air-plane-ding.mp3'
 import { useMyUser } from './MyUserContext'
 import { useEnabledWidgets } from './EnabledWidgetsContext'
 
+const WELCOME = process.env.REACT_APP_WELCOME_MESSAGE
+
 const SocketContext = React.createContext()
 export function useSocket() {
   return React.useContext(SocketContext)
@@ -19,9 +21,8 @@ let nextMatch
 export default function SocketProvider(props) {
   const { children } = props
 
-  const [socketHelper, setSocketHelper] = React.useState()
   const [otherUser, setOtherUser] = React.useState(null)
-  const [connectionMsg, setConnectionMsg] = React.useState('Welcome to Chat2Gether')
+  const [connectionMsg, setConnectionMsg] = React.useState(`Welcome to Chat2Gether${WELCOME ? `\n${WELCOME}` : ''}`)
   const [remoteStream, setRemoteStream] = React.useState(null)
   const [canNextMatch, setCanNextMatch] = React.useState(true)
   const [matchCountdown, setMatchCountdown] = React.useState(-1)
