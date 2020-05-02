@@ -14,15 +14,24 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   me: User!
   findRoom: User
+  matches(
+    where: MatchWhereInput
+    orderBy: MatchOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [Match!]!
 }
 
 type Mutation {
   createUser(data: CreateUserInput!): User!
-  deleteUser: User!
   updateUser(data: UserUpdateInput!): User!
   createFeedback(data: FeedbackCreateInput!): Feedback!
   createReport(data: CreateReportInput!): Report!
-  
+  createMatch(data: CreateMatchInput!): Match!
+  disconnectMatch(data: DisconnectMatchInput!): Match!
 }
 
 # type Subscription {
@@ -37,7 +46,13 @@ type AudioPrefObject {
   id: ID!
   name: AudioPrefType!
 }
-
+input DisconnectMatchInput {
+  id: ID!
+  type: DisconnectType!
+}
+input CreateMatchInput {
+  otherUserId: ID!
+}
 input CreateReportInput {
   type: ReportType!
   offenderId: ID!
@@ -64,7 +79,7 @@ type User {
   lastActive: String!
   isHost: Boolean!
   isConnected: Boolean!
-  visited: [User!]!
+  matches(orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Match!]!
   reportsMade: [Report!]
   reportsReceived: [Report!]
   updatedAt: String!

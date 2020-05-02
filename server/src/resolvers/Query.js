@@ -11,7 +11,7 @@ export default {
       where: args.where,
     }
     const users = await prisma.query.users(opArgs, info)
-    return users.filter(value => value.id !== userId)
+    return users.filter(user => user.id !== userId)
   },
   me(parent, args, { prisma, request }, info) {
     const userId = getUserId(request)
@@ -27,6 +27,7 @@ export default {
     const user = await prisma.query.user(
       { where: { id: userId } },
       `{
+      ip
       gender
       lookingFor { name }
       age
@@ -34,11 +35,12 @@ export default {
       maxAge
       audioPref
       accAudioPrefs { name }
-      visited { id } 
     }`,
     )
     // Make sure they're not banned
-    const bans = await prisma.query.bans({ where: { user: { id: userId }, endAt_gte: new Date() } })
+    const bans = await prisma.query.bans({
+      where: { user: { OR: [{ id: userId }, { ip: user.ip }] }, endAt_gte: new Date() },
+    })
     if (bans.length) {
       throw Error(`Please contact an admin`)
     }
@@ -49,7 +51,6 @@ export default {
         where: {
           AND: [
             { id_not: userId },
-            { id_not_in: user.visited.map(x => x.id) },
             { gender_in: user.lookingFor.map(x => x.name) },
             { lookingFor_some: { name: user.gender } },
             { minAge_lte: user.age },
@@ -60,7 +61,7 @@ export default {
             { accAudioPrefs_some: { name: user.audioPref } },
             { isHost: true },
             { isConnected: false },
-            { visited_none: { id: userId } },
+            { matches_none: { users_some: { id: userId }, disconnectType_not: 'REFRESH' } },
             { updatedAt_gt: d.toISOString() },
           ],
         },
@@ -72,5 +73,10 @@ export default {
     console.log('potentialMatch', potentialMatch)
     const [match] = potentialMatch
     return match
+  },
+  matches(parent, args, { prisma, request }, info) {
+    getUserId(request)
+
+    return prisma.query.matches(args, info)
   },
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useApolloClient } from '@apollo/client'
 import SocketHelper from '../helpers/socketHelper'
-import { UPDATE_USER } from '../queries/mutations'
+import { UPDATE_USER, DISCONNECT_MATCH, CREATE_MATCH } from '../queries/mutations'
 import { FIND_ROOM } from '../queries/queries'
 import PrefMatcher from '../components/PrefMatcher'
 import AirPlaneDing from '../assets/air-plane-ding.mp3'
@@ -27,9 +27,11 @@ export default function SocketProvider(props) {
   const [canNextMatch, setCanNextMatch] = React.useState(true)
   const [matchCountdown, setMatchCountdown] = React.useState(-1)
 
+  const socketHelper = React.useRef()
   const matchTimer = React.useRef(null)
   const probeTimer = React.useRef(null)
   const room = React.useRef(null)
+  const matchId = React.useRef(null)
 
   const { user, getMe } = useMyUser()
   const client = useApolloClient()
@@ -38,14 +40,16 @@ export default function SocketProvider(props) {
   const resetSocket = React.useCallback(() => {
     console.log('reset socket')
     // Clean up any existing room
-    window.clearInterval(matchTimer)
-    clearTimeout(probeTimer.current)
+    window.clearInterval(matchTimer.current)
+    window.clearTimeout(probeTimer.current)
     setRemoteStream(null)
     // setTextChat([])
     room.current = null
+    matchId.current = null
     setOtherUser(null)
-    if (socketHelper && socketHelper.leaveRooms) socketHelper.leaveRooms()
-  }, [socketHelper])
+    setMatchCountdown(-1)
+    if (socketHelper.current && socketHelper.current.leaveRooms) socketHelper.current.leaveRooms()
+  }, [])
 
   const startCountdown = React.useCallback(() => {
     setMatchCountdown(8)
@@ -53,6 +57,7 @@ export default function SocketProvider(props) {
     const timer = setInterval(() => {
       if (num <= 1) {
         window.clearInterval(timer)
+        if (socketHelper.current) setRemoteStream(socketHelper.current.remoteStream)
       }
       num -= 1
       setMatchCountdown(num)
@@ -60,30 +65,15 @@ export default function SocketProvider(props) {
     matchTimer.current = timer
   }, [])
 
-  const onNextRoom = React.useCallback(
-    async (roomId, localStream) => {
-      console.log('onNextRoom with localStream', localStream)
-      if (roomId) {
-        const { error } = await client.mutate({
-          mutation: UPDATE_USER,
-          variables: { data: { visited: { connect: { id: roomId } } } },
-        })
-        if (error) console.error(error)
-      }
-      nextMatch(localStream)
-    },
-    [client],
-  )
-
   const onIdentity = React.useCallback(
-    u => {
+    async u => {
       try {
         // Have to fix on iOS safari first
         const isIOS =
           (/iPad|iPhone|iPod/.test(navigator.platform) ||
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
           !window.MSStream
-        if (!isIOS) {
+        if (!isIOS && !window.safari) {
           new Audio(AirPlaneDing).play()
         }
       } catch (err) {
@@ -104,89 +94,101 @@ export default function SocketProvider(props) {
           theirPref={u.audioPref}
         />,
       )
+      if (user.id === room.current) {
+        // if we're in our own room then we're the host
+        const { data } = await client.mutate({
+          mutation: CREATE_MATCH,
+          variables: { data: { otherUserId: u.id } },
+        })
+        matchId.current = data.createMatch.id
+        console.log(`I'm the host and matchId is ${matchId.current}`)
+        socketHelper.current.emit('matchId', { matchId: matchId.current, roomId: room.current, userId: user.id })
+      }
       startCountdown()
       setEnabledWidgets(enabledWidgets => ({ video: enabledWidgets.video, localVideo: true }))
     },
-    [setEnabledWidgets, startCountdown, user],
+    [client, setEnabledWidgets, startCountdown, user],
+  )
+
+  const onMatchId = React.useCallback(mId => {
+    if (!matchId.current) {
+      matchId.current = mId
+    }
+  }, [])
+
+  const endCall = React.useCallback(
+    async type => {
+      const disconnectPayload = {
+        mutation: DISCONNECT_MATCH,
+        variables: { data: { id: matchId.current, type } },
+        errorPolicy: 'all',
+      }
+      // If refreshing, we don't want to await anything, just fire and forget
+      if (type === 'REFRESH') {
+        if (matchId.current) client.mutate(disconnectPayload)
+        return
+      }
+      if (matchId.current) {
+        console.log('Ending call')
+        await client.mutate(disconnectPayload)
+      }
+      if (socketHelper.current) {
+        await client.mutate({
+          mutation: UPDATE_USER,
+          variables: { data: { isHost: false, isConnected: false } },
+        })
+        resetSocket()
+        await getMe()
+      }
+    },
+    [client, getMe, resetSocket],
   )
 
   // Starts socket.io up
   const initializeSocket = React.useCallback(
     localStream => {
-      const newSocketHelper = new SocketHelper()
-      newSocketHelper.localStream = localStream
-      newSocketHelper.onNextRoom = onNextRoom
-      newSocketHelper.onTrack = async e => {
-        console.log('ontrack', e)
-        clearTimeout(probeTimer.current)
-        const { loading, error } = await client.mutate({
-          mutation: UPDATE_USER,
-          variables: { data: { isConnected: true } },
-        })
-        if (error) console.error(error)
-        if (loading) console.log(loading)
-        const updatedUser = await getMe()
-        console.log('ontrack dump', updatedUser, room.current, e.streams[0])
-        newSocketHelper.emit('identity', { user: updatedUser, roomId: room.current })
-
-        setTimeout(() => {
-          console.log(`other user is ${otherUser}`)
-          let hackyUser = null
-          // Using this hack to get state from inside closure
-          setOtherUser(prev => {
-            hackyUser = prev
-            return prev
+      socketHelper.current = new SocketHelper()
+      socketHelper.current.localStream = localStream
+      socketHelper.current.onNextRoom = nextMatch
+      socketHelper.current.socket.on('identity', onIdentity)
+      socketHelper.current.socket.on('matchId', onMatchId)
+      socketHelper.current.onIceConnectionStateChange = async e => {
+        console.log('iceconnectionstatechange', e.target.iceConnectionState, e)
+        if (e.target.iceConnectionState === 'checking') {
+          clearTimeout(probeTimer.current)
+          const { loading, error } = await client.mutate({
+            mutation: UPDATE_USER,
+            variables: { data: { isConnected: true } },
           })
-          console.log(`hackyUser is ${hackyUser}`)
-          if (hackyUser) {
-            setRemoteStream(e.streams[0])
-          }
-        }, 8000)
+          if (error) console.error('error', error)
+          if (loading) console.log('loading', loading)
+          const updatedUser = await getMe()
+          socketHelper.current.emit('identity', { user: updatedUser, roomId: room.current })
+        }
+        // if (e.target.iceConnectionState !== 'connected') return
       }
-      newSocketHelper.onIdentity = onIdentity
-      newSocketHelper.onIceConnectionStateChange = e => {
-        console.log(e.target.iceConnectionState)
-      }
-      newSocketHelper.updateConnectionMsg = connectMsg => {
+      socketHelper.current.updateConnectionMsg = connectMsg => {
         setConnectionMsg(connectMsg)
       }
-      newSocketHelper.onDisconnect = () => {
-        console.log('Disconnecting...')
+      socketHelper.current.onDisconnect = () => {
         setConnectionMsg('User Disconnected')
-        // newSocketHelper.pc.close()
+        endCall('REFRESH')
         resetSocket()
       }
-      newSocketHelper.initializeEvents()
-      setSocketHelper(newSocketHelper)
-      console.log('initialize socket')
-      return newSocketHelper
+      socketHelper.current.initializeEvents()
     },
-    [client, getMe, onIdentity, onNextRoom, otherUser, resetSocket],
+    [client, endCall, getMe, onIdentity, onMatchId, resetSocket],
   )
-
-  const endCall = React.useCallback(async () => {
-    const data = { isHost: false, isConnected: false }
-    if (otherUser) {
-      console.log('Ending call with', otherUser)
-      data.visited = { connect: [{ id: otherUser.id }] }
-    }
-
-    await client.mutate({
-      mutation: UPDATE_USER,
-      variables: { data },
-    })
-    resetSocket()
-    await getMe()
-  }, [client, getMe, otherUser, resetSocket])
 
   nextMatch = React.useCallback(
     async localStream => {
-      console.log('in nextMatch with ', user)
       if (!canNextMatch) return
       setCanNextMatch(false)
-      const data = { isHost: false, isConnected: false }
-      if (otherUser) {
-        data.visited = { connect: [{ id: otherUser.id }] }
+      if (matchId.current) {
+        await client.mutate({
+          mutation: DISCONNECT_MATCH,
+          variables: { data: { id: matchId.current, type: 'NEXT_MATCH' } },
+        })
       }
 
       // Clean up any existing room
@@ -194,7 +196,7 @@ export default function SocketProvider(props) {
       setConnectionMsg('Finding a match...')
       const resetUserRes = await client.mutate({
         mutation: UPDATE_USER,
-        variables: { data },
+        variables: { data: { isHost: false, isConnected: false } },
       })
       if (resetUserRes.error) console.error(resetUserRes)
       let updatedUser = await getMe()
@@ -202,10 +204,10 @@ export default function SocketProvider(props) {
       // Start finding a room
       const d = new Date()
       d.setMinutes(d.getMinutes() - 0.25)
-      const tempSocketHelper = await initializeSocket(localStream)
-      if (socketHelper) {
-        console.log('Could have used cached socketHelper', tempSocketHelper)
-      }
+      initializeSocket(localStream)
+      // if (socketHelper) {
+      //   console.log('Could have used cached socketHelper', tempSocketHelper)
+      // }
       const compatibleHost = await client.query({ query: FIND_ROOM, fetchPolicy: 'network-only', errorPolicy: 'all' })
       if (compatibleHost.errors) {
         setCanNextMatch(true)
@@ -226,36 +228,35 @@ export default function SocketProvider(props) {
         setConnectionMsg('Waiting for matches...')
         room.current = updatedUser.id
         console.log(`No match, creating my room with id ${updatedUser.id}`)
-        tempSocketHelper.joinRoom(updatedUser.id)
+        socketHelper.current.joinRoom(updatedUser.id)
       } else {
         // Join a host
         console.log(`Match found, joining ${host.id}`)
         room.current = host.id
         setOtherUser(host)
-        tempSocketHelper.joinRoom(host.id)
+        socketHelper.current.joinRoom(host.id)
       }
       setCanNextMatch(true)
     },
-    [canNextMatch, client, getMe, initializeSocket, otherUser, resetSocket, socketHelper, user],
+    [canNextMatch, client, getMe, initializeSocket, resetSocket],
   )
 
   // Repeat search functionality
   React.useEffect(() => {
     if (connectionMsg === 'Waiting for matches...' && !otherUser) {
-      console.log('effect cleared')
       clearTimeout(probeTimer.current)
       probeTimer.current = setTimeout(() => {
-        if (socketHelper) {
-          nextMatch(socketHelper.localStream)
+        if (socketHelper.current) {
+          nextMatch(socketHelper.current.localStream)
         }
       }, 15000)
     }
-  }, [connectionMsg, otherUser, socketHelper])
+  }, [connectionMsg, otherUser])
 
   return (
     <SocketContext.Provider
       value={{
-        socketHelper,
+        socketHelper: socketHelper.current,
         connectionMsg,
         remoteStream,
         endCall,

@@ -50,10 +50,10 @@ export default function ChatHub() {
   const { user } = useMyUser()
   const { localStream, requestCamera } = useLocalStream()
   const { enabledWidgets } = useEnabledWidgets()
-  const { socketHelper, connectionMsg, remoteStream, roomId, otherUser, matchCountdown } = useSocket()
+  const { socketHelper, connectionMsg, remoteStream, roomId, otherUser, matchCountdown, endCall } = useSocket()
   const { flowDirection } = useWindowSize()
 
-  const logWindowError = e => console.log(e)
+  const logWindowError = e => console.error(e)
   React.useEffect(() => {
     window.addEventListener('error', logWindowError)
     return () => {
@@ -61,7 +61,7 @@ export default function ChatHub() {
     }
   }, [])
 
-  const onUnload = React.useCallback(
+  const onBeforeUnload = React.useCallback(
     e => {
       if (!otherUser) return null
       e.returnValue = 'Are you sure you want to end your call?'
@@ -70,12 +70,21 @@ export default function ChatHub() {
     [otherUser],
   )
 
+  const onUnload = React.useCallback(() => {
+    console.log('unloading with ', endCall)
+    endCall('REFRESH')
+  }, [endCall])
+
   React.useEffect(() => {
-    window.addEventListener('beforeunload', onUnload)
+    window.addEventListener('beforeunload', onBeforeUnload)
+    window.addEventListener('unload', onUnload)
+    window.addEventListener('pagehide', onUnload)
     return () => {
-      window.removeEventListener('beforeunload', onUnload)
+      window.removeEventListener('beforeunload', onBeforeUnload)
+      window.removeEventListener('unload', onUnload)
+      window.removeEventListener('pagehide', onUnload)
     }
-  }, [onUnload])
+  }, [onBeforeUnload, onUnload])
 
   const renderBackground = () => {
     if (remoteStream) {

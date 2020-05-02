@@ -14,6 +14,10 @@ type AggregateGenderObject {
   count: Int!
 }
 
+type AggregateMatch {
+  count: Int!
+}
+
 type AggregateReport {
   count: Int!
 }
@@ -333,6 +337,13 @@ type BatchPayload {
 
 scalar DateTime
 
+enum DisconnectType {
+  REFRESH
+  STOP
+  NEXT_MATCH
+  REPORT
+}
+
 type Feedback {
   id: ID!
   text: String!
@@ -616,6 +627,401 @@ enum GenderType {
 
 scalar Long
 
+type Match {
+  id: ID!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  disconnectType: DisconnectType
+  hostId: ID!
+  clientId: ID!
+  creatorId: ID!
+  disconnectorId: ID
+  hasEnded: Boolean!
+  endedAt: DateTime
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
+
+type MatchConnection {
+  pageInfo: PageInfo!
+  edges: [MatchEdge]!
+  aggregate: AggregateMatch!
+}
+
+input MatchCreateInput {
+  id: ID
+  users: UserCreateManyWithoutMatchesInput
+  disconnectType: DisconnectType
+  hostId: ID!
+  clientId: ID!
+  creatorId: ID!
+  disconnectorId: ID
+  hasEnded: Boolean
+  endedAt: DateTime
+}
+
+input MatchCreateManyWithoutUsersInput {
+  create: [MatchCreateWithoutUsersInput!]
+  connect: [MatchWhereUniqueInput!]
+}
+
+input MatchCreateWithoutUsersInput {
+  id: ID
+  disconnectType: DisconnectType
+  hostId: ID!
+  clientId: ID!
+  creatorId: ID!
+  disconnectorId: ID
+  hasEnded: Boolean
+  endedAt: DateTime
+}
+
+type MatchEdge {
+  node: Match!
+  cursor: String!
+}
+
+enum MatchOrderByInput {
+  id_ASC
+  id_DESC
+  disconnectType_ASC
+  disconnectType_DESC
+  hostId_ASC
+  hostId_DESC
+  clientId_ASC
+  clientId_DESC
+  creatorId_ASC
+  creatorId_DESC
+  disconnectorId_ASC
+  disconnectorId_DESC
+  hasEnded_ASC
+  hasEnded_DESC
+  endedAt_ASC
+  endedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type MatchPreviousValues {
+  id: ID!
+  disconnectType: DisconnectType
+  hostId: ID!
+  clientId: ID!
+  creatorId: ID!
+  disconnectorId: ID
+  hasEnded: Boolean!
+  endedAt: DateTime
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
+
+input MatchScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  disconnectType: DisconnectType
+  disconnectType_not: DisconnectType
+  disconnectType_in: [DisconnectType!]
+  disconnectType_not_in: [DisconnectType!]
+  hostId: ID
+  hostId_not: ID
+  hostId_in: [ID!]
+  hostId_not_in: [ID!]
+  hostId_lt: ID
+  hostId_lte: ID
+  hostId_gt: ID
+  hostId_gte: ID
+  hostId_contains: ID
+  hostId_not_contains: ID
+  hostId_starts_with: ID
+  hostId_not_starts_with: ID
+  hostId_ends_with: ID
+  hostId_not_ends_with: ID
+  clientId: ID
+  clientId_not: ID
+  clientId_in: [ID!]
+  clientId_not_in: [ID!]
+  clientId_lt: ID
+  clientId_lte: ID
+  clientId_gt: ID
+  clientId_gte: ID
+  clientId_contains: ID
+  clientId_not_contains: ID
+  clientId_starts_with: ID
+  clientId_not_starts_with: ID
+  clientId_ends_with: ID
+  clientId_not_ends_with: ID
+  creatorId: ID
+  creatorId_not: ID
+  creatorId_in: [ID!]
+  creatorId_not_in: [ID!]
+  creatorId_lt: ID
+  creatorId_lte: ID
+  creatorId_gt: ID
+  creatorId_gte: ID
+  creatorId_contains: ID
+  creatorId_not_contains: ID
+  creatorId_starts_with: ID
+  creatorId_not_starts_with: ID
+  creatorId_ends_with: ID
+  creatorId_not_ends_with: ID
+  disconnectorId: ID
+  disconnectorId_not: ID
+  disconnectorId_in: [ID!]
+  disconnectorId_not_in: [ID!]
+  disconnectorId_lt: ID
+  disconnectorId_lte: ID
+  disconnectorId_gt: ID
+  disconnectorId_gte: ID
+  disconnectorId_contains: ID
+  disconnectorId_not_contains: ID
+  disconnectorId_starts_with: ID
+  disconnectorId_not_starts_with: ID
+  disconnectorId_ends_with: ID
+  disconnectorId_not_ends_with: ID
+  hasEnded: Boolean
+  hasEnded_not: Boolean
+  endedAt: DateTime
+  endedAt_not: DateTime
+  endedAt_in: [DateTime!]
+  endedAt_not_in: [DateTime!]
+  endedAt_lt: DateTime
+  endedAt_lte: DateTime
+  endedAt_gt: DateTime
+  endedAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [MatchScalarWhereInput!]
+  OR: [MatchScalarWhereInput!]
+  NOT: [MatchScalarWhereInput!]
+}
+
+type MatchSubscriptionPayload {
+  mutation: MutationType!
+  node: Match
+  updatedFields: [String!]
+  previousValues: MatchPreviousValues
+}
+
+input MatchSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: MatchWhereInput
+  AND: [MatchSubscriptionWhereInput!]
+  OR: [MatchSubscriptionWhereInput!]
+  NOT: [MatchSubscriptionWhereInput!]
+}
+
+input MatchUpdateInput {
+  users: UserUpdateManyWithoutMatchesInput
+  disconnectType: DisconnectType
+  hostId: ID
+  clientId: ID
+  creatorId: ID
+  disconnectorId: ID
+  hasEnded: Boolean
+  endedAt: DateTime
+}
+
+input MatchUpdateManyDataInput {
+  disconnectType: DisconnectType
+  hostId: ID
+  clientId: ID
+  creatorId: ID
+  disconnectorId: ID
+  hasEnded: Boolean
+  endedAt: DateTime
+}
+
+input MatchUpdateManyMutationInput {
+  disconnectType: DisconnectType
+  hostId: ID
+  clientId: ID
+  creatorId: ID
+  disconnectorId: ID
+  hasEnded: Boolean
+  endedAt: DateTime
+}
+
+input MatchUpdateManyWithoutUsersInput {
+  create: [MatchCreateWithoutUsersInput!]
+  delete: [MatchWhereUniqueInput!]
+  connect: [MatchWhereUniqueInput!]
+  set: [MatchWhereUniqueInput!]
+  disconnect: [MatchWhereUniqueInput!]
+  update: [MatchUpdateWithWhereUniqueWithoutUsersInput!]
+  upsert: [MatchUpsertWithWhereUniqueWithoutUsersInput!]
+  deleteMany: [MatchScalarWhereInput!]
+  updateMany: [MatchUpdateManyWithWhereNestedInput!]
+}
+
+input MatchUpdateManyWithWhereNestedInput {
+  where: MatchScalarWhereInput!
+  data: MatchUpdateManyDataInput!
+}
+
+input MatchUpdateWithoutUsersDataInput {
+  disconnectType: DisconnectType
+  hostId: ID
+  clientId: ID
+  creatorId: ID
+  disconnectorId: ID
+  hasEnded: Boolean
+  endedAt: DateTime
+}
+
+input MatchUpdateWithWhereUniqueWithoutUsersInput {
+  where: MatchWhereUniqueInput!
+  data: MatchUpdateWithoutUsersDataInput!
+}
+
+input MatchUpsertWithWhereUniqueWithoutUsersInput {
+  where: MatchWhereUniqueInput!
+  update: MatchUpdateWithoutUsersDataInput!
+  create: MatchCreateWithoutUsersInput!
+}
+
+input MatchWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  users_every: UserWhereInput
+  users_some: UserWhereInput
+  users_none: UserWhereInput
+  disconnectType: DisconnectType
+  disconnectType_not: DisconnectType
+  disconnectType_in: [DisconnectType!]
+  disconnectType_not_in: [DisconnectType!]
+  hostId: ID
+  hostId_not: ID
+  hostId_in: [ID!]
+  hostId_not_in: [ID!]
+  hostId_lt: ID
+  hostId_lte: ID
+  hostId_gt: ID
+  hostId_gte: ID
+  hostId_contains: ID
+  hostId_not_contains: ID
+  hostId_starts_with: ID
+  hostId_not_starts_with: ID
+  hostId_ends_with: ID
+  hostId_not_ends_with: ID
+  clientId: ID
+  clientId_not: ID
+  clientId_in: [ID!]
+  clientId_not_in: [ID!]
+  clientId_lt: ID
+  clientId_lte: ID
+  clientId_gt: ID
+  clientId_gte: ID
+  clientId_contains: ID
+  clientId_not_contains: ID
+  clientId_starts_with: ID
+  clientId_not_starts_with: ID
+  clientId_ends_with: ID
+  clientId_not_ends_with: ID
+  creatorId: ID
+  creatorId_not: ID
+  creatorId_in: [ID!]
+  creatorId_not_in: [ID!]
+  creatorId_lt: ID
+  creatorId_lte: ID
+  creatorId_gt: ID
+  creatorId_gte: ID
+  creatorId_contains: ID
+  creatorId_not_contains: ID
+  creatorId_starts_with: ID
+  creatorId_not_starts_with: ID
+  creatorId_ends_with: ID
+  creatorId_not_ends_with: ID
+  disconnectorId: ID
+  disconnectorId_not: ID
+  disconnectorId_in: [ID!]
+  disconnectorId_not_in: [ID!]
+  disconnectorId_lt: ID
+  disconnectorId_lte: ID
+  disconnectorId_gt: ID
+  disconnectorId_gte: ID
+  disconnectorId_contains: ID
+  disconnectorId_not_contains: ID
+  disconnectorId_starts_with: ID
+  disconnectorId_not_starts_with: ID
+  disconnectorId_ends_with: ID
+  disconnectorId_not_ends_with: ID
+  hasEnded: Boolean
+  hasEnded_not: Boolean
+  endedAt: DateTime
+  endedAt_not: DateTime
+  endedAt_in: [DateTime!]
+  endedAt_not_in: [DateTime!]
+  endedAt_lt: DateTime
+  endedAt_lte: DateTime
+  endedAt_gt: DateTime
+  endedAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [MatchWhereInput!]
+  OR: [MatchWhereInput!]
+  NOT: [MatchWhereInput!]
+}
+
+input MatchWhereUniqueInput {
+  id: ID
+}
+
 type Mutation {
   createAudioPrefObject(data: AudioPrefObjectCreateInput!): AudioPrefObject!
   updateAudioPrefObject(data: AudioPrefObjectUpdateInput!, where: AudioPrefObjectWhereUniqueInput!): AudioPrefObject
@@ -641,6 +1047,12 @@ type Mutation {
   upsertGenderObject(where: GenderObjectWhereUniqueInput!, create: GenderObjectCreateInput!, update: GenderObjectUpdateInput!): GenderObject!
   deleteGenderObject(where: GenderObjectWhereUniqueInput!): GenderObject
   deleteManyGenderObjects(where: GenderObjectWhereInput): BatchPayload!
+  createMatch(data: MatchCreateInput!): Match!
+  updateMatch(data: MatchUpdateInput!, where: MatchWhereUniqueInput!): Match
+  updateManyMatches(data: MatchUpdateManyMutationInput!, where: MatchWhereInput): BatchPayload!
+  upsertMatch(where: MatchWhereUniqueInput!, create: MatchCreateInput!, update: MatchUpdateInput!): Match!
+  deleteMatch(where: MatchWhereUniqueInput!): Match
+  deleteManyMatches(where: MatchWhereInput): BatchPayload!
   createReport(data: ReportCreateInput!): Report!
   updateReport(data: ReportUpdateInput!, where: ReportWhereUniqueInput!): Report
   updateManyReports(data: ReportUpdateManyMutationInput!, where: ReportWhereInput): BatchPayload!
@@ -685,6 +1097,9 @@ type Query {
   genderObject(where: GenderObjectWhereUniqueInput!): GenderObject
   genderObjects(where: GenderObjectWhereInput, orderBy: GenderObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GenderObject]!
   genderObjectsConnection(where: GenderObjectWhereInput, orderBy: GenderObjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GenderObjectConnection!
+  match(where: MatchWhereUniqueInput!): Match
+  matches(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Match]!
+  matchesConnection(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MatchConnection!
   report(where: ReportWhereUniqueInput!): Report
   reports(where: ReportWhereInput, orderBy: ReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Report]!
   reportsConnection(where: ReportWhereInput, orderBy: ReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ReportConnection!
@@ -954,6 +1369,7 @@ type Subscription {
   ban(where: BanSubscriptionWhereInput): BanSubscriptionPayload
   feedback(where: FeedbackSubscriptionWhereInput): FeedbackSubscriptionPayload
   genderObject(where: GenderObjectSubscriptionWhereInput): GenderObjectSubscriptionPayload
+  match(where: MatchSubscriptionWhereInput): MatchSubscriptionPayload
   report(where: ReportSubscriptionWhereInput): ReportSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
@@ -973,6 +1389,7 @@ type User {
   isHost: Boolean!
   isConnected: Boolean!
   visited(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  matches(where: MatchWhereInput, orderBy: MatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Match!]
   reportsMade(where: ReportWhereInput, orderBy: ReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Report!]
   reportsReceived(where: ReportWhereInput, orderBy: ReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Report!]
   updatedAt: DateTime!
@@ -1000,8 +1417,14 @@ input UserCreateInput {
   isHost: Boolean!
   isConnected: Boolean!
   visited: UserCreateManyWithoutVisitedInput
+  matches: MatchCreateManyWithoutUsersInput
   reportsMade: ReportCreateManyWithoutReporterInput
   reportsReceived: ReportCreateManyWithoutOffenderInput
+}
+
+input UserCreateManyWithoutMatchesInput {
+  create: [UserCreateWithoutMatchesInput!]
+  connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateManyWithoutVisitedInput {
@@ -1024,6 +1447,25 @@ input UserCreateOneWithoutReportsReceivedInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateWithoutMatchesInput {
+  id: ID
+  ip: String!
+  fingerprint: String!
+  gender: GenderType!
+  lookingFor: GenderObjectCreateManyInput
+  age: Int!
+  minAge: Int!
+  maxAge: Int!
+  audioPref: AudioPrefType!
+  accAudioPrefs: AudioPrefObjectCreateManyInput
+  lastActive: DateTime!
+  isHost: Boolean!
+  isConnected: Boolean!
+  visited: UserCreateManyWithoutVisitedInput
+  reportsMade: ReportCreateManyWithoutReporterInput
+  reportsReceived: ReportCreateManyWithoutOffenderInput
+}
+
 input UserCreateWithoutReportsMadeInput {
   id: ID
   ip: String!
@@ -1039,6 +1481,7 @@ input UserCreateWithoutReportsMadeInput {
   isHost: Boolean!
   isConnected: Boolean!
   visited: UserCreateManyWithoutVisitedInput
+  matches: MatchCreateManyWithoutUsersInput
   reportsReceived: ReportCreateManyWithoutOffenderInput
 }
 
@@ -1057,6 +1500,7 @@ input UserCreateWithoutReportsReceivedInput {
   isHost: Boolean!
   isConnected: Boolean!
   visited: UserCreateManyWithoutVisitedInput
+  matches: MatchCreateManyWithoutUsersInput
   reportsMade: ReportCreateManyWithoutReporterInput
 }
 
@@ -1074,6 +1518,7 @@ input UserCreateWithoutVisitedInput {
   lastActive: DateTime!
   isHost: Boolean!
   isConnected: Boolean!
+  matches: MatchCreateManyWithoutUsersInput
   reportsMade: ReportCreateManyWithoutReporterInput
   reportsReceived: ReportCreateManyWithoutOffenderInput
 }
@@ -1268,6 +1713,7 @@ input UserUpdateDataInput {
   isHost: Boolean
   isConnected: Boolean
   visited: UserUpdateManyWithoutVisitedInput
+  matches: MatchUpdateManyWithoutUsersInput
   reportsMade: ReportUpdateManyWithoutReporterInput
   reportsReceived: ReportUpdateManyWithoutOffenderInput
 }
@@ -1286,6 +1732,7 @@ input UserUpdateInput {
   isHost: Boolean
   isConnected: Boolean
   visited: UserUpdateManyWithoutVisitedInput
+  matches: MatchUpdateManyWithoutUsersInput
   reportsMade: ReportUpdateManyWithoutReporterInput
   reportsReceived: ReportUpdateManyWithoutOffenderInput
 }
@@ -1314,6 +1761,18 @@ input UserUpdateManyMutationInput {
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
+}
+
+input UserUpdateManyWithoutMatchesInput {
+  create: [UserCreateWithoutMatchesInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutMatchesInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutMatchesInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
 }
 
 input UserUpdateManyWithoutVisitedInput {
@@ -1354,6 +1813,24 @@ input UserUpdateOneRequiredWithoutReportsReceivedInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateWithoutMatchesDataInput {
+  ip: String
+  fingerprint: String
+  gender: GenderType
+  lookingFor: GenderObjectUpdateManyInput
+  age: Int
+  minAge: Int
+  maxAge: Int
+  audioPref: AudioPrefType
+  accAudioPrefs: AudioPrefObjectUpdateManyInput
+  lastActive: DateTime
+  isHost: Boolean
+  isConnected: Boolean
+  visited: UserUpdateManyWithoutVisitedInput
+  reportsMade: ReportUpdateManyWithoutReporterInput
+  reportsReceived: ReportUpdateManyWithoutOffenderInput
+}
+
 input UserUpdateWithoutReportsMadeDataInput {
   ip: String
   fingerprint: String
@@ -1368,6 +1845,7 @@ input UserUpdateWithoutReportsMadeDataInput {
   isHost: Boolean
   isConnected: Boolean
   visited: UserUpdateManyWithoutVisitedInput
+  matches: MatchUpdateManyWithoutUsersInput
   reportsReceived: ReportUpdateManyWithoutOffenderInput
 }
 
@@ -1385,6 +1863,7 @@ input UserUpdateWithoutReportsReceivedDataInput {
   isHost: Boolean
   isConnected: Boolean
   visited: UserUpdateManyWithoutVisitedInput
+  matches: MatchUpdateManyWithoutUsersInput
   reportsMade: ReportUpdateManyWithoutReporterInput
 }
 
@@ -1401,8 +1880,14 @@ input UserUpdateWithoutVisitedDataInput {
   lastActive: DateTime
   isHost: Boolean
   isConnected: Boolean
+  matches: MatchUpdateManyWithoutUsersInput
   reportsMade: ReportUpdateManyWithoutReporterInput
   reportsReceived: ReportUpdateManyWithoutOffenderInput
+}
+
+input UserUpdateWithWhereUniqueWithoutMatchesInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutMatchesDataInput!
 }
 
 input UserUpdateWithWhereUniqueWithoutVisitedInput {
@@ -1423,6 +1908,12 @@ input UserUpsertWithoutReportsMadeInput {
 input UserUpsertWithoutReportsReceivedInput {
   update: UserUpdateWithoutReportsReceivedDataInput!
   create: UserCreateWithoutReportsReceivedInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutMatchesInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutMatchesDataInput!
+  create: UserCreateWithoutMatchesInput!
 }
 
 input UserUpsertWithWhereUniqueWithoutVisitedInput {
@@ -1527,6 +2018,9 @@ input UserWhereInput {
   visited_every: UserWhereInput
   visited_some: UserWhereInput
   visited_none: UserWhereInput
+  matches_every: MatchWhereInput
+  matches_some: MatchWhereInput
+  matches_none: MatchWhereInput
   reportsMade_every: ReportWhereInput
   reportsMade_some: ReportWhereInput
   reportsMade_none: ReportWhereInput

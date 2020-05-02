@@ -13,6 +13,7 @@ type User {
   isHost: Boolean!
   isConnected: Boolean!
   visited: [User!]! @relation(name: "VisitedUsers", onDelete: SET_NULL)
+  matches: [Match!]! @relation(name: "MatchedUsers")
   reportsMade: [Report!]! @relation(name: "ReportsMade")
   reportsReceived: [Report!]! @relation(name: "ReportsReceived")
   updatedAt: DateTime! @updatedAt
@@ -52,6 +53,27 @@ enum ReportType {
   FALSE_AGE
   FALSE_SEX
   FALSE_AUDIO
+}
+
+type Match {
+  id: ID! @unique @id
+  users: [User!]! @relation(name: "MatchedUsers")
+  disconnectType: DisconnectType
+  hostId: ID!
+  clientId: ID!
+  creatorId: ID!
+  disconnectorId: ID
+  hasEnded: Boolean! @default(value: false)
+  endedAt: DateTime
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+enum DisconnectType {
+  REFRESH
+  STOP
+  NEXT_MATCH
+  REPORT
 }
 
 type GenderObject {

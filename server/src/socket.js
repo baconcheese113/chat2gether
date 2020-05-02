@@ -52,6 +52,11 @@ export default io => {
       socket.to(msg.roomId).emit('identity', msg.user)
     })
 
+    socket.on('matchId', msg => {
+      console.log(`${msg.userId} created match ${msg.matchId} as host`)
+      socket.to(msg.roomId).emit('matchId', msg.matchId)
+    })
+
     socket.on('countdown', msg => {
       console.log(`${msg.type} from ${msg.userId}`)
       socket.to(msg.roomId).emit(msg.type, msg.userId)

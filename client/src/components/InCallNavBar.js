@@ -92,7 +92,12 @@ export default function InCallNavBar(props) {
         {showLeft || isPC ? (
           <>
             {buttons.stop && (
-              <ToggleButton data-cy="navStopButton" iconClass="fas fa-stop" title="Stop" onClick={endCall} />
+              <ToggleButton
+                data-cy="navStopButton"
+                iconClass="fas fa-stop"
+                title="Stop"
+                onClick={() => endCall('STOP')}
+              />
             )}
             {buttons.mic && (
               <ToggleButtonWithMeter

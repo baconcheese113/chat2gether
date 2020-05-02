@@ -14,8 +14,10 @@ export default function useWindowSize() {
 
   React.useEffect(() => {
     window.addEventListener('resize', updateSize)
+    window.addEventListener('orientationchange', updateSize)
     return () => {
       window.removeEventListener('resize', updateSize)
+      window.removeEventListener('orientationchange', updateSize)
     }
   }, [updateSize])
 

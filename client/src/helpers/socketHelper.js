@@ -34,6 +34,8 @@ export default class SocketHelper {
 
   onIdentity = user => user
 
+  onMatchId = matchId => matchId
+
   /**
    * General Flow
    *
@@ -61,8 +63,8 @@ export default class SocketHelper {
     })
     this.socket.on('full room', roomId => {
       console.log(`full room at ${roomId}`)
-      this.updateConnectionMsg('Room full, finding next...')
-      this.onNextRoom(null, this.localStream)
+      this.updateConnectionMsg('Room full')
+      this.onNextRoom(this.localStream)
     })
     this.socket.on('disconnect', () => {
       console.log('disconnect')
@@ -95,8 +97,11 @@ export default class SocketHelper {
       this.pc = new RTCPeerConnection(this.iceServers)
       this.pc.onicecandidate = onIceCandidate
       this.pc.ontrack = e => {
-        console.log('ontrack', e)
+        console.log('ontrack', e.streams[0])
         this.updateConnectionMsg('Connection complete')
+        const [stream] = e.streams
+        this.remoteStream = stream
+        console.log('set remote stream to ', this.remoteStream)
         this.onTrack(e)
       }
       this.pc.oniceconnectionstatechange = e => {
@@ -192,7 +197,8 @@ export default class SocketHelper {
     })
 
     // Other non-setup functions
-    this.socket.on('identity', this.onIdentity)
+    // this.socket.on('identity', this.onIdentity)
+    // this.socket.on('matchId', matchId => console.log('socketHelper says matchId is ', matchId))
   }
 
   leaveRooms() {

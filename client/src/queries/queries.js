@@ -14,11 +14,6 @@ export const GET_USERS = gql`
       accAudioPrefs {
         name
       }
-      visited {
-        id
-        gender
-        age
-      }
     }
   }
 `
@@ -41,15 +36,21 @@ export const GET_ME = gql`
       lastActive
       isHost
       isConnected
-      visited {
-        id
-        gender
-        age
-      }
       reportsMade {
         type
         offender {
           id
+        }
+      }
+      matches(orderBy: endedAt_DESC) {
+        id
+        endedAt
+        createdAt
+        disconnectType
+        users {
+          id
+          gender
+          age
         }
       }
     }
@@ -73,11 +74,6 @@ export const FIND_ROOM = gql`
       lastActive
       isHost
       isConnected
-      visited {
-        id
-        gender
-        age
-      }
     }
   }
 `

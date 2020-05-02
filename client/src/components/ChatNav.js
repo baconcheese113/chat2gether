@@ -99,7 +99,7 @@ export default function ChatNav() {
   const handleDialogClose = async madeReport => {
     setDialogOpen(false)
     if (madeReport) {
-      await endCall()
+      await endCall('REPORT')
     }
   }
 

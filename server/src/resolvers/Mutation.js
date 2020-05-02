@@ -31,12 +31,6 @@ export default {
     request.res.cookie('token', token, options)
     return user
   },
-  async deleteUser(parent, args, { prisma, request }, info) {
-    const userId = getUserId(request)
-
-    return prisma.mutation.deleteUser({ where: { id: userId } }, info)
-  },
-
   async updateUser(parent, args, { prisma, request }, info) {
     const userId = getUserId(request)
 
@@ -96,5 +90,58 @@ export default {
     }
 
     return report
+  },
+
+  async createMatch(parent, args, { prisma, request }, info) {
+    const userId = getUserId(request)
+
+    const { otherUserId } = args.data
+    const usersArr = [userId, otherUserId]
+    // determine if there's already an active match between these two users
+    const existingMatches = await prisma.query.matches(
+      {
+        where: { hasEnded: false, hostId_in: usersArr, clientId_in: usersArr },
+      },
+      info,
+    )
+    console.log('User/Host is ', userId, ' and client is ', otherUserId, ' existing matches -> ', existingMatches)
+    if (existingMatches && existingMatches.length) return existingMatches[0]
+    // determine if user is host or not
+    const me = await prisma.query.user({ where: { id: userId } }, `{ isHost }`)
+    const hostId = me.isHost ? userId : otherUserId
+    const clientId = me.isHost ? otherUserId : userId
+    // create and return new match
+    return prisma.mutation.createMatch(
+      { data: { hostId, clientId, creatorId: userId, users: { connect: [{ id: hostId }, { id: clientId }] } } },
+      info,
+    )
+  },
+
+  async disconnectMatch(parent, args, { prisma, request }, info) {
+    const userId = getUserId(request)
+
+    const { id, type } = args.data
+    // get matches where id and user is in users array
+    const matches = await prisma.query.matches({ where: { id, users_some: { id: userId } } })
+    if (!matches) throw new Error('Cannot disconnect that which does not exist')
+    console.log('disconnect matches ', matches)
+
+    if (matches[0].hasEnded) {
+      return { updateMatch: matches[0] }
+    }
+    // return updated match with type, disconnectorId, and endedAt
+    try {
+      const updateMatch = await prisma.mutation.updateMatch(
+        {
+          where: { id },
+          data: { disconnectType: type, disconnectorId: userId, endedAt: new Date(), hasEnded: true },
+        },
+        info,
+      )
+      return updateMatch
+    } catch (e) {
+      console.log('error disconnecting ', e)
+    }
+    return { updateMatch: { ...matches } }
   },
 }

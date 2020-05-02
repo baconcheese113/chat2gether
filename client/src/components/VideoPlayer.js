@@ -78,6 +78,7 @@ const marquee = keyframes`
 const ArrowIcon = styled.i`
   position: absolute;
   top: 120%;
+  left: 45%;
   font-size: 32px;
   color: white;
   animation: ${marquee} 0.8s infinite;

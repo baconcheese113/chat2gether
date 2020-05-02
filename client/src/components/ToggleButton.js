@@ -17,6 +17,7 @@ const ButtonElem = styled(Button)`
   align-items: center;
   padding: 4px 8px;
   border-radius: 8px;
+  color: #fff;
   /* background-color: ${p => (p.active ? p.theme.colorPrimary : p.theme.colorGreyDark2)}; */
   background-image: linear-gradient(
     to bottom right,

@@ -35,7 +35,7 @@ export default function ReportUserDialog(props) {
       isLoading={isLoading}
       open={open}
       title="Report User"
-      onCancel={onClose}
+      onCancel={() => onClose(false)}
       onConfirm={handleConfirm}
     >
       <Subtitle>

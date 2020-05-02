@@ -30,10 +30,16 @@ export const UPDATE_USER = gql`
       }
       isHost
       isConnected
-      visited {
-        id
-        gender
-        age
+      matches {
+        users {
+          id
+          gender
+          age
+        }
+        hostId
+        clientId
+        endedAt
+        createdAt
       }
     }
   }
@@ -51,6 +57,22 @@ export const CREATE_FEEDBACK = gql`
 export const CREATE_REPORT = gql`
   mutation CreateReportMutation($data: CreateReportInput!) {
     createReport(data: $data) {
+      id
+    }
+  }
+`
+
+export const CREATE_MATCH = gql`
+  mutation CreateMatchMutation($data: CreateMatchInput!) {
+    createMatch(data: $data) {
+      id
+    }
+  }
+`
+
+export const DISCONNECT_MATCH = gql`
+  mutation DisconnectMatchMutation($data: DisconnectMatchInput!) {
+    disconnectMatch(data: $data) {
       id
     }
   }

@@ -8,11 +8,12 @@ const StyledButton = styled.button`
   border: #181818;
   text-align: center;
   background-color: ${p => p.backgroundColor};
-  color: ${p => (p.disabled ? '#888' : '#fff')};
+  color: ${p => (p.disabled ? '#888' : '#eee')};
   padding: 5px 10px;
   cursor: ${p => (p.disabled ? 'default' : 'pointer')};
   font-size: ${p => p.fontSize};
   filter: ${p => p.disabled && 'brightness(0.8) grayscale(1)'};
+  position: relative;
   transition: all 0.4s;
 
   &:hover {

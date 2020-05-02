@@ -88,7 +88,10 @@ export default function ToggleButtonWithMeter(props) {
     if (stream && !processor.current) {
       connectProcessor()
     }
-    const refresh = setInterval(() => setVolume(vol.current), 100) // 10fps
+    const refresh = setInterval(() => {
+      if (!processor.current) return
+      setVolume(vol.current)
+    }, 100) // 10fps
     return () => {
       endProcessor()
       clearInterval(refresh)
