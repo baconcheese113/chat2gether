@@ -45,13 +45,12 @@
     }
 
     main {
-      max-width: 600rem;
       overflow: hidden;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 90vh;
+      height: 100%;
       width: 100%;
     }
     section {
@@ -70,6 +69,24 @@
       font-size: 5rem;
       text-shadow: 0 0 1rem #000;
       transform-origin: center right;
+    }
+    .notice-container {
+      position: absolute;
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #9932cc;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+    }
+    .fa-exclamation-circle {
+      font-size: 32px;
+    }
+    .notice-text {
+      margin-left: 16px;
     }
     .swing-start {
       animation: 1s 2.2s swing-down;
@@ -120,6 +137,7 @@
     }
     img {
       position: fixed;
+      min-width: 40%;
       filter: blur(3px) grayscale(0.9) brightness(50%);
       transform: translate(-50%, -50%) scale(3);
       z-index: -1;
@@ -140,6 +158,12 @@
         <h2 class="subtitle">Under Construction</h2>
         <i class="fas fa-hard-hat"></i>
       </div>
+      <% if(welcomeMessage) { %>
+        <div id="notice" class="notice-container">
+          <i class="fas fa-exclamation-circle"></i>
+          <p id="notice-text" class="notice-text"><%= welcomeMessage %></p>
+        </div>
+      <% } %>
     </section>
   </main>
 
@@ -154,6 +178,12 @@
         title.className = 'swing-left'
       }
     })
+
+    const body = document.querySelector('body')
+    window.addEventListener('resize', () => {
+      body.style.height = `${window.innerHeight}px`
+    })
+    body.style.height = `${window.innerHeight}px`
   </script>
 </body>
 </html>

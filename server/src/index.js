@@ -19,10 +19,11 @@ socket(io);
 
 console.log(`env is ${process.env.IS_UNDER_CONSTRUCTION}`);
 if (process.env.IS_UNDER_CONSTRUCTION === 'true') {
-  app.get('*', (req, res) => {
-    app.use(express.static(path.join(__dirname, '../../client/build')));
-    res.sendFile(path.join(__dirname, '../../client/build', 'construction.html'));
-  });
+  app.set('view engine', 'ejs')
+  app.set('views', `${__dirname}/views`)
+  app.get('*', async (req, res) => {
+    res.render('construction', { welcomeMessage: process.env.REACT_APP_WELCOME_MESSAGE })
+  })
 } else if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../../client/build')));
   app.get('/', (req, res) => {
