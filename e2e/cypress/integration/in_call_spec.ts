@@ -97,6 +97,7 @@ describe('in_call_spec', function () {
   })
 
   it('Uses video player widget', function () {
+    cy.dataCy('navPlayerButton').click()
     cy.window().then(() => {
       theirSocketHelper.sendPlayerSync('start')
     })
