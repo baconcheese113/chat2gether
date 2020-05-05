@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import * as moment from 'moment/moment'
+import moment from 'moment'
 import { useMyUser } from '../hooks/MyUserContext'
 import useWindowSize from '../hooks/WindowSizeHook'
 import { Button } from './common'

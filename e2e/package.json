@@ -12,12 +12,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
     "@cypress/webpack-preprocessor": "^5.1.2",
     "babel-loader": "^8.1.0",
-    "cypress": "^4.4.1",
-    "ts-loader": "^7.0.1",
+    "cypress": "^4.5.0",
+    "ts-loader": "^7.0.2",
     "typescript": "^3.8.3",
     "webpack": "^4.43.0"
   },
