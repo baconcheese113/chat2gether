@@ -5,43 +5,12 @@ import { CREATE_FEEDBACK } from '../queries/mutations'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useLocalStream } from '../hooks/LocalStreamContext'
 import SVGTester from './SVGTester'
-import { Button } from './common'
+import { Button, Dialog } from './common'
 
 const StyledSettings = styled.div`
   position: absolute;
   height: 100%;
   width: 100%;
-`
-const Blur = styled.div`
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  filter: blur(5px) saturate(20%);
-  background-color: #000000aa;
-`
-
-const Container = styled.div`
-  margin: auto;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  height: 40rem;
-  width: 30rem;
-  max-width: 90%;
-  max-height: 90%;
-  background-color: #313131;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 1rem #000;
-  display: flex;
-  flex-direction: column;
-`
-const Title = styled.h3`
-  margin: 1rem 2rem;
-  font-size: 2rem;
-  padding: 1rem;
-  border-bottom: 2px solid #222;
 `
 const SettingsList = styled.div`
   padding: 1.5rem;
@@ -75,21 +44,12 @@ const DeviceOption = styled.option`
   cursor: pointer;
 `
 
-const Actions = styled.div`
-  display: flex;
-  /* for Edge */
-  /* justify-content: space-around; */
-  justify-content: space-evenly;
-  justify-self: flex-end;
-  font-size: 1.2rem;
-`
-const LeftAction = styled(Button)``
-
 const FeedbackForm = styled.div`
   background-color: #313131;
   border: #555 solid 2px;
   padding: 10px;
   border-radius: 5px;
+  margin-top: 16px;
 
   p {
     font-size: 1.4rem;
@@ -201,9 +161,7 @@ export default function Settings() {
           <SVGTester height="50vh" width="50vh" />
         </Modal>
       )}
-      <Blur role="button" tabIndex={0} onClick={handleClose} onKeyUp={handleClose} />
-      <Container>
-        <Title>Settings</Title>
+      <Dialog open isLoading={isLoading} title="Settings" onCancel={() => handleClose(false)} onConfirm={handleClose}>
         <SettingsList>
           <label htmlFor="video-source">
             Video Source
@@ -213,17 +171,13 @@ export default function Settings() {
           </label>
 
           <FeedbackForm>
-            <p>SendFeedback</p>
+            <p>Send Feedback</p>
             <FeedbackInput value={feedbackText} onChange={e => setFeedbackText(e.target.value)} />
             {feedbackMsg}
             <Button light small disabled={!feedbackText} label="Submit" onClick={handleFeedback} />
           </FeedbackForm>
         </SettingsList>
-        <Actions>
-          <LeftAction flex square label="Cancel" onClick={() => handleClose(false)} />
-          <Button flex primary square label="Apply" onClick={handleClose} />
-        </Actions>
-      </Container>
+      </Dialog>
     </StyledSettings>
   )
 }
