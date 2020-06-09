@@ -16,6 +16,7 @@ const StyledNavBar = styled.div`
   display: flex;
   font-size: 1.6rem;
   padding: 0.5rem;
+  overflow: hidden;
 `
 const LeftAligned = styled.div`
   display: flex;

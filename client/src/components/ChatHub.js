@@ -36,6 +36,7 @@ const PageContainer = styled.div`
   justify-content: space-evenly;
   align-items: center;
   font-size: 2rem;
+  height: 100%;
 `
 const CountdownSpan = styled.span`
   width: 100%;

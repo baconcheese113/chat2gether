@@ -24,6 +24,7 @@ const LocalVideoContainer = styled.div.attrs(p => ({
   border-radius: 20px;
   border: 2px solid #555;
   transition: border-style 1s, box-shadow 1.2s, filter 0.6s, animation 3s, width 0.6s, height 0.6s;
+  z-index: 10;
 
   &:hover {
     box-shadow: 0 0 3px #fff;
