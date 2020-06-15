@@ -4,6 +4,8 @@ import HtmlParse from '../helpers/htmlParse3'
 import { useNotify } from '../hooks/NotifyContext'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import useWindowSize from '../hooks/WindowSizeHook'
+import { useVideoPlayer } from '../hooks/VideoPlayerContext'
+import { useSocket } from '../hooks/SocketContext'
 import { Button } from './common'
 import VideoGrid from './VideoGrid'
 
@@ -70,6 +72,7 @@ const SyncButton = styled(Button)`
   color: ${p => p.color};
   display: flex;
   justify-content: center;
+  align-items: center;
 `
 const marquee = keyframes`
   0% { transform: translateY(0px);}
@@ -114,13 +117,16 @@ const UPDATE = { PAUSE: 'pause', PLAY: 'play', SEEKED: 'seeked' }
 /** ******************* Component Starts */
 export default function VideoPlayer(props) {
   const { socketHelper, roomId, userId } = props
-  const [currentVideo, setCurrentVideo] = React.useState(null)
+  const { savedPausedState, savedUrl, savedId, savedTime, setVideoData, parser, performNewSearch } = useVideoPlayer()
+  const { remoteStream } = useSocket()
+
+  const [currentVideo, setCurrentVideo] = React.useState(savedId)
   const [isShown, setIsShown] = React.useState(false)
-  const [parser, setParser] = React.useState(new HtmlParse(null))
   const [syncState, setSyncState] = React.useState(SYNC.OFF)
-  const [videoUrl, setVideoUrl] = React.useState('')
+  const [videoUrl, setVideoUrl] = React.useState(savedUrl)
   const [disabled, setDisabled] = React.useState(false)
   const [showVideoSyncToast, setShowVideoSyncToast] = React.useState(false)
+  const [hasRemoteStream, setHasRemoteStream] = React.useState(!remoteStream)
 
   const player = React.useRef()
 
@@ -132,14 +138,6 @@ export default function VideoPlayer(props) {
   const coords = { x: innerWidth / 2, y: innerHeight / 3 }
 
   const showHintArrow = !window.sessionStorage.getItem('tutVideoSyncButton')
-
-  // When user presses search
-  const onSubmitSearch = async newQuery => {
-    if (!newQuery || newQuery === parser.search) return
-    const newParser = new HtmlParse(newQuery)
-    await newParser.parsePage()
-    setParser(newParser)
-  }
 
   // Boilerplate socket message
   const msg = {
@@ -237,7 +235,7 @@ export default function VideoPlayer(props) {
   )
 
   const handlePlayerUpdate = e => {
-    if (disabled) {
+    if (disabled || !socketHelper) {
       setDisabled(false)
       return
     }
@@ -264,6 +262,31 @@ export default function VideoPlayer(props) {
     }
   }, [active, setVideoNotify, videoNotify])
 
+  // Saving the player state across calls
+  React.useEffect(() => {
+    const playerRef = player.current
+    return () => {
+      if (!playerRef) return
+      setVideoData({
+        savedPausedState: playerRef.paused,
+        savedUrl: videoUrl,
+        savedId: currentVideo,
+        savedTime: playerRef.currentTime,
+      })
+    }
+  }, [currentVideo, setVideoData, videoUrl])
+
+  React.useEffect(() => {
+    if (hasRemoteStream !== !!remoteStream) {
+      if (player.current && savedTime) {
+        player.current.currentTime = savedTime
+        if (savedPausedState) player.current.pause()
+        else player.current.play()
+      }
+      setHasRemoteStream(!!remoteStream)
+      setVideoData({})
+    }
+  }, [hasRemoteStream, remoteStream, savedPausedState, savedTime, setVideoData])
   // Clicking the player's toggle sync button
   const toggleSync = () => {
     window.sessionStorage.setItem('tutVideoSyncButton', true)
@@ -293,12 +316,17 @@ export default function VideoPlayer(props) {
     return '#ffe400'
   }, [syncState])
 
-  const getSyncText = React.useCallback(() => {
+  const syncText = React.useMemo(() => {
     if (syncState === SYNC.OFF) return 'Request Sync'
     if (syncState === SYNC.REQUESTED) return 'Cancel Sync'
     if (syncState === SYNC.UNACCEPTED) return 'Accept Sync'
     return 'Synced'
   }, [syncState])
+
+  const emptyText = React.useMemo(() => {
+    if (socketHelper) return `Click the search and sync buttons at the top left!`
+    return `Click the search button at the top left!`
+  }, [socketHelper])
 
   // {syncState === SYNC.UNACCEPTED && <Notification />}
   // <i className={`fas fa-sync-alt ${syncState === SYNC.ACCEPTED ? 'rotate' : ''}`} />
@@ -322,15 +350,17 @@ export default function VideoPlayer(props) {
               onSeeked={handlePlayerUpdate}
             />
           ) : (
-            <EmptyStateText>Click the search and sync buttons in the top left!</EmptyStateText>
+            <EmptyStateText>{emptyText}</EmptyStateText>
           )}
           <VideoControls>
             <SearchButton data-cy="playerSearchButton" onClick={() => setIsShown(true)}>
               <i className="fas fa-search" />
             </SearchButton>
-            <SyncButton color={getColor} data-cy="playerSyncButton" label={getSyncText()} onClick={toggleSync}>
-              {showHintArrow && <ArrowIcon className="fas fa-long-arrow-alt-up" />}
-            </SyncButton>
+            {socketHelper && (
+              <SyncButton color={getColor} data-cy="playerSyncButton" label={syncText} onClick={toggleSync}>
+                {showHintArrow && <ArrowIcon className="fas fa-long-arrow-alt-up" />}
+              </SyncButton>
+            )}
           </VideoControls>
         </VideoContainer>
       </StyledVideoPlayer>
@@ -339,7 +369,7 @@ export default function VideoPlayer(props) {
         selectVideo={selectVideo}
         setIsShown={setIsShown}
         videos={parser.videos}
-        onSubmitSearch={onSubmitSearch}
+        onSubmitSearch={performNewSearch}
       />
       <SideToastContainer>
         <SideToast showToast={showVideoSyncToast}>

@@ -35,7 +35,7 @@ function clamp(number, min, max) {
 const bufferSize = 512
 
 export default function ToggleButtonWithMeter(props) {
-  const { stream, iconClass, onClick, notification, active, 'data-cy': dataCy } = props
+  const { stream, iconClass, onClick, notification, active, innerWidth, 'data-cy': dataCy } = props
 
   const [volume, setVolume] = React.useState(0)
   const vol = React.useRef(0) // Use to prevent crazy amounts of re-renders
@@ -99,7 +99,13 @@ export default function ToggleButtonWithMeter(props) {
   }, [connectProcessor, endProcessor, processor, stream])
 
   return (
-    <ToggleButton active={active} data-cy={dataCy} notification={notification} onClick={onClick}>
+    <ToggleButton
+      active={active}
+      data-cy={dataCy}
+      innerWidth={innerWidth}
+      notification={notification}
+      onClick={onClick}
+    >
       <i className={iconClass} />
       <IconContainer>
         <Expander percent={clamp(volume * 4, 0, 1) * 100} vol={vol}>

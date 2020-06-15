@@ -58,12 +58,13 @@ export default function SocketProvider(props) {
       if (num <= 1) {
         window.clearInterval(timer)
         if (socketHelper.current) setRemoteStream(socketHelper.current.remoteStream)
+        setEnabledWidgets({ video: true, localVideo: true })
       }
       num -= 1
       setMatchCountdown(num)
     }, 1000)
     matchTimer.current = timer
-  }, [])
+  }, [setEnabledWidgets])
 
   const onIdentity = React.useCallback(
     async u => {
@@ -105,7 +106,7 @@ export default function SocketProvider(props) {
         socketHelper.current.emit('matchId', { matchId: matchId.current, roomId: room.current, userId: user.id })
       }
       startCountdown()
-      setEnabledWidgets(enabledWidgets => ({ video: enabledWidgets.video, localVideo: true }))
+      setEnabledWidgets({ localVideo: true })
     },
     [client, setEnabledWidgets, startCountdown, user],
   )

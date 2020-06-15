@@ -38,7 +38,7 @@ export default function InCallNavBar(props) {
   const { videoNotify, countdownNotify, textNotify } = useNotify()
   const { enabledWidgets, featureToggle, chatSettings, setChatSettings } = useEnabledWidgets()
   const { endCall, remoteStream } = useSocket()
-  const { isPC } = useWindowSize()
+  const { isPC, innerWidth } = useWindowSize()
 
   React.useEffect(() => {
     ;(async () => {
@@ -96,6 +96,7 @@ export default function InCallNavBar(props) {
               <ToggleButton
                 data-cy="navStopButton"
                 iconClass="fas fa-stop"
+                innerWidth={innerWidth}
                 title="Stop"
                 onClick={() => endCall('STOP')}
               />
@@ -105,6 +106,7 @@ export default function InCallNavBar(props) {
                 active={chatSettings.micMute ? 0 : 1}
                 data-cy="navMicButton"
                 iconClass={`fas fa-microphone${chatSettings.micMute ? '-slash' : ''}`}
+                innerWidth={innerWidth}
                 stream={localStream}
                 onClick={handleMutePress}
               />
@@ -114,6 +116,7 @@ export default function InCallNavBar(props) {
                 active={chatSettings.speakerMute ? 0 : 1}
                 data-cy="navSpeakerButton"
                 iconClass={`fas fa-volume${chatSettings.speakerMute ? '-mute' : '-up'}`}
+                innerWidth={innerWidth}
                 stream={remoteStream}
                 onClick={() => setChatSettings({ ...chatSettings, speakerMute: !chatSettings.speakerMute })}
               />
@@ -125,6 +128,7 @@ export default function InCallNavBar(props) {
             active
             importantTitle
             iconClass="fas fa-chevron-right"
+            innerWidth={innerWidth}
             title="Controls"
             onClick={() => setShowLeft(true)}
           />
@@ -138,8 +142,9 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.profile ? 1 : 0}
                 data-cy="navProfileButton"
                 iconClass="fas fa-user-alt"
+                innerWidth={innerWidth}
                 title="Profile"
-                onClick={() => featureToggle('profile')}
+                onClick={() => featureToggle('profile', !remoteStream)}
               />
             )}
             {buttons.countdown && (
@@ -147,9 +152,10 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.countdown ? 1 : 0}
                 data-cy="navCountdownButton"
                 iconClass="fas fa-stopwatch"
+                innerWidth={innerWidth}
                 notification={countdownNotify ? 1 : 0}
                 title="Countdown"
-                onClick={() => featureToggle('countdown')}
+                onClick={() => featureToggle('countdown', !remoteStream)}
               />
             )}
             {buttons.chat && (
@@ -157,19 +163,10 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.text ? 1 : 0}
                 data-cy="navCommentButton"
                 iconClass="fas fa-comment"
+                innerWidth={innerWidth}
                 notification={textNotify}
                 title="Chat"
-                onClick={() => featureToggle('text')}
-              />
-            )}
-            {buttons.video && (
-              <ToggleButton
-                active={enabledWidgets.video ? 1 : 0}
-                data-cy="navPlayerButton"
-                iconClass="fab fa-youtube"
-                notification={videoNotify ? 1 : 0}
-                title="Video"
-                onClick={() => featureToggle('video')}
+                onClick={() => featureToggle('text', !remoteStream)}
               />
             )}
             {buttons.updatePref && (
@@ -177,8 +174,9 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.updatePref ? 1 : 0}
                 data-cy="navUpdateUserButton"
                 iconClass="fas fa-user-edit"
+                innerWidth={innerWidth}
                 title="Edit"
-                onClick={() => featureToggle('updatePref')}
+                onClick={() => featureToggle('updatePref', !remoteStream)}
               />
             )}
             {buttons.stats && (
@@ -186,8 +184,9 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.stats ? 1 : 0}
                 data-cy="navStatsButton"
                 iconClass="fas fa-chart-area"
+                innerWidth={innerWidth}
                 title="Stats"
-                onClick={() => featureToggle('stats')}
+                onClick={() => featureToggle('stats', !remoteStream)}
               />
             )}
             {buttons.matches && (
@@ -195,8 +194,20 @@ export default function InCallNavBar(props) {
                 active={enabledWidgets.matches ? 1 : 0}
                 data-cy="navMatchesButton"
                 iconClass="fas fa-users"
+                innerWidth={innerWidth}
                 title="Matches"
-                onClick={() => featureToggle('matches')}
+                onClick={() => featureToggle('matches', !remoteStream)}
+              />
+            )}
+            {buttons.video && (
+              <ToggleButton
+                active={enabledWidgets.video ? 1 : 0}
+                data-cy="navPlayerButton"
+                iconClass="fab fa-youtube"
+                innerWidth={innerWidth}
+                notification={videoNotify ? 1 : 0}
+                title="Video"
+                onClick={() => featureToggle('video', !remoteStream)}
               />
             )}
           </>
@@ -205,6 +216,7 @@ export default function InCallNavBar(props) {
             active
             importantTitle
             iconClass="fas fa-chevron-left"
+            innerWidth={innerWidth}
             notification={hiddenNotifications}
             title="Widgets"
             onClick={() => setShowLeft(false)}

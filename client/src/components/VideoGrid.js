@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import useWindowSize from '../hooks/WindowSizeHook'
+import { useVideoPlayer } from '../hooks/VideoPlayerContext'
 import SVGTester from './SVGTester'
 import { Button } from './common'
 
@@ -112,7 +113,9 @@ const SubmitButton = styled(Button)`
 
 export default function VideoGrid(props) {
   const { videos, onSubmitSearch, isShown, setIsShown, selectVideo } = props
-  const [query, setQuery] = React.useState('')
+  const { parser } = useVideoPlayer()
+
+  const [query, setQuery] = React.useState(parser ? parser.search : '')
   const [submittedQuery, setSubmittedQuery] = React.useState('')
   const [isLoading, setIsLoading] = React.useState(false)
 

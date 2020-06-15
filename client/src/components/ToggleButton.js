@@ -1,6 +1,5 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
-import useWindowSize from '../hooks/WindowSizeHook'
 import { Button } from './common'
 
 const StyledToggleButton = styled.div`
@@ -50,9 +49,17 @@ const Notification = styled.p`
 `
 
 export default function ToggleButton(props) {
-  const { children, title, importantTitle, iconClass, onClick, notification, active, 'data-cy': dataCy } = props
-
-  const { innerWidth } = useWindowSize()
+  const {
+    children,
+    title,
+    importantTitle,
+    iconClass,
+    onClick,
+    notification,
+    active,
+    innerWidth,
+    'data-cy': dataCy,
+  } = props
 
   const showTitle = title && (innerWidth > 480 || (importantTitle && innerWidth > 320))
   return (

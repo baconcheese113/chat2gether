@@ -5,6 +5,7 @@ import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import { useSocket } from '../hooks/SocketContext'
 import { useMyUser } from '../hooks/MyUserContext'
 import useWindowSize from '../hooks/WindowSizeHook'
+import { VideoPlayerProvider } from '../hooks/VideoPlayerContext'
 import VideoWindow from './VideoWindow'
 import TextChat from './TextChat'
 import Settings from './Settings'
@@ -28,6 +29,9 @@ const StyledChatHub = styled.div`
 const ConnectingText = styled.div`
   padding: 0 1rem;
   white-space: pre-wrap;
+  height: ${p => p.height};
+  display: flex;
+  align-items: center;
 `
 const PageContainer = styled.div`
   display: flex;
@@ -113,7 +117,8 @@ export default function ChatHub() {
     }
     return (
       <PageContainer>
-        <ConnectingText>{connectionMsg}</ConnectingText>
+        <VideoPlayer roomId={roomId} userId={user.id} />
+        <ConnectingText height={enabledWidgets.video ? '100%' : undefined}>{connectionMsg}</ConnectingText>
         {matchCountdown > 0 && <CountdownSpan>{matchCountdown}</CountdownSpan>}
         {enabledWidgets.updatePref && <UserUpdateForm />}
         {enabledWidgets.stats && <LineGraph />}
@@ -121,7 +126,7 @@ export default function ChatHub() {
         <ChatNav />
         <VideoWindow flowDirection={flowDirection} stream={localStream} videoType="localVideo" />
         <InCallNavBar
-          buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true }}
+          buttons={{ stop: true, mic: true, speaker: true, matches: true, stats: true, updatePref: true, video: true }}
         />
       </PageContainer>
     )
@@ -129,8 +134,10 @@ export default function ChatHub() {
 
   return (
     <StyledChatHub flowDirection={flowDirection}>
-      {renderBackground()}
-      {enabledWidgets.menu && <Settings />}
+      <VideoPlayerProvider>
+        {renderBackground()}
+        {enabledWidgets.menu && <Settings />}
+      </VideoPlayerProvider>
     </StyledChatHub>
   )
 }

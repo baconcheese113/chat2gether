@@ -25,7 +25,7 @@ export function EnabledWidgetsProvider(props) {
   const [enabledWidgets, setEnabledWidgets] = React.useState({
     text: false,
     menu: false,
-    video: true,
+    video: false,
     countdown: false,
     profile: false,
     matches: false,
@@ -38,9 +38,16 @@ export function EnabledWidgetsProvider(props) {
   const [chatSettings, setChatSettings] = React.useState({ micMute: false, speakerMute: false })
 
   const featureToggle = React.useCallback(
-    elem => {
+    (elem, inHub) => {
       const { text, countdown, profile, video, localVideo } = enabledWidgets
-      setEnabledWidgets({ text, countdown, profile, video, localVideo, [elem]: !enabledWidgets[elem] })
+      setEnabledWidgets({
+        text,
+        countdown,
+        profile,
+        video: inHub ? false : video,
+        localVideo,
+        [elem]: !enabledWidgets[elem],
+      })
     },
     [enabledWidgets],
   )
