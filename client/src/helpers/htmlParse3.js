@@ -21,7 +21,7 @@ class HtmlParse {
     const doc = parser.parseFromString(videoResponse.data, 'text/html')
     const videoUrl = doc
       .getElementById(`${DOMAIN}-player`)
-      .innerHTML.match(/videoUrl":"(.*?)"}/)[1]
+      .innerHTML.match(/videoUrl":"(http.*?)"}/)[1]
       .replace(/\\/g, '')
     return videoUrl
   }
