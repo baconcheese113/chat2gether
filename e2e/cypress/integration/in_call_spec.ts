@@ -101,7 +101,8 @@ describe('in_call_spec', function () {
     cy.window().then(() => {
       theirSocketHelper.sendPlayerSync('start')
     })
-    cy.dataCy('navPlayerButton').should('contain.text', '1').click().wait(1000)
+    // No longer needed since video player defaults open
+    // cy.dataCy('navPlayerButton').should('contain.text', '1').click().wait(1000)
     cy.dataCy('playerSyncButton').should('contain.text', 'Accept Sync').click().should('contain.text', 'Synced')
 
     cy.dataCy('navMicButton').click()
