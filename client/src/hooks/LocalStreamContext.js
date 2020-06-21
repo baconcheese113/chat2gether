@@ -2,7 +2,7 @@ import React from 'react'
 import { useEnabledWidgets } from './EnabledWidgetsContext'
 import { useSocket } from './SocketContext'
 
-const LocalStreamContext = React.createContext({ localStream: null, requestCamera: () => {} })
+const LocalStreamContext = React.createContext({ localStream: null, requestDevices: () => {} })
 export function useLocalStream() {
   return React.useContext(LocalStreamContext)
 }
@@ -19,7 +19,7 @@ export const LocalStreamProvider = props => {
   }, [localStream])
 
   // InitializeSocket needs to be called first
-  const requestCamera = React.useCallback(
+  const requestDevices = React.useCallback(
     async (videoSource = undefined, audioSource = undefined) => {
       console.log('request camera')
       const constraints = {
@@ -61,5 +61,5 @@ export const LocalStreamProvider = props => {
     [chatSettings.micMute, localStream, remoteStream, socketHelper],
   )
 
-  return <LocalStreamContext.Provider value={{ localStream, requestCamera }}>{children}</LocalStreamContext.Provider>
+  return <LocalStreamContext.Provider value={{ localStream, requestDevices }}>{children}</LocalStreamContext.Provider>
 }

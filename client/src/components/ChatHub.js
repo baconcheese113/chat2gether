@@ -53,7 +53,7 @@ const CountdownSpan = styled.span`
 
 export default function ChatHub() {
   const { user } = useMyUser()
-  const { localStream, requestCamera } = useLocalStream()
+  const { localStream, requestDevices } = useLocalStream()
   const { enabledWidgets } = useEnabledWidgets()
   const { socketHelper, connectionMsg, remoteStream, roomId, otherUser, matchCountdown, endCall } = useSocket()
   const { flowDirection } = useWindowSize()
@@ -111,7 +111,7 @@ export default function ChatHub() {
     if (!localStream) {
       return (
         <PageContainer>
-          <Button data-cy="shareVideoButton" label="Share Video to Begin" onClick={() => requestCamera()} />
+          <Button data-cy="shareVideoButton" label="Share Video to Begin" onClick={() => requestDevices()} />
         </PageContainer>
       )
     }

@@ -34,7 +34,7 @@ export default function InCallNavBar(props) {
   const [showLeft, setShowLeft] = React.useState(false)
   const [isMobile, setIsMobile] = React.useState(false)
 
-  const { localStream, requestCamera } = useLocalStream()
+  const { localStream, requestDevices } = useLocalStream()
   const { videoNotify, countdownNotify, textNotify } = useNotify()
   const { enabledWidgets, featureToggle, chatSettings, setChatSettings } = useEnabledWidgets()
   const { endCall, remoteStream } = useSocket()
@@ -64,7 +64,7 @@ export default function InCallNavBar(props) {
       console.log(currentId, rear.deviceId, front.deviceId)
       if (rear && front) {
         const newDeviceId = currentId === rear.deviceId ? front.deviceId : rear.deviceId
-        requestCamera(newDeviceId)
+        requestDevices(newDeviceId)
       }
     } catch (err) {
       console.error(err)
