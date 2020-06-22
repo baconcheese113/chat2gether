@@ -6,6 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import { GET_USERS } from '../../queries/queries'
 import { GENDERS, GENDER_COLORS, GENDER_DASHARRAY } from '../../helpers/constants'
+import SVGTester from '../SVGTester'
 import StatsWindow from './StatsWindow'
 
 const containerXY = { x: 500, y: 500 }
@@ -78,6 +79,7 @@ export default function LineGraph() {
   const [statsWindow, setStatsWindow] = React.useState(null)
   const [timeGroupings, setTimeGroupings] = React.useState(Array(numIntervals).fill({}))
   const [minuteSpread, setMinuteSpread] = React.useState(60 * 24 * 30)
+  const [isLoading, setIsLoading] = React.useState(true)
 
   const intervalRange = minuteSpread / numIntervals // minutes
 
@@ -128,6 +130,7 @@ export default function LineGraph() {
     const where = { where: { updatedAt_gt: d.toISOString() } }
     const { loading, err, data } = await client.query({ query: GET_USERS, variables: where })
     if (loading) console.log('loading ', loading)
+    setIsLoading(false)
     if (err) {
       console.error(err)
     }
@@ -291,10 +294,6 @@ export default function LineGraph() {
     )
   }
 
-  React.useEffect(() => {
-    refreshUserCount()
-  }, [refreshUserCount])
-
   const printGrid = () => {
     return Array(numIntervalsY)
       .fill(0)
@@ -355,6 +354,13 @@ export default function LineGraph() {
     e.preventDefault()
     setMinuteSpread(e.target.value)
   }
+
+  if (isLoading)
+    return (
+      <StyledLineGraph>
+        <SVGTester height="50vh" width="50vh" />
+      </StyledLineGraph>
+    )
 
   return (
     <StyledLineGraph>
