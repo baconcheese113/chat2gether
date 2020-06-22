@@ -82,7 +82,7 @@ const ResultDuration = styled.span`
 const SearchBarForm = styled.form`
   background-color: #313131;
   border-radius: 5px;
-
+  height: 48px;
   display: flex;
   padding: 0;
   border: none;
@@ -90,24 +90,20 @@ const SearchBarForm = styled.form`
 `
 
 const SearchBar = styled.input`
+  flex: 1;
+  overflow: hidden;
   outline: none;
   border: 2px solid #3f3f3f;
-  cursor: pointer;
-
   display: block;
   background-color: #aaa;
   border-radius: 1rem;
-  width: 82%;
   margin: 0;
-  margin-right: -5px;
   font-size: 1.6rem;
   padding: 0 4px;
   z-index: 10;
 `
 const SubmitButton = styled(Button)`
-  display: block;
-  padding: 3px 6px;
-  width: 20%;
+  padding: 12px;
   background-color: #222;
 `
 
@@ -120,6 +116,7 @@ export default function VideoGrid(props) {
   const [isLoading, setIsLoading] = React.useState(false)
 
   const { innerWidth } = useWindowSize()
+  const searchBar = React.useRef()
 
   const handleClose = () => {
     setIsShown(false)
@@ -142,6 +139,10 @@ export default function VideoGrid(props) {
     }
     setIsLoading(false)
   }
+
+  React.useEffect(() => {
+    searchBar.current.focus()
+  })
 
   const getContent = () => {
     if (isLoading) {
@@ -190,8 +191,9 @@ export default function VideoGrid(props) {
         <SearchBarForm onSubmit={handleSearchSubmit}>
           <SubmitButton data-cy="playerSearchSubmit" label="Search" onClick={handleSearchSubmit} />
           <SearchBar
+            ref={searchBar}
             data-cy="playerSearchInput"
-            placeholder={`Search ${process.env.REACT_APP_SEARCH_DOMAIN} by keyword, URLs are not supported`}
+            placeholder={`Search ${process.env.REACT_APP_SEARCH_DOMAIN} by keyword, no URLs`}
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
