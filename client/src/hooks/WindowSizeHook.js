@@ -9,7 +9,6 @@ export default function useWindowSize() {
 
   const updateSize = React.useCallback(() => {
     if (innerWidth === window.innerWidth && innerHeight === window.innerHeight) return
-    console.log(`orientation change ${window.innerWidth} x ${window.innerHeight} now`)
     setWindowSize({ innerWidth: window.innerWidth, innerHeight: window.innerHeight })
   }, [innerHeight, innerWidth])
 

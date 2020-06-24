@@ -33,13 +33,9 @@ export default function App() {
   const { innerHeight } = useWindowSize()
 
   React.useEffect(() => {
-    if (document.cookie.split(';').filter(item => item.trim().startsWith('token=')).length === 0) {
-      setCanRender(true)
-      return
-    }
     const fetchData = async () => {
-      const { data } = await client.query({ query: GET_ME })
-      if (data.me) {
+      const { data } = await client.query({ query: GET_ME, errorPolicy: 'all' })
+      if (data && data.me) {
         setUser(data.me)
       }
       setCanRender(true)
@@ -66,10 +62,10 @@ export default function App() {
       )
     }
     return (
-      <div>
+      <>
         <Header />
         <UserCreate setUser={setUser} />
-      </div>
+      </>
     )
   }
   return ''
