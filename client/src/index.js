@@ -10,7 +10,10 @@ import { fetch } from 'whatwg-fetch' // Cypress still prefers XMLHttpRequest (xh
 import App from './components/App'
 import { darkTheme, muiTheme, GlobalStyle } from './helpers/themes'
 
-Sentry.init({ dsn: 'https://cfc156ae965449309801e5a8973ece80@sentry.io/1493191' })
+console.log(`React in ${process.env.NODE_ENV} mode`)
+if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
+  Sentry.init({ dsn: 'https://cfc156ae965449309801e5a8973ece80@sentry.io/1493191' })
+}
 
 const client = new ApolloClient({
   // uri: /* '/', */ 'http://localhost:4000', // removed to default to '/graphql'
