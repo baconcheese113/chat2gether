@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useEnabledWidgets } from '../hooks/EnabledWidgetsContext'
 import useWindowSize from '../hooks/WindowSizeHook'
+import { useLocalStream } from '../hooks/LocalStreamContext'
 
 const circlingDashes = keyframes`
   from { box-shadow: 0 0 0 10px #5e5e5e; }
@@ -44,6 +45,13 @@ const ExpandIcon = styled.i`
   bottom: 5%;
   right: 5%;
   opacity: 0.5;
+`
+const EfficiencyIcon = styled.i`
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  opacity: 0.9;
+  color: #81c91f;
 `
 const RemoteVideoContainer = styled.div`
   position: relative;
@@ -97,6 +105,7 @@ export default function VideoWindow(props) {
 
   const { chatSettings, enabledWidgets } = useEnabledWidgets()
   const { flowDirection } = useWindowSize
+  const { inEfficiencyMode } = useLocalStream()
 
   const handleDrag = e => {
     if (e.dataTransfer) {
@@ -192,6 +201,7 @@ export default function VideoWindow(props) {
         top={top}
         onTouchMove={onTouchMove}
       >
+        {inEfficiencyMode && <EfficiencyIcon className="fas fa-leaf" />}
         {!isExpanded && <ExpandIcon className="fas fa-expand" />}
         {getVideo(LocalVideo)}
       </LocalVideoContainer>

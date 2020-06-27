@@ -60,11 +60,10 @@ export default function InCallNavBar(props) {
       const allDevices = await navigator.mediaDevices.enumerateDevices()
       const rear = allDevices.find(d => d.kind === 'videoinput' && d.label.match(/back/i))
       const front = allDevices.find(d => d.kind === 'videoinput' && d.label.match(/front/i))
-      const currentId = localStream.getVideoTracks()[0].getSettings().deviceId
-      console.log(currentId, rear.deviceId, front.deviceId)
+      const { deviceId } = localStream.getVideoTracks()[0].getSettings()
       if (rear && front) {
-        const newDeviceId = currentId === rear.deviceId ? front.deviceId : rear.deviceId
-        requestDevices(newDeviceId)
+        const videoSource = deviceId === rear.deviceId ? front.deviceId : rear.deviceId
+        requestDevices({ videoSource })
       }
     } catch (err) {
       console.error(err)

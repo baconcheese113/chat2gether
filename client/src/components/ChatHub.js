@@ -53,7 +53,7 @@ const CountdownSpan = styled.span`
 
 export default function ChatHub() {
   const { user } = useMyUser()
-  const { localStream, requestDevices } = useLocalStream()
+  const { localStream, requestDevices, determineEfficiencyMode } = useLocalStream()
   const { enabledWidgets } = useEnabledWidgets()
   const { socketHelper, connectionMsg, remoteStream, roomId, otherUser, matchCountdown, endCall } = useSocket()
   const { flowDirection } = useWindowSize()
@@ -91,6 +91,10 @@ export default function ChatHub() {
     }
   }, [onBeforeUnload, onUnload])
 
+  React.useEffect(() => {
+    determineEfficiencyMode(!!otherUser)
+  }, [determineEfficiencyMode, otherUser])
+
   const renderBackground = () => {
     if (remoteStream) {
       return (
@@ -111,7 +115,7 @@ export default function ChatHub() {
     if (!localStream) {
       return (
         <PageContainer>
-          <Button data-cy="shareVideoButton" label="Share Video to Begin" onClick={() => requestDevices()} />
+          <Button data-cy="shareVideoButton" label="Share Video to Begin" onClick={() => requestDevices({})} />
         </PageContainer>
       )
     }

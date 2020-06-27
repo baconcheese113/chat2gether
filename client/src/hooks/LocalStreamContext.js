@@ -10,6 +10,7 @@ export function useLocalStream() {
 export const LocalStreamProvider = props => {
   const { children } = props
   const [localStream, setLocalStream] = React.useState(null)
+  const [inEfficiencyMode, setInEfficiencyMode] = React.useState(false)
 
   const { chatSettings } = useEnabledWidgets()
   const { remoteStream, socketHelper } = useSocket()
@@ -18,23 +19,50 @@ export const LocalStreamProvider = props => {
     console.log(`localStream changed to `, localStream)
   }, [localStream])
 
+  const determineEfficiencyMode = React.useCallback(
+    async inCall => {
+      const videoTracks = localStream && localStream.getVideoTracks()
+      if (!videoTracks || !videoTracks.length) {
+        setInEfficiencyMode(false)
+        return
+      }
+
+      const allDevices = await navigator.mediaDevices.enumerateDevices()
+      const rear = allDevices.find(d => d.kind === 'videoinput' && d.label.match(/back/i))
+      const front = allDevices.find(d => d.kind === 'videoinput' && d.label.match(/front/i))
+      const onMobile = rear && front
+      if (!onMobile) {
+        setInEfficiencyMode(false)
+        return
+      }
+
+      const videoConstraints = videoTracks[0].getConstraints()
+      if (inCall && videoConstraints.frameRate === 1) {
+        videoConstraints.frameRate = 30
+      } else if (!inCall && videoConstraints.frameRate !== 1) {
+        videoConstraints.frameRate = 1
+      }
+      videoTracks[0].applyConstraints(videoConstraints)
+      setInEfficiencyMode(videoConstraints.frameRate === 1)
+    },
+    [localStream],
+  )
+
   // InitializeSocket needs to be called first
   const requestDevices = React.useCallback(
-    async (videoSource = undefined, audioSource = undefined) => {
-      console.log('request camera')
+    async ({ videoSource, audioSource }) => {
       const constraints = {
         video: {
           deviceId: videoSource ? { exact: videoSource } : undefined,
           aspectRatio: { min: 0.5, max: 2 },
+          frameRate: inEfficiencyMode ? 1 : 30,
         },
         audio: {
           deviceId: audioSource ? { exact: audioSource } : undefined,
         },
       }
-      console.log('constraints', constraints)
       // Get stream
       try {
-        console.log(navigator.mediaDevices)
         // Have to stop tracks before switching on mobile
         if (localStream) localStream.getTracks().forEach(track => track.stop())
         console.log('tracks stopped')
@@ -58,8 +86,12 @@ export const LocalStreamProvider = props => {
         console.error(e)
       }
     },
-    [chatSettings.micMute, localStream, remoteStream, socketHelper],
+    [chatSettings.micMute, inEfficiencyMode, localStream, remoteStream, socketHelper],
   )
 
-  return <LocalStreamContext.Provider value={{ localStream, requestDevices }}>{children}</LocalStreamContext.Provider>
+  return (
+    <LocalStreamContext.Provider value={{ localStream, requestDevices, determineEfficiencyMode, inEfficiencyMode }}>
+      {children}
+    </LocalStreamContext.Provider>
+  )
 }

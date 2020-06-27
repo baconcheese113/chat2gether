@@ -143,7 +143,7 @@ export default function Settings() {
 
   const handleClose = (shouldApply = true) => {
     if (shouldApply) {
-      requestDevices(selectedVideo, selectedAudio)
+      requestDevices({ videoSource: selectedVideo, audioSource: selectedAudio })
     }
     setEnabledWidgets({ ...enabledWidgets, menu: false })
   }
