@@ -12,10 +12,11 @@ export default function useWindowSize() {
     setWindowSize({ innerWidth: window.innerWidth, innerHeight: window.innerHeight })
   }, [innerHeight, innerWidth])
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     window.addEventListener('resize', updateSize)
     return () => window.removeEventListener('resize', updateSize)
-  }, [updateSize])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return { innerHeight, innerWidth, isPC, flowDirection }
 }
