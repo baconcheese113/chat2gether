@@ -1,7 +1,7 @@
 import React from 'react'
 import { useApolloClient } from '@apollo/client'
 import SocketHelper from '../helpers/socketHelper'
-import { UPDATE_USER, DISCONNECT_MATCH, CREATE_MATCH } from '../queries/mutations'
+import { UPDATE_USER, UPDATE_ADDRESSES, DISCONNECT_MATCH, CREATE_MATCH } from '../queries/mutations'
 import { FIND_ROOM } from '../queries/queries'
 import PrefMatcher from '../components/PrefMatcher'
 import AirPlaneDing from '../assets/air-plane-ding.mp3'
@@ -154,8 +154,9 @@ export default function SocketProvider(props) {
       socketHelper.current.socket.on('identity', onIdentity)
       socketHelper.current.socket.on('matchId', onMatchId)
       socketHelper.current.onIceConnectionStateChange = async e => {
-        console.log('iceconnectionstatechange', e.target.iceConnectionState, e)
-        if (e.target.iceConnectionState === 'checking') {
+        const { iceConnectionState, currentLocalDescription } = e.target
+        console.log('iceconnectionstatechange callback state is ', iceConnectionState, e)
+        if (iceConnectionState === 'checking') {
           clearTimeout(probeTimer.current)
           const { loading, error } = await client.mutate({
             mutation: UPDATE_USER,
@@ -165,8 +166,13 @@ export default function SocketProvider(props) {
           if (loading) console.log('loading', loading)
           const updatedUser = await getMe()
           socketHelper.current.emit('identity', { user: updatedUser, roomId: room.current })
+          // console.log('matching', currentLocalDescription.sdp)
+          const addressMatches = [...currentLocalDescription.sdp.matchAll(/a=candidate:\d* \d* \w* \d* (.*?) \d* typ/g)]
+          const addresses = [...addressMatches.reduce((set, a) => set.add(a[1]), new Set())]
+          if (addresses.length) {
+            await client.mutate({ mutation: UPDATE_ADDRESSES, variables: { data: { addresses } } })
+          }
         }
-        // if (e.target.iceConnectionState !== 'connected') return
       }
       socketHelper.current.updateConnectionMsg = connectMsg => {
         setConnectionMsg(connectMsg)

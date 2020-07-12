@@ -28,6 +28,7 @@ type Query {
 type Mutation {
   createUser(data: CreateUserInput!): User!
   updateUser(data: UserUpdateInput!): User!
+  updateAddresses(data: UpdateAddressesInput!): User!
   createFeedback(data: FeedbackCreateInput!): Feedback!
   createReport(data: CreateReportInput!): Report!
   createMatch(data: CreateMatchInput!): Match!
@@ -52,6 +53,9 @@ input DisconnectMatchInput {
 }
 input CreateMatchInput {
   otherUserId: ID!
+}
+input UpdateAddressesInput {
+  addresses: [String!]!
 }
 input CreateReportInput {
   type: ReportType!

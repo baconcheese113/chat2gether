@@ -141,7 +141,6 @@ export default class SocketHelper {
         console.log('on ready')
         createPC()
         try {
-          // await this.pc.createOffer(setLocalAndOffer, e => console.error(e))
           const offer = await this.pc.createOffer()
           setLocalAndOffer(offer)
         } catch (e) {

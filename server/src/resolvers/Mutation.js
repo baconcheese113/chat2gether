@@ -1,3 +1,4 @@
+import isLocalhost from 'is-localhost-ip'
 import getUserId from '../utils/getUserId'
 import generateToken from '../utils/generateToken'
 
@@ -42,7 +43,28 @@ export default {
       info,
     )
   },
+  async updateAddresses(parent, args, { prisma, request }, info) {
+    const userId = getUserId(request)
+    const inputAddresses = await args.data.addresses.reduce(async (prev, a) => {
+      const isLocal = await isLocalhost(a)
+      console.log(`${a} is${isLocal ? '' : ' not'} local`)
+      if (isLocal) return prev
+      return [...(await prev), a]
+    }, [])
+    console.log('arg data', args.data)
+    console.log('inputAddresses', inputAddresses)
 
+    if (!inputAddresses.length) {
+      return prisma.query.user({ where: { id: userId } }, info)
+    }
+    const me = await prisma.query.user({ where: { id: userId } }, `{ addresses }`)
+    const existingAddresses = me.addresses || ''
+    const newAddresses = [
+      ...existingAddresses.split(',').reduce((set, a) => (a ? set.add(a[1]) : set), new Set(inputAddresses)),
+    ]
+    console.log('newAddresses', newAddresses.join(','))
+    return prisma.mutation.updateUser({ where: { id: userId }, data: { addresses: newAddresses.join(',') } }, info)
+  },
   async createFeedback(parent, args, { prisma }, info) {
     return prisma.mutation.createFeedback(
       {

@@ -44,6 +44,13 @@ export const UPDATE_USER = gql`
     }
   }
 `
+export const UPDATE_ADDRESSES = gql`
+  mutation UpdateAddressesMutation($data: UpdateAddressesInput!) {
+    updateAddresses(data: $data) {
+      id
+    }
+  }
+`
 
 export const CREATE_FEEDBACK = gql`
   mutation CreateFeedbackMutation($data: FeedbackCreateInput!) {
