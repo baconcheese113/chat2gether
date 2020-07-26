@@ -156,7 +156,8 @@ export default function SocketProvider(props) {
       socketHelper.current.onIceConnectionStateChange = async e => {
         const { iceConnectionState, currentLocalDescription } = e.target
         console.log('iceconnectionstatechange callback state is ', iceConnectionState, e)
-        if (iceConnectionState === 'checking') {
+        console.log('target is ', JSON.parse(JSON.stringify(e.target)))
+        if (iceConnectionState === 'checking' && currentLocalDescription) {
           clearTimeout(probeTimer.current)
           const { loading, error } = await client.mutate({
             mutation: UPDATE_USER,

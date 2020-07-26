@@ -59,8 +59,10 @@ export default {
     }
     const me = await prisma.query.user({ where: { id: userId } }, `{ addresses }`)
     const existingAddresses = me.addresses || ''
+    console.log('existingAddresses are ', existingAddresses)
+    console.log('set of inputAddresses are ', new Set(inputAddresses))
     const newAddresses = [
-      ...existingAddresses.split(',').reduce((set, a) => (a ? set.add(a[1]) : set), new Set(inputAddresses)),
+      ...existingAddresses.split(',').reduce((set, a) => (a ? set.add(a) : set), new Set(inputAddresses)),
     ]
     console.log('newAddresses', newAddresses.join(','))
     return prisma.mutation.updateUser({ where: { id: userId }, data: { addresses: newAddresses.join(',') } }, info)
